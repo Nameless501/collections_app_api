@@ -1,37 +1,39 @@
+import HttpStatusCodes from './httpCodes.config.js'
+
 type ErrorsConfigType = {
     [key: string]: {
-        statusCode: number,
+        statusCode: HttpStatusCodes,
         message: string,
     }
 };
 
 const errorsConfig: ErrorsConfigType = {
     badRequest: {
-        statusCode: 400,
+        statusCode: HttpStatusCodes.badRequest,
         message: 'Некорректные данные',
     },
     notFound: {
-        statusCode: 404,
+        statusCode: HttpStatusCodes.notFound,
         message: 'Данные не найдены',
     },
     forbidden: {
-        statusCode: 403,
+        statusCode: HttpStatusCodes.forbidden,
         message: 'Ошибка доступа',
     },
     emailConflict: {
-        statusCode: 409,
+        statusCode: HttpStatusCodes.emailConflict,
         message: 'Такой email уже зарегистрирован',
     },
     dataAccess: {
-        statusCode: 401,
+        statusCode: HttpStatusCodes.dataAccessError,
         message: 'Необходима авторизация',
     },
     wrongCredentials: {
-        statusCode: 401,
+        statusCode: HttpStatusCodes.dataAccessError,
         message: 'Неправильные почта или пароль',
     },
     default: {
-        statusCode: 500,
+        statusCode: HttpStatusCodes.defaultError,
         message: 'Произошла ошибка',
     },
 } as const;
