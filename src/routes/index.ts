@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router } from 'express'
 
 import authenticationRouter from './authentication.route.js'
 
-import routesConfig from '../configs/routes.config.js';
+import routesConfig from '../configs/routes.config.js'
 
-const router: Router = Router();
+const router: Router = Router()
 
-router.use(routesConfig.authentication.root, authenticationRouter);
+router.use(routesConfig.authentication.root, authenticationRouter)
 
-export default router;
+export default router

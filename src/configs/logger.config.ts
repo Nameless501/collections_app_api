@@ -1,7 +1,7 @@
-import winston from 'winston';
+import winston from 'winston'
 
 type LoggerOptions = {
-    transports: Array<typeof winston.transports.File>,
+    transports: Array<typeof winston.transports.File>
 }
 
 export enum LoggerFilenames {
@@ -10,15 +10,15 @@ export enum LoggerFilenames {
 }
 
 interface ILogger {
-    getOptions: (filename: LoggerFilenames) => LoggerOptions,
+    getOptions: (filename: LoggerFilenames) => LoggerOptions
 }
 
 export const loggerConfig: ILogger = {
     getOptions: (filename) => ({
-            transports: [
-                new winston.transports.File({
-                    filename,
-                }),
-            ],
-        })
-};
+        transports: [
+            new winston.transports.File({
+                filename,
+            }),
+        ],
+    }),
+}

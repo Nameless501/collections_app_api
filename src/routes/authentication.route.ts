@@ -1,16 +1,19 @@
-import { Router } from 'express';
+import { Router } from 'express'
 
-import authenticationController from '../controllers/Authentication.controller.js';
+import authenticationController from '../controllers/Authentication.controller.js'
 
-import createRequestValidator from '../utils/validation.util.js';
+import createRequestValidator from '../utils/validation.util.js'
 
-import { signUpValidationConfig, signInValidationConfig } from '../configs/validation.config.js'
+import {
+    signUpValidationConfig,
+    signInValidationConfig,
+} from '../configs/validation.config.js'
 
-import routesConfig from '../configs/routes.config.js';
+import routesConfig from '../configs/routes.config.js'
 
-const { signIn, signUp, signOut } = routesConfig.authentication;
+const { signIn, signUp, signOut } = routesConfig.authentication
 
-const router: Router = Router();
+const router: Router = Router()
 
 // router.post(
 //     signIn,
@@ -21,8 +24,8 @@ router.post(
     signUp,
     createRequestValidator(signUpValidationConfig),
     authenticationController.handleSignUp
-);
+)
 
 // router.post(signOut, );
 
-export default router;
+export default router

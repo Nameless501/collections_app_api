@@ -1,12 +1,7 @@
-import "dotenv/config.js";
+import 'dotenv/config.js'
 
-const {
-    MYSQLHOST,
-    MYSQLUSER,
-    MYSQLDATABASE,
-    MYSQLPASSWORD,
-    MYSQLPORT
-} = process.env;
+const { MYSQLHOST, MYSQLUSER, MYSQLDATABASE, MYSQLPASSWORD, MYSQLPORT } =
+    process.env
 
 const dbConfig = {
     dialect: 'mysql',
@@ -19,6 +14,6 @@ const dbConfig = {
         timestamps: false,
         freezeTableName: true,
     },
-} as const;
+} as const
 
-export default dbConfig;
+export default dbConfig

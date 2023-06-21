@@ -1,9 +1,9 @@
 type OptionsTypes = {
-    origin: string | string[],
-    methods: string | string[],
-    preflightContinue: boolean,
-    optionsSuccessStatus: number,
-    allowedHeaders: string [],
+    origin: string | string[]
+    methods: string | string[]
+    preflightContinue: boolean
+    optionsSuccessStatus: number
+    allowedHeaders: string[]
     credentials: boolean
 }
 
@@ -14,6 +14,6 @@ const corsConfig: OptionsTypes = {
     optionsSuccessStatus: 204,
     allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
     credentials: true,
-};
+}
 
-export default corsConfig;
+export default corsConfig

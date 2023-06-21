@@ -1,7 +1,7 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize'
 
-import dbConfig from '../configs/db.config.js';
+import dbConfig from '../configs/db.config.js'
 
-const sequelize: Sequelize = new Sequelize(dbConfig);
+const sequelize: Sequelize = new Sequelize(dbConfig)
 
-export default sequelize;
+export default sequelize

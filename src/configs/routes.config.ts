@@ -6,6 +6,6 @@ const routesConfig = {
         signUp: '/sign-up',
         signOut: '/sign-out',
     },
-} as const;
+} as const
 
-export default routesConfig;
+export default routesConfig
