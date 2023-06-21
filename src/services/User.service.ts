@@ -17,11 +17,14 @@ class UserService {
         password: string
     }): Promise<IUserModel> | never => {
         try {
-            const newUser = await this.model.create(payload);
-            return newUser;
+            const newUser = await this.model.create(payload)
+            return newUser
         } catch (err) {
-            const error = err instanceof UniqueConstraintError ? EmailConflictError : DefaultError;
-            throw new error();
+            const error =
+                err instanceof UniqueConstraintError
+                    ? EmailConflictError
+                    : DefaultError
+            throw new error()
         }
     }
 

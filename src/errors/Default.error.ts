@@ -13,4 +13,4 @@ class DefaultError extends HttpError {
     }
 }
 
-export default DefaultError;
+export default DefaultError

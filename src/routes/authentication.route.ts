@@ -19,7 +19,7 @@ router.post(
     signIn,
     createRequestValidator(signInValidationConfig),
     authenticationController.handleSignIn
-);
+)
 
 router.post(
     signUp,
@@ -27,9 +27,6 @@ router.post(
     authenticationController.handleSignUp
 )
 
-router.post(
-    signOut,
-    authenticationController.handleSignOut
-);
+router.post(signOut, authenticationController.handleSignOut)
 
 export default router

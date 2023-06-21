@@ -26,7 +26,10 @@ class AuthenticationController {
         ) => Promise<IUserModel> | never,
         private assignToken: (id: number) => string,
         private hashPassword: (password: string) => Promise<string>,
-        private comparePassword: (password: string, passwordHash: string) => Promise<void> | never,
+        private comparePassword: (
+            password: string,
+            passwordHash: string
+        ) => Promise<void> | never,
         private cookiesConfig: CookiesConfigType
     ) {}
 
@@ -35,7 +38,7 @@ class AuthenticationController {
         password,
         email,
     }: UserCredentialsType): Promise<IUserModel> => {
-        const passwordHash = await this.hashPassword(password);
+        const passwordHash = await this.hashPassword(password)
         return this.createUser({ name, email, password: passwordHash })
     }
 
@@ -60,9 +63,9 @@ class AuthenticationController {
     }
 
     private setCookieToken = (id: number, res: Response): void => {
-        const token = this.assignToken(id);
-        res.cookie(this.cookiesConfig.name, token, this.cookiesConfig.options);
-    };
+        const token = this.assignToken(id)
+        res.cookie(this.cookiesConfig.name, token, this.cookiesConfig.options)
+    }
 
     public handleSignIn = async (
         req: Request,
@@ -70,13 +73,13 @@ class AuthenticationController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const { email, password } = req.body;
-            const user = await this.findUser(email);
-            await this.comparePassword(password, user.password as string);
-            this.setCookieToken(user.id as number, res);
-            res.send(this.hideUserPassword(user));
+            const { email, password } = req.body
+            const user = await this.findUser(email)
+            await this.comparePassword(password, user.password as string)
+            this.setCookieToken(user.id as number, res)
+            res.send(this.hideUserPassword(user))
         } catch (err) {
-            next(err);
+            next(err)
         }
     }
 
@@ -85,7 +88,10 @@ class AuthenticationController {
         res: Response,
         next: NextFunction
     ): void => {
-        res.clearCookie(this.cookiesConfig.name, this.cookiesConfig.options).sendStatus(HttpStatusCodes.success);
+        res.clearCookie(
+            this.cookiesConfig.name,
+            this.cookiesConfig.options
+        ).sendStatus(HttpStatusCodes.success)
     }
 }
 
