@@ -94,7 +94,7 @@ class AuthenticationController {
                 this.cookiesConfig.options
             ).sendStatus(HttpStatusCodes.success)
         } catch (err) {
-            next(err);
+            next(err)
         }
     }
 }

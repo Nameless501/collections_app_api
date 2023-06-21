@@ -4,11 +4,6 @@
     "description": "",
     "main": "src/app.ts",
     "type": "module",
-    "husky": {
-        "hooks": {
-            "pre-commit": "npm run lint && prettier --write ."
-        }
-    },
     "scripts": {
         "dev": "npx nodemon",
         "build": "rimraf ./build && npx tsc",
