@@ -10,31 +10,35 @@ type ErrorsConfigType = {
 const errorsConfig: ErrorsConfigType = {
     badRequest: {
         statusCode: HttpStatusCodes.badRequest,
-        message: 'Некорректные данные',
+        message: 'Error: The request cannot be fulfilled.',
+    },
+    validation: {
+        statusCode: HttpStatusCodes.badRequest,
+        message: 'Error: Request parameters is not valid.',
     },
     notFound: {
         statusCode: HttpStatusCodes.notFound,
-        message: 'Данные не найдены',
+        message: 'Error: Data not found.',
     },
     forbidden: {
         statusCode: HttpStatusCodes.forbidden,
-        message: 'Ошибка доступа',
+        message: "Error: You don't have permission to access this resource.",
     },
     emailConflict: {
         statusCode: HttpStatusCodes.emailConflict,
-        message: 'Такой email уже зарегистрирован',
+        message: 'Error: This email is already used.',
     },
     dataAccess: {
         statusCode: HttpStatusCodes.dataAccessError,
-        message: 'Необходима авторизация',
+        message: 'Error: Access error - needed authentication.',
     },
     wrongCredentials: {
         statusCode: HttpStatusCodes.dataAccessError,
-        message: 'Неправильные почта или пароль',
+        message: 'Error: Wrong email or password.',
     },
     default: {
         statusCode: HttpStatusCodes.defaultError,
-        message: 'Произошла ошибка',
+        message: 'Error: Something went wrong. Try again Later.',
     },
 } as const
 

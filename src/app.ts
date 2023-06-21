@@ -16,6 +16,8 @@ import corsConfig from './configs/cors.config.js'
 
 import { createRequestLogger, createErrorLogger } from './utils/logger.util.js'
 
+import errorHandler from './middlewares/ErrorHandler.middleware.js'
+
 const { PORT } = process.env
 
 const app: Express = express()
@@ -35,5 +37,7 @@ app.use(createRequestLogger())
 app.use(routesConfig.root, router)
 
 app.use(createErrorLogger())
+
+app.use(errorHandler.watch)
 
 app.listen(PORT)
