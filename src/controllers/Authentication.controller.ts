@@ -88,10 +88,14 @@ class AuthenticationController {
         res: Response,
         next: NextFunction
     ): void => {
-        res.clearCookie(
-            this.cookiesConfig.name,
-            this.cookiesConfig.options
-        ).sendStatus(HttpStatusCodes.success)
+        try {
+            res.clearCookie(
+                this.cookiesConfig.name,
+                this.cookiesConfig.options
+            ).sendStatus(HttpStatusCodes.success)
+        } catch (err) {
+            next(err);
+        }
     }
 }
 
