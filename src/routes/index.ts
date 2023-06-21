@@ -1,11 +1,11 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+
+import authenticationRouter from './authentication.route.js'
 
 import routesConfig from '../configs/routes.config.js';
 
 const router: Router = Router();
 
-router.all(routesConfig.root, (req: Request, res: Response): void => {
-    res.sendStatus(200);
-})
+router.use(routesConfig.authentication.root, authenticationRouter);
 
 export default router;

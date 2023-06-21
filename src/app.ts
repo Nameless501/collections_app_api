@@ -14,7 +14,7 @@ import routesConfig from './configs/routes.config.js';
 
 import corsConfig from './configs/cors.config.js'
 
-import { createRequestLogger, createErrorLogger } from './utils/logger.utils.js';
+import { createRequestLogger, createErrorLogger } from './utils/logger.util.js';
 
 const { PORT } = process.env;
 
