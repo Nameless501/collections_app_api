@@ -15,10 +15,11 @@ const { signIn, signUp, signOut } = routesConfig.authentication
 
 const router: Router = Router()
 
-// router.post(
-//     signIn,
-//     createRequestValidator(signInValidationConfig),
-// );
+router.post(
+    signIn,
+    createRequestValidator(signInValidationConfig),
+    authenticationController.handleSignIn
+);
 
 router.post(
     signUp,
@@ -26,6 +27,9 @@ router.post(
     authenticationController.handleSignUp
 )
 
-// router.post(signOut, );
+router.post(
+    signOut,
+    authenticationController.handleSignOut
+);
 
 export default router

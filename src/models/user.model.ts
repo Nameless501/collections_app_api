@@ -17,6 +17,7 @@ export interface IUserModel
     email: string
     password?: string
     isAdmin: CreationOptional<boolean>
+    id?: number
 }
 
 const UserModel = sequelize.define<IUserModel>('Users', {
