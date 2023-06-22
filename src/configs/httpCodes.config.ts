@@ -10,4 +10,4 @@ enum HttpStatusCodes {
     defaultError = 500,
 }
 
-export default HttpStatusCodes
+export default HttpStatusCodes;

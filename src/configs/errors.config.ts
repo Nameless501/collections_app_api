@@ -1,11 +1,11 @@
-import HttpStatusCodes from './httpCodes.config.js'
+import HttpStatusCodes from './httpCodes.config.js';
 
 type ErrorsConfigType = {
     [key: string]: {
-        statusCode: HttpStatusCodes
-        message: string
-    }
-}
+        statusCode: HttpStatusCodes;
+        message: string;
+    };
+};
 
 const errorsConfig: ErrorsConfigType = {
     badRequest: {
@@ -40,6 +40,6 @@ const errorsConfig: ErrorsConfigType = {
         statusCode: HttpStatusCodes.defaultError,
         message: 'Error: Something went wrong. Try again Later.',
     },
-} as const
+} as const;
 
-export default errorsConfig
+export default errorsConfig;

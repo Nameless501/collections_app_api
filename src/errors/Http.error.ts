@@ -1,7 +1,7 @@
 abstract class HttpError extends Error {
     protected constructor(public statusCode: number, public message: string) {
-        super(message)
+        super(message);
     }
 }
 
-export default HttpError
+export default HttpError;

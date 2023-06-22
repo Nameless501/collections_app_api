@@ -1,47 +1,45 @@
-import express, { Express } from 'express'
+import express, { Express } from 'express';
 
-import helmet from 'helmet'
+import helmet from 'helmet';
 
-import cors from 'cors'
+import cors from 'cors';
 
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
 
-import 'dotenv/config'
+import 'dotenv/config';
 
-import router from './routes/index.js'
+import router from './routes/index.js';
 
-import routesConfig from './configs/routes.config.js'
+import routesConfig from './configs/routes.config.js';
 
-import corsConfig from './configs/cors.config.js'
+import corsConfig from './configs/cors.config.js';
 
-import limiter from './configs/limiter.config.js'
+import limiter from './configs/limiter.config.js';
 
-import { createRequestLogger, createErrorLogger } from './utils/logger.util.js'
+import { createRequestLogger, createErrorLogger } from './utils/logger.util.js';
 
-import errorHandler from './middlewares/ErrorHandler.middleware.js'
+import errorHandler from './middlewares/ErrorHandler.middleware.js';
 
-const { PORT } = process.env
+const app: Express = express();
 
-const app: Express = express()
+app.use(helmet());
 
-app.use(helmet())
+app.use('*', cors(corsConfig));
 
-app.use('*', cors(corsConfig))
+app.use(cookieParser());
 
-app.use(cookieParser())
+app.use(express.json());
 
-app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.urlencoded({ extended: true }))
+app.use(createRequestLogger());
 
-app.use(createRequestLogger())
+app.use(limiter);
 
-app.use(limiter)
+app.use(routesConfig.root, router);
 
-app.use(routesConfig.root, router)
+app.use(createErrorLogger());
 
-app.use(createErrorLogger())
+app.use(errorHandler.watch);
 
-app.use(errorHandler.watch)
-
-app.listen(PORT)
+app.listen(process.env.PORT);

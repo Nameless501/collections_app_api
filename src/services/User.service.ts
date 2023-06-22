@@ -1,42 +1,42 @@
-import UserModel, { IUserModel } from '../models/user.model.js'
+import UserModel, { IUserModel } from '../models/user.model.js';
 
-import { UniqueConstraintError } from 'sequelize'
+import { UniqueConstraintError } from 'sequelize';
 
-import EmailConflictError from '../errors/EmailConflict.error.js'
+import EmailConflictError from '../errors/EmailConflict.error.js';
 
-import WrongCredentialsError from '../errors/WrongCredentials.error.js'
+import WrongCredentialsError from '../errors/WrongCredentials.error.js';
 
-import DefaultError from '../errors/Default.error.js'
+import DefaultError from '../errors/Default.error.js';
 
 class UserService {
-    private model = UserModel
+    private model = UserModel;
 
     public createUser = async (payload: {
-        name: string
-        email: string
-        password: string
+        name: string;
+        email: string;
+        password: string;
     }): Promise<IUserModel> | never => {
         try {
-            const newUser = await this.model.create(payload)
-            return newUser
+            const newUser = await this.model.create(payload);
+            return newUser;
         } catch (err) {
             const error =
                 err instanceof UniqueConstraintError
                     ? EmailConflictError
-                    : DefaultError
-            throw new error()
+                    : DefaultError;
+            throw new error();
         }
-    }
+    };
 
     public findUser = async (email: string): Promise<IUserModel> | never => {
         const user: IUserModel | null = await this.model.findOne({
             where: { email },
-        })
+        });
         if (!user) {
-            throw new WrongCredentialsError()
+            throw new WrongCredentialsError();
         }
-        return user
-    }
+        return user;
+    };
 }
 
-export default UserService
+export default UserService;

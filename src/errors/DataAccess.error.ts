@@ -1,16 +1,16 @@
-import HttpError from './Http.error.js'
+import HttpError from './Http.error.js';
 
-import errorsConfig from '../configs/errors.config.js'
+import errorsConfig from '../configs/errors.config.js';
 
-const config = errorsConfig.dataAccess
+const config = errorsConfig.dataAccess;
 
 class DataAccessError extends HttpError {
     constructor(
         public statusCode: number = config.statusCode,
         public message: string = config.message
     ) {
-        super(statusCode, message)
+        super(statusCode, message);
     }
 }
 
-export default DataAccessError
+export default DataAccessError;

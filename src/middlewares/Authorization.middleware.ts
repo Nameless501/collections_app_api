@@ -1,38 +1,38 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express';
 
-import DataAccessError from '../errors/DataAccess.error.js'
+import DataAccessError from '../errors/DataAccess.error.js';
 
-import { verifyToken } from '../utils/token.util.js'
+import { verifyToken } from '../utils/token.util.js';
 
 class Authorization {
-    private token: string | undefined
+    private token: string | undefined;
 
     private getToken = (req: Request): void => {
-        this.token = req.cookies.jwt
+        this.token = req.cookies.jwt;
         if (!this.token) {
-            throw new DataAccessError()
+            throw new DataAccessError();
         }
-    }
+    };
 
     private verifyToken = (): void => {
         try {
-            const payload = verifyToken(this.token as string)
+            const payload = verifyToken(this.token as string);
         } catch (err) {
-            throw new DataAccessError()
+            throw new DataAccessError();
         }
-    }
+    };
 
     public authorize = (
         req: Request,
         res: Response,
         next: NextFunction
     ): void => {
-        this.getToken(req)
-        this.verifyToken()
-        next()
-    }
+        this.getToken(req);
+        this.verifyToken();
+        next();
+    };
 }
 
-const authorization = new Authorization()
+const authorization = new Authorization();
 
-export default authorization
+export default authorization;

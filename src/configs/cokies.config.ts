@@ -1,9 +1,9 @@
 export type CookiesConfigType = {
-    name: string
+    name: string;
     options: {
-        [key: string]: string | boolean
-    }
-}
+        [key: string]: string | boolean;
+    };
+};
 
 export const cookiesConfig: CookiesConfigType = {
     name: 'jwt',
@@ -12,8 +12,8 @@ export const cookiesConfig: CookiesConfigType = {
         sameSite: 'none',
         secure: true,
     },
-} as const
+} as const;
 
 export const tokenConfig = {
     expiresIn: '7d',
-} as const
+} as const;

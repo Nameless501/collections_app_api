@@ -4,20 +4,20 @@ import {
     InferAttributes,
     InferCreationAttributes,
     CreationOptional,
-} from 'sequelize'
+} from 'sequelize';
 
-import sequelize from '../services/Sequelize.service.js'
+import sequelize from '../services/Sequelize.service.js';
 
 export interface IUserModel
     extends Model<
         InferAttributes<IUserModel>,
         InferCreationAttributes<IUserModel>
     > {
-    name: string
-    email: string
-    password?: string
-    isAdmin: CreationOptional<boolean>
-    id?: number
+    name: string;
+    email: string;
+    password?: string;
+    isAdmin: CreationOptional<boolean>;
+    id?: number;
 }
 
 const UserModel = sequelize.define<IUserModel>('Users', {
@@ -42,8 +42,8 @@ const UserModel = sequelize.define<IUserModel>('Users', {
         allowNull: false,
         defaultValue: false,
     },
-})
+});
 
-UserModel.sync()
+UserModel.sync();
 
-export default UserModel
+export default UserModel;

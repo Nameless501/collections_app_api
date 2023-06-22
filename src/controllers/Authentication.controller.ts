@@ -1,22 +1,22 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express';
 
-import UserService from '../services/User.service.js'
+import UserService from '../services/User.service.js';
 
-import { IUserModel } from '../models/user.model.js'
+import { IUserModel } from '../models/user.model.js';
 
-import HttpStatusCodes from '../configs/httpCodes.config.js'
+import HttpStatusCodes from '../configs/httpCodes.config.js';
 
-import { assignToken } from '../utils/token.util.js'
+import { assignToken } from '../utils/token.util.js';
 
-import { cookiesConfig, CookiesConfigType } from '../configs/cokies.config.js'
+import { cookiesConfig, CookiesConfigType } from '../configs/cokies.config.js';
 
-import { comparePassword, hashPassword } from '../utils/passwordHash.util.js'
+import { comparePassword, hashPassword } from '../utils/passwordHash.util.js';
 
 type UserCredentialsType = {
-    password: string
-    name: string
-    email: string
-}
+    password: string;
+    name: string;
+    email: string;
+};
 
 class AuthenticationController {
     constructor(
@@ -38,14 +38,14 @@ class AuthenticationController {
         password,
         email,
     }: UserCredentialsType): Promise<IUserModel> => {
-        const passwordHash = await this.hashPassword(password)
-        return this.createUser({ name, email, password: passwordHash })
-    }
+        const passwordHash = await this.hashPassword(password);
+        return this.createUser({ name, email, password: passwordHash });
+    };
 
     private hideUserPassword = (user: IUserModel): IUserModel => {
-        user.password = undefined
-        return user
-    }
+        user.password = undefined;
+        return user;
+    };
 
     public handleSignUp = async (
         req: Request,
@@ -53,19 +53,19 @@ class AuthenticationController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const user = await this.handleUserCreate(req.body)
+            const user = await this.handleUserCreate(req.body);
             res.status(HttpStatusCodes.dataCreated).send(
                 this.hideUserPassword(user)
-            )
+            );
         } catch (err) {
-            next(err)
+            next(err);
         }
-    }
+    };
 
     private setCookieToken = (id: number, res: Response): void => {
-        const token = this.assignToken(id)
-        res.cookie(this.cookiesConfig.name, token, this.cookiesConfig.options)
-    }
+        const token = this.assignToken(id);
+        res.cookie(this.cookiesConfig.name, token, this.cookiesConfig.options);
+    };
 
     public handleSignIn = async (
         req: Request,
@@ -73,15 +73,15 @@ class AuthenticationController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const { email, password } = req.body
-            const user = await this.findUser(email)
-            await this.comparePassword(password, user.password as string)
-            this.setCookieToken(user.id as number, res)
-            res.send(this.hideUserPassword(user))
+            const { email, password } = req.body;
+            const user = await this.findUser(email);
+            await this.comparePassword(password, user.password as string);
+            this.setCookieToken(user.id as number, res);
+            res.send(this.hideUserPassword(user));
         } catch (err) {
-            next(err)
+            next(err);
         }
-    }
+    };
 
     public handleSignOut = (
         req: Request,
@@ -92,14 +92,14 @@ class AuthenticationController {
             res.clearCookie(
                 this.cookiesConfig.name,
                 this.cookiesConfig.options
-            ).sendStatus(HttpStatusCodes.success)
+            ).sendStatus(HttpStatusCodes.success);
         } catch (err) {
-            next(err)
+            next(err);
         }
-    }
+    };
 }
 
-const user = new UserService()
+const user = new UserService();
 
 const authenticationController = new AuthenticationController(
     user.findUser,
@@ -108,6 +108,6 @@ const authenticationController = new AuthenticationController(
     hashPassword,
     comparePassword,
     cookiesConfig
-)
+);
 
-export default authenticationController
+export default authenticationController;
