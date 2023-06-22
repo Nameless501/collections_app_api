@@ -14,6 +14,8 @@ import routesConfig from './configs/routes.config.js'
 
 import corsConfig from './configs/cors.config.js'
 
+import limiter from './configs/limiter.config.js'
+
 import { createRequestLogger, createErrorLogger } from './utils/logger.util.js'
 
 import errorHandler from './middlewares/ErrorHandler.middleware.js'
@@ -33,6 +35,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(createRequestLogger())
+
+app.use(limiter)
 
 app.use(routesConfig.root, router)
 
