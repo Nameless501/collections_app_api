@@ -2,6 +2,8 @@ import { Router } from 'express'
 
 import authenticationController from '../controllers/Authentication.controller.js'
 
+import authorization from '../middlewares/Authorization.middleware.js'
+
 import createRequestValidator from '../utils/validation.util.js'
 
 import {
@@ -27,6 +29,10 @@ router.post(
     authenticationController.handleSignUp
 )
 
-router.post(signOut, authenticationController.handleSignOut)
+router.post(
+    signOut,
+    authorization.authorize,
+    authenticationController.handleSignOut
+)
 
 export default router
