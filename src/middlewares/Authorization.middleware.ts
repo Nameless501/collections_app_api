@@ -17,7 +17,7 @@ class Authorization {
     private verifyToken = (req: Request): void => {
         try {
             const payload = verifyToken(this.token as string);
-            req.body.UserId = payload.id;
+            req.headers.UserId = payload.id;
         } catch (err) {
             throw new DataAccessError();
         }

@@ -13,6 +13,7 @@ type CollectionCredentialsType = {
     subject: CollectionSubjects;
     description: string;
     image?: string;
+    UserId: number;
 };
 
 class CollectionsController {
@@ -30,8 +31,9 @@ class CollectionsController {
         subject,
         description,
         image,
+        UserId
     }: CollectionCredentialsType): Promise<ICollectionModel> =>
-        this.createCollection({ title, subject, description, image });
+        this.createCollection({ title, subject, description, image, UserId });
 
     public handleNewCollection = async (
         req: Request,
@@ -39,7 +41,8 @@ class CollectionsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collection = await this.handleCollectionCreate(req.body);
+            const params = { ...req.body, UserId: Number(req.headers.UserId) };
+            const collection = await this.handleCollectionCreate(params);
             res.status(HttpStatusCodes.dataCreated).send(collection);
         } catch (err) {
             next(err);
@@ -52,7 +55,7 @@ class CollectionsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collections = await this.findUserCollections(req.body.UserId);
+            const collections = await this.findUserCollections(Number(req.headers.UserId));
             res.send(collections);
         } catch (err) {
             next(err);
