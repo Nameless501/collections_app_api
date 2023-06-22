@@ -5,7 +5,7 @@ import DataAccessError from '../errors/DataAccess.error.js';
 import { verifyToken } from '../utils/token.util.js';
 
 class Authorization {
-    private token: string | undefined;
+    private token?: string;
 
     private getToken = (req: Request): void => {
         this.token = req.cookies.jwt;
@@ -14,9 +14,10 @@ class Authorization {
         }
     };
 
-    private verifyToken = (): void => {
+    private verifyToken = (req: Request): void => {
         try {
             const payload = verifyToken(this.token as string);
+            req.body.UserId = payload.id;
         } catch (err) {
             throw new DataAccessError();
         }
@@ -28,7 +29,7 @@ class Authorization {
         next: NextFunction
     ): void => {
         this.getToken(req);
-        this.verifyToken();
+        this.verifyToken(req);
         next();
     };
 }

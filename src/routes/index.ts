@@ -2,6 +2,8 @@ import { NextFunction, Request, Response, Router } from 'express';
 
 import authenticationRouter from './authentication.route.js';
 
+import collectionsRouter from './collections.route.js';
+
 import routesConfig from '../configs/routes.config.js';
 
 import NotFoundError from '../errors/NotFound.error.js';
@@ -9,6 +11,8 @@ import NotFoundError from '../errors/NotFound.error.js';
 const router: Router = Router();
 
 router.use(routesConfig.authentication.root, authenticationRouter);
+
+router.use(routesConfig.collections.root, collectionsRouter);
 
 router.use((req: Request, res: Response, next: NextFunction) =>
     next(new NotFoundError())

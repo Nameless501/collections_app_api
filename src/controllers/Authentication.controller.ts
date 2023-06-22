@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import UserService from '../services/User.service.js';
+import userService from '../services/User.service.js';
 
 import { IUserModel } from '../models/user.model.js';
 
@@ -99,11 +99,9 @@ class AuthenticationController {
     };
 }
 
-const user = new UserService();
-
 const authenticationController = new AuthenticationController(
-    user.findUser,
-    user.createUser,
+    userService.findUser,
+    userService.createUser,
     assignToken,
     hashPassword,
     comparePassword,

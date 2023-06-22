@@ -1,6 +1,6 @@
-import UserModel, { IUserModel } from '../models/user.model.js';
+import { UniqueConstraintError, ModelCtor } from 'sequelize';
 
-import { UniqueConstraintError } from 'sequelize';
+import UserModel, { IUserModel } from '../models/user.model.js';
 
 import EmailConflictError from '../errors/EmailConflict.error.js';
 
@@ -9,7 +9,7 @@ import WrongCredentialsError from '../errors/WrongCredentials.error.js';
 import DefaultError from '../errors/Default.error.js';
 
 class UserService {
-    private model = UserModel;
+    constructor(private model: ModelCtor<IUserModel>) {}
 
     public createUser = async (payload: {
         name: string;
@@ -17,8 +17,7 @@ class UserService {
         password: string;
     }): Promise<IUserModel> | never => {
         try {
-            const newUser = await this.model.create(payload);
-            return newUser;
+            return await this.model.create(payload);
         } catch (err) {
             const error =
                 err instanceof UniqueConstraintError
@@ -39,4 +38,6 @@ class UserService {
     };
 }
 
-export default UserService;
+const userService = new UserService(UserModel);
+
+export default userService;

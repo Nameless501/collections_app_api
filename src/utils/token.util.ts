@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import 'dotenv/config.js';
 
@@ -10,4 +10,4 @@ export const assignToken = (id: number): string =>
     jwt.sign({ id }, JWT_KEY as string, tokenConfig);
 
 export const verifyToken = (token: string) =>
-    jwt.verify(token, JWT_KEY as string);
+    jwt.verify(token, JWT_KEY as string) as JwtPayload;
