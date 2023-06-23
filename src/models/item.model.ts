@@ -1,27 +1,21 @@
-import {
-    Model,
-    DataTypes,
-    InferAttributes,
-    InferCreationAttributes,
-} from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 import sequelize from '../services/Sequelize.service.js';
+
+import { IItemModel } from '../types/items.types.js';
 
 import CollectionModel from './collection.model.js';
 
 import UserModel from './user.model.js';
 
-export interface IItemModel
-    extends Model<
-        InferAttributes<IItemModel>,
-        InferCreationAttributes<IItemModel>
-    > {
-    title: string;
-}
-
 const ItemModel = sequelize.define<IItemModel>(
     'Items',
     {
+        id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            autoIncrement: true,
+            primaryKey: true,
+        },
         title: {
             type: DataTypes.STRING,
             allowNull: false,

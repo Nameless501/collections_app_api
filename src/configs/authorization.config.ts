@@ -1,9 +1,6 @@
-export type CookiesConfigType = {
-    name: string;
-    options: {
-        [key: string]: string | boolean;
-    };
-};
+import { SignOptions } from 'jsonwebtoken';
+
+import { CookiesConfigType } from '../types/common.types.js';
 
 export const cookiesConfig: CookiesConfigType = {
     name: 'jwt',
@@ -14,6 +11,6 @@ export const cookiesConfig: CookiesConfigType = {
     },
 } as const;
 
-export const tokenConfig = {
+export const tokenConfig: SignOptions = {
     expiresIn: '7d',
 } as const;

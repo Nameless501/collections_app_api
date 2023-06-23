@@ -1,30 +1,17 @@
-import {
-    Model,
-    DataTypes,
-    InferAttributes,
-    InferCreationAttributes,
-    CreationOptional,
-} from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 import sequelize from '../services/Sequelize.service.js';
 
-import CollectionSubjects from '../configs/subjects.config.js';
+import { ICollectionModel } from '../types/collections.type.js';
 
 import UserModel from './user.model.js';
 
-export interface ICollectionModel
-    extends Model<
-        InferAttributes<ICollectionModel>,
-        InferCreationAttributes<ICollectionModel>
-    > {
-    title: string;
-    subject: CollectionSubjects;
-    description: string;
-    image?: CreationOptional<string>;
-    UserId?: number;
-}
-
 const CollectionModel = sequelize.define<ICollectionModel>('Collections', {
+    id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        autoIncrement: true,
+        primaryKey: true,
+    },
     title: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -47,5 +34,7 @@ const CollectionModel = sequelize.define<ICollectionModel>('Collections', {
 UserModel.hasMany(CollectionModel);
 
 CollectionModel.belongsTo(UserModel);
+
+CollectionModel.sync();
 
 export default CollectionModel;

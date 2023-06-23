@@ -1,44 +1,45 @@
 import HttpStatusCodes from './httpCodes.config.js';
 
-type ErrorsConfigType = {
-    [key: string]: {
-        statusCode: HttpStatusCodes;
-        message: string;
-    };
-};
+import HttpMessages from './httpMessages.config.js';
 
-const errorsConfig: ErrorsConfigType = {
+import { ErrorsConfigType } from '../types/common.types.js';
+
+const errorsConfig: ErrorsConfigType<HttpStatusCodes, HttpMessages> = {
     badRequest: {
         statusCode: HttpStatusCodes.badRequest,
-        message: 'Error: The request cannot be fulfilled.',
+        message: HttpMessages.badRequest,
     },
     validation: {
         statusCode: HttpStatusCodes.badRequest,
-        message: 'Error: Request parameters is not valid.',
+        message: HttpMessages.validationError,
     },
     notFound: {
         statusCode: HttpStatusCodes.notFound,
-        message: 'Error: Data not found.',
+        message: HttpMessages.notFound,
     },
     forbidden: {
         statusCode: HttpStatusCodes.forbidden,
-        message: "Error: You don't have permission to access this resource.",
+        message: HttpMessages.forbidden,
     },
     emailConflict: {
         statusCode: HttpStatusCodes.emailConflict,
-        message: 'Error: This email is already used.',
+        message: HttpMessages.emailConflict,
     },
     dataAccess: {
         statusCode: HttpStatusCodes.dataAccessError,
-        message: 'Error: Access error - needed authentication.',
+        message: HttpMessages.dataAccessError,
     },
     wrongCredentials: {
         statusCode: HttpStatusCodes.dataAccessError,
-        message: 'Error: Wrong email or password.',
+        message: HttpMessages.wrongCredentials,
+    },
+    tooManyRequests: {
+        statusCode: HttpStatusCodes.tooManyRequests,
+        message: HttpMessages.tooManyRequests,
     },
     default: {
         statusCode: HttpStatusCodes.defaultError,
-        message: 'Error: Something went wrong. Try again Later.',
+        message: HttpMessages.defaultError,
     },
 } as const;
 

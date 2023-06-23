@@ -12,11 +12,13 @@ import NotFoundError from '../errors/NotFound.error.js';
 
 const router: Router = Router();
 
-router.use(routesConfig.authentication.root, authenticationRouter);
+const { authentication, collections, items } = routesConfig.root;
 
-router.use(routesConfig.collections.root, collectionsRouter);
+router.use(authentication, authenticationRouter);
 
-router.use(routesConfig.items.root, itemsRouter);
+router.use(collections, collectionsRouter);
+
+router.use(items, itemsRouter);
 
 router.use((req: Request, res: Response, next: NextFunction) =>
     next(new NotFoundError())

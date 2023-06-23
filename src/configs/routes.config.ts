@@ -1,7 +1,13 @@
-const routesConfig = {
-    root: '/',
+import { RoutesConfigType } from '../types/common.types.js';
+
+const routesConfig: RoutesConfigType = {
+    root: {
+        main: '/',
+        authentication: '/authentication',
+        collections: '/collections',
+        items: '/collections',
+    },
     authentication: {
-        root: '/authentication',
         signIn: '/sign-in',
         signUp: '/sign-up',
         signOut: '/sign-out',
@@ -12,7 +18,6 @@ const routesConfig = {
         userCollections: '/my',
     },
     items: {
-        root: '/collections',
         newItem: '/:collectionId/new',
     },
 } as const;

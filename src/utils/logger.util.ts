@@ -1,15 +1,13 @@
 import expressWinston from 'express-winston';
 
-import { loggerConfig, LoggerFilenames } from '../configs/logger.config.js';
+import { loggerConfig, LoggerFiles } from '../configs/logger.config.js';
 
 export function createRequestLogger() {
-    return expressWinston.logger(
-        loggerConfig.getOptions(LoggerFilenames.request)
-    );
+    return expressWinston.logger(loggerConfig.getOptions(LoggerFiles.request));
 }
 
 export function createErrorLogger() {
     return expressWinston.errorLogger(
-        loggerConfig.getOptions(LoggerFilenames.error)
+        loggerConfig.getOptions(LoggerFiles.error)
     );
 }

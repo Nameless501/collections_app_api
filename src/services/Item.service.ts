@@ -1,19 +1,18 @@
 import { ModelCtor } from 'sequelize';
 
-import ItemModel, { IItemModel } from '../models/item.model.js';
+import ItemModel from '../models/item.model.js';
+
+import { IItemModel, ItemCredentialsType } from '../types/items.types.js';
 
 class CollectionService {
     constructor(private model: ModelCtor<IItemModel>) {}
 
-    public createItem = (payload: {
-        title: string;
-        CollectionId: number;
-        UserId: number;
-    }): Promise<IItemModel> => this.model.create(payload);
+    public createItem = (payload: ItemCredentialsType): Promise<IItemModel> =>
+        this.model.create(payload);
 
-    private findItems = (param?: {
-        [key: string]: number | string;
-    }): Promise<IItemModel[]> =>
+    private findItems = (
+        param?: Partial<ItemCredentialsType>
+    ): Promise<IItemModel[]> =>
         this.model.findAll(param ? { where: param } : {});
 
     public findCollectionItems = (

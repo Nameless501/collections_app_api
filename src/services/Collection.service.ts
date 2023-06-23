@@ -1,24 +1,22 @@
 import { ModelCtor } from 'sequelize';
 
-import CollectionModel, {
-    ICollectionModel,
-} from '../models/collection.model.js';
+import CollectionModel from '../models/collection.model.js';
 
-import CollectionSubjects from '../configs/subjects.config.js';
+import {
+    ICollectionModel,
+    CollectionCredentialsType,
+} from '../types/collections.type.js';
 
 class CollectionService {
     constructor(private model: ModelCtor<ICollectionModel>) {}
 
-    public createCollection = (payload: {
-        title: string;
-        subject: CollectionSubjects;
-        description: string;
-        image?: string;
-    }): Promise<ICollectionModel> => this.model.create(payload);
+    public createCollection = (
+        payload: CollectionCredentialsType
+    ): Promise<ICollectionModel> => this.model.create(payload);
 
-    private findCollections = (param?: {
-        [key: string]: number | string;
-    }): Promise<ICollectionModel[]> =>
+    private findCollections = (
+        param?: Partial<CollectionCredentialsType>
+    ): Promise<ICollectionModel[]> =>
         this.model.findAll(param ? { where: param } : {});
 
     public findUserCollections = (

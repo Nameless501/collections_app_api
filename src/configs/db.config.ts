@@ -1,9 +1,11 @@
+import { Options } from 'sequelize';
+
 import 'dotenv/config.js';
 
 const { MYSQLHOST, MYSQLUSER, MYSQLDATABASE, MYSQLPASSWORD, MYSQLPORT } =
     process.env;
 
-const dbConfig = {
+const dbConfig: Options = {
     dialect: 'mysql',
     username: MYSQLUSER,
     password: MYSQLPASSWORD,

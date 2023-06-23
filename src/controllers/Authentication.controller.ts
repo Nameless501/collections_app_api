@@ -2,27 +2,27 @@ import { Request, Response, NextFunction } from 'express';
 
 import userService from '../services/User.service.js';
 
-import { IUserModel } from '../models/user.model.js';
+import {
+    IUserModel,
+    SignUpInputType,
+    SignOutputType,
+} from '../types/users.types.js';
+
+import { CookiesConfigType } from '../types/common.types.js';
 
 import HttpStatusCodes from '../configs/httpCodes.config.js';
 
 import { assignToken } from '../utils/token.util.js';
 
-import { cookiesConfig, CookiesConfigType } from '../configs/cokies.config.js';
+import { cookiesConfig } from '../configs/authorization.config.js';
 
 import { comparePassword, hashPassword } from '../utils/passwordHash.util.js';
-
-type UserCredentialsType = {
-    password: string;
-    name: string;
-    email: string;
-};
 
 class AuthenticationController {
     constructor(
         private findUser: (email: string) => Promise<IUserModel> | never,
         private createUser: (
-            payload: UserCredentialsType
+            payload: SignUpInputType
         ) => Promise<IUserModel> | never,
         private assignToken: (id: number) => string,
         private hashPassword: (password: string) => Promise<string>,
@@ -30,26 +30,24 @@ class AuthenticationController {
             password: string,
             passwordHash: string
         ) => Promise<void> | never,
-        private cookiesConfig: CookiesConfigType
+        private readonly cookiesConfig: CookiesConfigType
     ) {}
 
-    private handleUserCreate = async ({
-        name,
-        password,
-        email,
-    }: UserCredentialsType): Promise<IUserModel> => {
-        const passwordHash = await this.hashPassword(password);
-        return this.createUser({ name, email, password: passwordHash });
+    private handleUserCreate = async (
+        payload: SignUpInputType
+    ): Promise<IUserModel> => {
+        const password = await this.hashPassword(payload.password);
+        return this.createUser({ ...payload, password });
     };
 
-    private hideUserPassword = (user: IUserModel): IUserModel => {
+    private hideUserPassword = (user: SignOutputType): SignOutputType => {
         user.password = undefined;
         return user;
     };
 
     public handleSignUp = async (
         req: Request,
-        res: Response<IUserModel>,
+        res: Response<SignOutputType>,
         next: NextFunction
     ): Promise<void> => {
         try {
@@ -69,7 +67,7 @@ class AuthenticationController {
 
     public handleSignIn = async (
         req: Request,
-        res: Response<IUserModel>,
+        res: Response<SignOutputType>,
         next: NextFunction
     ): Promise<void> => {
         try {

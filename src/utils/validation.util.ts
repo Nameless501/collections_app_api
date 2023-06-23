@@ -1,8 +1,10 @@
-import { celebrate, Joi } from 'celebrate';
+import { celebrate } from 'celebrate';
 
-import { ValidationKeysTypes } from '../configs/validation.config.js';
+import Joi, { Schema } from 'joi';
 
-function createRequestValidator(schema: ValidationKeysTypes) {
+import { ValidationConfigTypes } from '../types/common.types.js';
+
+function createRequestValidator(schema: ValidationConfigTypes<Schema>) {
     return celebrate({
         body: Joi.object().keys(schema),
     });

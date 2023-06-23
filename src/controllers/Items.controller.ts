@@ -2,15 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 
 import itemService from '../services/Item.service.js';
 
-import { IItemModel } from '../models/item.model.js';
+import { IItemModel, ItemCredentialsType } from '../types/items.types.js';
 
 import HttpStatusCodes from '../configs/httpCodes.config.js';
-
-type ItemCredentialsType = {
-    title: string;
-    CollectionId: number;
-    UserId: number;
-};
 
 class ItemsController {
     constructor(
@@ -19,12 +13,9 @@ class ItemsController {
         ) => Promise<IItemModel>
     ) {}
 
-    private handleItemCreate = ({
-        title,
-        CollectionId,
-        UserId,
-    }: ItemCredentialsType): Promise<IItemModel> =>
-        this.createItem({ title, CollectionId, UserId });
+    private handleItemCreate = (
+        payload: ItemCredentialsType
+    ): Promise<IItemModel> => this.createItem(payload);
 
     public handleNewItem = async (
         req: Request,
@@ -32,12 +23,12 @@ class ItemsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const params = {
+            const payload = {
                 ...req.body,
                 CollectionId: Number(req.params.collectionId),
                 UserId: Number(req.headers.UserId),
             };
-            const item = await this.handleItemCreate(params);
+            const item = await this.handleItemCreate(payload);
             res.status(HttpStatusCodes.dataCreated).send(item);
         } catch (err) {
             next(err);

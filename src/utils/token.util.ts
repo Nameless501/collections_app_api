@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import 'dotenv/config.js';
 
-import { tokenConfig } from '../configs/cokies.config.js';
+import { tokenConfig } from '../configs/authorization.config.js';
 
 const { JWT_KEY } = process.env;
 

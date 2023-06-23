@@ -7,6 +7,7 @@ enum HttpStatusCodes {
     forbidden = 403,
     notFound = 404,
     emailConflict = 409,
+    tooManyRequests = 429,
     defaultError = 500,
 }
 

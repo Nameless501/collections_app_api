@@ -1,19 +1,16 @@
 import winston from 'winston';
 
-type LoggerOptions = {
-    transports: Array<typeof winston.transports.File>;
-};
+import { LoggerConfigType } from '../types/common.types.js';
 
-export enum LoggerFilenames {
+export enum LoggerFiles {
     request = 'logs/request.log',
     error = 'logs/error.log',
 }
 
-interface ILogger {
-    getOptions: (filename: LoggerFilenames) => LoggerOptions;
-}
-
-export const loggerConfig: ILogger = {
+export const loggerConfig: LoggerConfigType<
+    LoggerFiles,
+    typeof winston.transports.File
+> = {
     getOptions: (filename) => ({
         transports: [
             new winston.transports.File({

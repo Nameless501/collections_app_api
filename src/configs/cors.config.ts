@@ -1,13 +1,6 @@
-type OptionsTypes = {
-    origin: string | string[];
-    methods: string | string[];
-    preflightContinue: boolean;
-    optionsSuccessStatus: number;
-    allowedHeaders: string[];
-    credentials: boolean;
-};
+import { CorsOptions } from 'cors';
 
-const corsConfig: OptionsTypes = {
+const corsConfig: CorsOptions = {
     origin: 'http://localhost:3001',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     preflightContinue: false,

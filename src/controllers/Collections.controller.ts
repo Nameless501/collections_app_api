@@ -2,19 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 
 import collectionService from '../services/Collection.service.js';
 
-import { ICollectionModel } from '../models/collection.model.js';
+import {
+    ICollectionModel,
+    CollectionCredentialsType,
+} from '../types/collections.type.js';
 
 import HttpStatusCodes from '../configs/httpCodes.config.js';
-
-import CollectionSubjects from '../configs/subjects.config.js';
-
-type CollectionCredentialsType = {
-    title: string;
-    subject: CollectionSubjects;
-    description: string;
-    image?: string;
-    UserId: number;
-};
 
 class CollectionsController {
     constructor(
@@ -26,14 +19,9 @@ class CollectionsController {
         ) => Promise<ICollectionModel[]>
     ) {}
 
-    private handleCollectionCreate = ({
-        title,
-        subject,
-        description,
-        image,
-        UserId,
-    }: CollectionCredentialsType): Promise<ICollectionModel> =>
-        this.createCollection({ title, subject, description, image, UserId });
+    private handleCollectionCreate = (
+        payload: CollectionCredentialsType
+    ): Promise<ICollectionModel> => this.createCollection(payload);
 
     public handleNewCollection = async (
         req: Request,

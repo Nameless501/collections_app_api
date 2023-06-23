@@ -1,18 +1,10 @@
-import Joi from 'joi';
+import Joi, { Schema } from 'joi';
 
 import CollectionSubjects from './subjects.config.js';
 
-export type ValidationKeysTypes = {
-    name?: Joi.StringSchema;
-    password?: Joi.StringSchema;
-    email?: Joi.StringSchema;
-    title?: Joi.StringSchema;
-    description?: Joi.StringSchema;
-    image?: Joi.StringSchema;
-    subject?: Joi.StringSchema;
-};
+import { ValidationConfigTypes } from '../types/common.types.js';
 
-const validationOptions: ValidationKeysTypes = {
+const validationOptions: ValidationConfigTypes<Schema> = {
     email: Joi.string().email().required(),
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30).required(),
@@ -22,24 +14,24 @@ const validationOptions: ValidationKeysTypes = {
     subject: Joi.string().valid(...Object.values(CollectionSubjects)),
 };
 
-export const signUpValidationConfig: ValidationKeysTypes = {
+export const signUpValidationConfig: ValidationConfigTypes<Schema> = {
     email: validationOptions.email,
     password: validationOptions.password,
     name: validationOptions.name,
 };
 
-export const signInValidationConfig: ValidationKeysTypes = {
+export const signInValidationConfig: ValidationConfigTypes<Schema> = {
     email: validationOptions.email,
     password: validationOptions.password,
 };
 
-export const newCollectionValidationConfig: ValidationKeysTypes = {
+export const newCollectionValidationConfig: ValidationConfigTypes<Schema> = {
     title: validationOptions.title,
     description: validationOptions.description,
     image: validationOptions.image,
     subject: validationOptions.subject,
 };
 
-export const newItemValidationConfig: ValidationKeysTypes = {
+export const newItemValidationConfig: ValidationConfigTypes<Schema> = {
     title: validationOptions.title,
 };

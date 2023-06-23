@@ -36,7 +36,7 @@ app.use(createRequestLogger());
 
 app.use(limiter);
 
-app.use(routesConfig.root, router);
+app.use(routesConfig.root.main, router);
 
 app.use(createErrorLogger());
 

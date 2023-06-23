@@ -1,6 +1,8 @@
 import { UniqueConstraintError, ModelCtor } from 'sequelize';
 
-import UserModel, { IUserModel } from '../models/user.model.js';
+import UserModel from '../models/user.model.js';
+
+import { IUserModel, SignUpInputType } from '../types/users.types.js';
 
 import EmailConflictError from '../errors/EmailConflict.error.js';
 
@@ -11,11 +13,9 @@ import DefaultError from '../errors/Default.error.js';
 class UserService {
     constructor(private model: ModelCtor<IUserModel>) {}
 
-    public createUser = async (payload: {
-        name: string;
-        email: string;
-        password: string;
-    }): Promise<IUserModel> | never => {
+    public createUser = async (
+        payload: SignUpInputType
+    ): Promise<IUserModel> | never => {
         try {
             return await this.model.create(payload);
         } catch (err) {
