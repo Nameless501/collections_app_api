@@ -31,13 +31,13 @@ class CollectionsController {
         subject,
         description,
         image,
-        UserId
+        UserId,
     }: CollectionCredentialsType): Promise<ICollectionModel> =>
         this.createCollection({ title, subject, description, image, UserId });
 
     public handleNewCollection = async (
         req: Request,
-        res: Response,
+        res: Response<ICollectionModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
@@ -51,11 +51,13 @@ class CollectionsController {
 
     public handleUserCollections = async (
         req: Request,
-        res: Response,
+        res: Response<ICollectionModel[]>,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collections = await this.findUserCollections(Number(req.headers.UserId));
+            const collections = await this.findUserCollections(
+                Number(req.headers.UserId)
+            );
             res.send(collections);
         } catch (err) {
             next(err);

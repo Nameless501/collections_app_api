@@ -11,6 +11,10 @@ const routesConfig = {
         newCollection: '/new',
         userCollections: '/my',
     },
+    items: {
+        root: '/collections',
+        newItem: '/:collectionId/new',
+    },
 } as const;
 
 export default routesConfig;

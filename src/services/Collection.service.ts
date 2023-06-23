@@ -9,7 +9,7 @@ import CollectionSubjects from '../configs/subjects.config.js';
 class CollectionService {
     constructor(private model: ModelCtor<ICollectionModel>) {}
 
-    public createCollection = async (payload: {
+    public createCollection = (payload: {
         title: string;
         subject: CollectionSubjects;
         description: string;

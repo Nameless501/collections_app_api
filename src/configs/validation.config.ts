@@ -39,3 +39,7 @@ export const newCollectionValidationConfig: ValidationKeysTypes = {
     image: validationOptions.image,
     subject: validationOptions.subject,
 };
+
+export const newItemValidationConfig: ValidationKeysTypes = {
+    title: validationOptions.title,
+};

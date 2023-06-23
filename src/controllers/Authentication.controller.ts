@@ -49,7 +49,7 @@ class AuthenticationController {
 
     public handleSignUp = async (
         req: Request,
-        res: Response,
+        res: Response<IUserModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
@@ -69,7 +69,7 @@ class AuthenticationController {
 
     public handleSignIn = async (
         req: Request,
-        res: Response,
+        res: Response<IUserModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
@@ -85,7 +85,7 @@ class AuthenticationController {
 
     public handleSignOut = (
         req: Request,
-        res: Response,
+        res: Response<HttpStatusCodes>,
         next: NextFunction
     ): void => {
         try {
