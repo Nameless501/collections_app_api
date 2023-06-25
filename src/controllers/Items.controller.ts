@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+
+import { TypedRequest } from '../types/common.types.js';
 
 import itemService from '../services/Item.service.js';
 
@@ -18,17 +20,16 @@ class ItemsController {
     ): Promise<IItemModel> => this.createItem(payload);
 
     public handleNewItem = async (
-        req: Request,
+        req: TypedRequest<ItemCredentialsType>,
         res: Response<IItemModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const payload = {
+            const item = await this.handleItemCreate({
                 ...req.body,
                 CollectionId: Number(req.params.collectionId),
-                UserId: Number(req.headers.UserId),
-            };
-            const item = await this.handleItemCreate(payload);
+                UserId: req.UserId as number,
+            });
             res.status(HttpStatusCodes.dataCreated).send(item);
         } catch (err) {
             next(err);

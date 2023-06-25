@@ -6,9 +6,10 @@ import {
     IUserModel,
     SignUpInputType,
     SignOutputType,
+    SignInInputType,
 } from '../types/users.types.js';
 
-import { CookiesConfigType } from '../types/common.types.js';
+import { CookiesConfigType, TypedRequest } from '../types/common.types.js';
 
 import HttpStatusCodes from '../configs/httpCodes.config.js';
 
@@ -46,7 +47,7 @@ class AuthenticationController {
     };
 
     public handleSignUp = async (
-        req: Request,
+        req: TypedRequest<SignUpInputType>,
         res: Response<SignOutputType>,
         next: NextFunction
     ): Promise<void> => {
@@ -66,7 +67,7 @@ class AuthenticationController {
     };
 
     public handleSignIn = async (
-        req: Request,
+        req: TypedRequest<SignInInputType>,
         res: Response<SignOutputType>,
         next: NextFunction
     ): Promise<void> => {

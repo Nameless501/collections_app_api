@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export type ErrorsConfigType<T, U> = {
     [key: string]: {
         statusCode: T;
@@ -25,3 +27,14 @@ export type CookiesConfigType = {
         [key: string]: string | boolean;
     };
 };
+
+export interface UserRequest extends Request {
+    UserId?: number;
+}
+
+export interface TypedRequest<T> extends UserRequest {
+    body: T;
+    user?: {
+        id: number;
+    };
+}

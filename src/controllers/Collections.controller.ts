@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+
+import { TypedRequest, UserRequest } from '../types/common.types.js';
 
 import collectionService from '../services/Collection.service.js';
 
@@ -24,13 +26,15 @@ class CollectionsController {
     ): Promise<ICollectionModel> => this.createCollection(payload);
 
     public handleNewCollection = async (
-        req: Request,
+        req: TypedRequest<CollectionCredentialsType>,
         res: Response<ICollectionModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const params = { ...req.body, UserId: Number(req.headers.UserId) };
-            const collection = await this.handleCollectionCreate(params);
+            const collection = await this.handleCollectionCreate({
+                ...req.body,
+                UserId: req.UserId as number,
+            });
             res.status(HttpStatusCodes.dataCreated).send(collection);
         } catch (err) {
             next(err);
@@ -38,13 +42,13 @@ class CollectionsController {
     };
 
     public handleUserCollections = async (
-        req: Request,
+        req: UserRequest,
         res: Response<ICollectionModel[]>,
         next: NextFunction
     ): Promise<void> => {
         try {
             const collections = await this.findUserCollections(
-                Number(req.headers.UserId)
+                req.UserId as number
             );
             res.send(collections);
         } catch (err) {

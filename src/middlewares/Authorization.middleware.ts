@@ -1,4 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+
+import { UserRequest } from '../types/common.types.js';
 
 import DataAccessError from '../errors/DataAccess.error.js';
 
@@ -7,24 +9,24 @@ import { verifyToken } from '../utils/token.util.js';
 class Authorization {
     private token?: string;
 
-    private getToken = (req: Request): void => {
+    private getToken = (req: UserRequest): void => {
         this.token = req.cookies.jwt;
         if (!this.token) {
             throw new DataAccessError();
         }
     };
 
-    private verifyToken = (req: Request): void => {
+    private verifyToken = (req: UserRequest): void => {
         try {
             const payload = verifyToken(this.token as string);
-            req.headers.UserId = payload.id;
+            req.UserId = payload.id;
         } catch (err) {
             throw new DataAccessError();
         }
     };
 
     public authorize = (
-        req: Request,
+        req: UserRequest,
         res: Response,
         next: NextFunction
     ): void => {
