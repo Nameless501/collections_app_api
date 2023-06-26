@@ -13,8 +13,9 @@ export type RoutesConfigType = {
     };
 };
 
-export type LoggerConfigType<T, U> = {
-    getOptions: (filename: T) => { transports: Array<U> };
+export type LoggerConfigType<T, U, W> = {
+    getExpressWinstonOptions: (filename: T) => { transports: Array<U> };
+    getWinstonOptions: (filename: T) => W;
 };
 
 export type ValidationConfigTypes<T> = {

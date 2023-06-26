@@ -6,6 +6,8 @@ import { ICollectionModel } from '../types/collections.type.js';
 
 import UserModel from './user.model.js';
 
+import { CollectionSubjects } from '../configs/models.config.js';
+
 const CollectionModel = sequelize.define<ICollectionModel>('Collections', {
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -17,11 +19,11 @@ const CollectionModel = sequelize.define<ICollectionModel>('Collections', {
         allowNull: false,
     },
     subject: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(...Object.values(CollectionSubjects)),
         allowNull: false,
     },
     description: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
     },
     image: {

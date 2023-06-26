@@ -1,4 +1,4 @@
-enum CollectionSubjects {
+export enum CollectionSubjects {
     books = 'books',
     coins = 'coins',
     postcards = 'postcards',
@@ -28,4 +28,9 @@ enum CollectionSubjects {
     other = 'other',
 }
 
-export default CollectionSubjects;
+export enum FieldTypes {
+    integer = 'integer',
+    string = 'string',
+    text = 'text',
+    boolean = 'boolean',
+}

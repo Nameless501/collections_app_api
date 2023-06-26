@@ -5,15 +5,15 @@ import ItemModel from '../models/item.model.js';
 import { IItemModel, ItemCredentialsType } from '../types/items.types.js';
 
 class CollectionService {
-    constructor(private model: ModelCtor<IItemModel>) {}
+    constructor(private itemModel: ModelCtor<IItemModel>) {}
 
     public createItem = (payload: ItemCredentialsType): Promise<IItemModel> =>
-        this.model.create(payload);
+        this.itemModel.create(payload);
 
     private findItems = (
         param?: Partial<ItemCredentialsType>
     ): Promise<IItemModel[]> =>
-        this.model.findAll(param ? { where: param } : {});
+        this.itemModel.findAll(param ? { where: param } : {});
 
     public findCollectionItems = (
         CollectionId: number

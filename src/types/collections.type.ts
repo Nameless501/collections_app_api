@@ -5,7 +5,7 @@ import {
     Model,
 } from 'sequelize';
 
-import CollectionSubjects from '../configs/subjects.config.js';
+import { CollectionSubjects } from '../configs/models.config.js';
 
 export interface ICollectionModel
     extends Model<
