@@ -1,5 +1,9 @@
 import { Request } from 'express';
 
+import { Model, ModelAttributes, ModelOptions } from 'sequelize';
+
+import { migrator } from '../configs/migrations.config.js';
+
 export type ErrorsConfigType<T, U> = {
     [key: string]: {
         statusCode: T;
@@ -30,7 +34,7 @@ export type CookiesConfigType = {
 };
 
 export interface UserRequest extends Request {
-    UserId?: number;
+    userId?: number;
 }
 
 export interface TypedRequest<T> extends UserRequest {
@@ -39,3 +43,11 @@ export interface TypedRequest<T> extends UserRequest {
         id: number;
     };
 }
+
+export type TableConfigType<M extends Model = Model> = {
+    name: string;
+    attributes: ModelAttributes<M>;
+    options?: ModelOptions;
+};
+
+export type Migration = typeof migrator._types.migration;

@@ -32,8 +32,8 @@ class CollectionService {
         );
 
     public findUserCollections = (
-        UserId: number
-    ): Promise<ICollectionModel[]> => this.findCollections({ UserId });
+        userId: number
+    ): Promise<ICollectionModel[]> => this.findCollections({ userId });
 
     public findAllCollections = (): Promise<ICollectionModel[]> =>
         this.findCollections();

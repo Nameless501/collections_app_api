@@ -3,7 +3,10 @@ import {
     InferAttributes,
     InferCreationAttributes,
     Model,
+    DateDataType,
 } from 'sequelize';
+
+import { ItemFieldCredentialsType } from './itemFields.type.js';
 
 export interface IItemModel
     extends Model<
@@ -12,10 +15,15 @@ export interface IItemModel
     > {
     id: CreationOptional<number>;
     title: string;
+    createdAt: CreationOptional<DateDataType>;
+    collectionId: CreationOptional<number>;
+    itemFieldId: CreationOptional<number>;
+    userId: CreationOptional<number>;
 }
 
 export type ItemCredentialsType = {
     title: string;
-    CollectionId: number;
-    UserId: number;
+    collectionId: number;
+    userId: number;
+    itemFields: Array<ItemFieldCredentialsType>;
 };

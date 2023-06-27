@@ -11,7 +11,13 @@ export interface IItemFieldModel
         InferCreationAttributes<IItemFieldModel>
     > {
     id: CreationOptional<number>;
-    ItemId: CreationOptional<number>;
-    FieldId: CreationOptional<number>;
+    itemId: CreationOptional<number>;
+    fieldId: CreationOptional<number>;
     value: string;
 }
+
+export type ItemFieldCredentialsType = {
+    itemId: number;
+    fieldId: number;
+    value: string;
+};

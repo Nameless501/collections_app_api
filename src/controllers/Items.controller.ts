@@ -27,8 +27,7 @@ class ItemsController {
         try {
             const item = await this.handleItemCreate({
                 ...req.body,
-                CollectionId: Number(req.params.collectionId),
-                UserId: req.UserId as number,
+                userId: req.userId as number,
             });
             res.status(HttpStatusCodes.dataCreated).send(item);
         } catch (err) {

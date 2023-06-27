@@ -2,13 +2,20 @@ import { ModelCtor } from 'sequelize';
 
 import ItemModel from '../models/item.model.js';
 
+import ItemFieldModel from '../models/itemField.model.js';
+
 import { IItemModel, ItemCredentialsType } from '../types/items.types.js';
 
+import { IItemFieldModel } from '../types/itemFields.type.js';
+
 class CollectionService {
-    constructor(private itemModel: ModelCtor<IItemModel>) {}
+    constructor(
+        private itemModel: ModelCtor<IItemModel>,
+        private itemFieldModel: ModelCtor<IItemFieldModel>
+    ) {}
 
     public createItem = (payload: ItemCredentialsType): Promise<IItemModel> =>
-        this.itemModel.create(payload);
+        this.itemModel.create(payload, { include: this.itemFieldModel });
 
     private findItems = (
         param?: Partial<ItemCredentialsType>
@@ -16,10 +23,10 @@ class CollectionService {
         this.itemModel.findAll(param ? { where: param } : {});
 
     public findCollectionItems = (
-        CollectionId: number
-    ): Promise<IItemModel[]> => this.findItems({ CollectionId });
+        collectionId: number
+    ): Promise<IItemModel[]> => this.findItems({ collectionId });
 }
 
-const collectionService = new CollectionService(ItemModel);
+const collectionService = new CollectionService(ItemModel, ItemFieldModel);
 
 export default collectionService;

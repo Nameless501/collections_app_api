@@ -33,7 +33,7 @@ class CollectionsController {
         try {
             const collection = await this.handleCollectionCreate({
                 ...req.body,
-                UserId: req.UserId as number,
+                userId: req.userId as number,
             });
             res.status(HttpStatusCodes.dataCreated).send(collection);
         } catch (err) {
@@ -48,7 +48,7 @@ class CollectionsController {
     ): Promise<void> => {
         try {
             const collections = await this.findUserCollections(
-                req.UserId as number
+                req.userId as number
             );
             res.send(collections);
         } catch (err) {

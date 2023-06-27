@@ -5,7 +5,7 @@ const routesConfig: RoutesConfigType = {
         main: '/',
         authentication: '/authentication',
         collections: '/collections',
-        items: '/collections',
+        items: '/items',
     },
     authentication: {
         signIn: '/sign-in',
@@ -18,7 +18,7 @@ const routesConfig: RoutesConfigType = {
         userCollections: '/my',
     },
     items: {
-        newItem: '/:collectionId/new',
+        newItem: '/new',
     },
 } as const;
 

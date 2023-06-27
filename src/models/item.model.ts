@@ -1,40 +1,25 @@
-import { DataTypes } from 'sequelize';
-
 import sequelize from '../services/Sequelize.service.js';
 
 import { IItemModel } from '../types/items.types.js';
 
-import CollectionModel from './collection.model.js';
+import { itemTableConfig } from '../configs/tables.config.js';
+
+import ItemFieldModel from './itemField.model.js';
 
 import UserModel from './user.model.js';
 
 const ItemModel = sequelize.define<IItemModel>(
-    'Items',
-    {
-        id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-    },
-    {
-        timestamps: true,
-        updatedAt: false,
-    }
+    itemTableConfig.name,
+    itemTableConfig.attributes,
+    itemTableConfig.options
 );
 
-CollectionModel.hasMany(ItemModel);
+ItemModel.hasMany(ItemFieldModel);
 
-ItemModel.belongsTo(CollectionModel);
+ItemFieldModel.belongsTo(ItemModel);
 
 UserModel.hasMany(ItemModel);
 
 ItemModel.belongsTo(UserModel);
-
-ItemModel.sync();
 
 export default ItemModel;

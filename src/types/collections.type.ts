@@ -6,6 +6,7 @@ import {
 } from 'sequelize';
 
 import { CollectionSubjects } from '../configs/models.config.js';
+import { FieldCredentialsType } from './fields.type.js';
 
 export interface ICollectionModel
     extends Model<
@@ -17,6 +18,7 @@ export interface ICollectionModel
     subject: CollectionSubjects;
     description: string;
     image: CreationOptional<string>;
+    userId: CreationOptional<number>;
 }
 
 export type CollectionCredentialsType = {
@@ -24,5 +26,6 @@ export type CollectionCredentialsType = {
     subject: CollectionSubjects;
     description: string;
     image?: string;
-    UserId: number;
+    userId: number;
+    fields: Array<FieldCredentialsType>;
 };

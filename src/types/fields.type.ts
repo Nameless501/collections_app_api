@@ -15,4 +15,13 @@ export interface IFieldModel
     id: CreationOptional<number>;
     type: FieldTypes;
     label: string;
+    collectionId: CreationOptional<number>;
+    itemFieldId: CreationOptional<number>;
 }
+
+export type FieldCredentialsType = {
+    type: FieldTypes;
+    label: string;
+    collectionId: CreationOptional<number>;
+    itemFieldId: CreationOptional<number>;
+};

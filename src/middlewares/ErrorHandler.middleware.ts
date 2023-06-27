@@ -37,6 +37,7 @@ class ErrorHandler {
         res: Response,
         next: NextFunction
     ): void => {
+        console.log(err);
         this.checkError(err);
         this.sendResponse(res);
     };

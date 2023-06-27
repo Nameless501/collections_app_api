@@ -20,6 +20,12 @@ import { requestLogger, errorLogger } from './utils/logger.util.js';
 
 import errorHandler from './middlewares/ErrorHandler.middleware.js';
 
+import { migrator } from './configs/migrations.config.js';
+
+(async () => {
+    await migrator.up();
+})();
+
 const app: Express = express();
 
 app.use(helmet());

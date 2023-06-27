@@ -5,6 +5,7 @@ import { CollectionSubjects, FieldTypes } from './models.config.js';
 import { ValidationConfigTypes } from '../types/common.types.js';
 
 const validationOptions: ValidationConfigTypes<Schema> = {
+    id: Joi.number().required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30).required(),
@@ -17,6 +18,21 @@ const validationOptions: ValidationConfigTypes<Schema> = {
             Joi.object({
                 type: Joi.string().valid(...Object.values(FieldTypes)),
                 label: Joi.string(),
+            })
+        )
+        .required(),
+    values: Joi.array()
+        .items(
+            Joi.object({
+                value: Joi.string(),
+                fieldId: Joi.number(),
+            })
+        )
+        .required(),
+    items: Joi.array()
+        .items(
+            Joi.object({
+                title: Joi.string(),
             })
         )
         .required(),
@@ -38,9 +54,11 @@ export const newCollectionValidationConfig: ValidationConfigTypes<Schema> = {
     description: validationOptions.description,
     image: validationOptions.image,
     subject: validationOptions.subject,
-    Fields: validationOptions.fields,
+    fields: validationOptions.fields,
 };
 
 export const newItemValidationConfig: ValidationConfigTypes<Schema> = {
     title: validationOptions.title,
+    collectionId: validationOptions.id,
+    itemFields: validationOptions.values,
 };

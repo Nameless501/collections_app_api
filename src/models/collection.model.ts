@@ -1,42 +1,24 @@
-import { DataTypes } from 'sequelize';
-
 import sequelize from '../services/Sequelize.service.js';
 
 import { ICollectionModel } from '../types/collections.type.js';
 
+import { collectionsTableConfig } from '../configs/tables.config.js';
+
 import UserModel from './user.model.js';
 
-import { CollectionSubjects } from '../configs/models.config.js';
+import FieldModel from './field.model.js';
 
-const CollectionModel = sequelize.define<ICollectionModel>('Collections', {
-    id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        autoIncrement: true,
-        primaryKey: true,
-    },
-    title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    subject: {
-        type: DataTypes.ENUM(...Object.values(CollectionSubjects)),
-        allowNull: false,
-    },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-    image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: null,
-    },
-});
+const CollectionModel = sequelize.define<ICollectionModel>(
+    collectionsTableConfig.name,
+    collectionsTableConfig.attributes
+);
 
 UserModel.hasMany(CollectionModel);
 
 CollectionModel.belongsTo(UserModel);
 
-CollectionModel.sync();
+CollectionModel.hasMany(FieldModel);
+
+FieldModel.belongsTo(CollectionModel);
 
 export default CollectionModel;
