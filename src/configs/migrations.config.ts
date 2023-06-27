@@ -10,7 +10,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 export const migrator: Umzug<Sequelize> = new Umzug({
     migrations: {
-        glob: __dirname + '../migrations/*.{ts, js}',
+        glob: __dirname + '../migrations/*.{ts,js}',
         resolve: (params) => {
             return {
                 name: params.name,
