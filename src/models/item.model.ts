@@ -8,6 +8,8 @@ import UserModel from './user.model.js';
 
 import TagModel from './tag.model.js';
 
+import ItemTagModel from './itemTag.model.js';
+
 import { itemTableConfig } from '../configs/tables.config.js';
 
 const ItemModel = sequelize.define<IItemModel>(
@@ -24,8 +26,8 @@ UserModel.hasMany(ItemModel);
 
 ItemModel.belongsTo(UserModel);
 
-ItemModel.hasMany(TagModel);
+ItemModel.belongsToMany(TagModel, { through: ItemTagModel });
 
-TagModel.belongsTo(ItemModel);
+TagModel.belongsToMany(ItemModel, { through: ItemTagModel });
 
 export default ItemModel;

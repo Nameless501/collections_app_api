@@ -1,4 +1,9 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    InferAttributes,
+    InferCreationAttributes,
+    Model,
+} from 'sequelize';
 
 export interface ITagModel
     extends Model<
@@ -7,7 +12,7 @@ export interface ITagModel
     > {
     id: CreationOptional<number>;
     value: string;
-    itemId: CreationOptional<number>;
+    itemTagId: CreationOptional<number>;
 }
 
 export type TagsCredentialsType = {

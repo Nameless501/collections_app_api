@@ -36,12 +36,11 @@ const validationOptions: ValidationConfigTypes<Schema> = {
             })
         )
         .required(),
-    tags: Joi.array()
-        .items(
-            Joi.object({
-                value: Joi.string(),
-            })
-        )
+    tags: Joi.array().items(
+        Joi.object({
+            value: Joi.string(),
+        })
+    ),
 };
 
 export const signUpValidationConfig: ValidationConfigTypes<Schema> = {

@@ -14,6 +14,9 @@ import { IFieldModel } from '../types/fields.type.js';
 
 import { IItemFieldModel } from '../types/itemFields.type.js';
 
+import { IItemTagModel } from '../types/itemTags.type.js';
+import { ITagModel } from '../types/tags.types.js';
+
 export const usersTableConfig: TableConfigType<IUserModel> = {
     name: 'users',
     attributes: {
@@ -101,6 +104,9 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
         itemFieldId: {
             type: DataTypes.INTEGER.UNSIGNED,
         },
+        itemTagId: {
+            type: DataTypes.INTEGER.UNSIGNED,
+        },
         userId: {
             type: DataTypes.INTEGER.UNSIGNED,
         },
@@ -163,7 +169,7 @@ export const itemsFieldsConfig: TableConfigType<IItemFieldModel> = {
     },
 };
 
-export const tagTableConfig: TableConfigType<IItemFieldModel> = {
+export const tagTableConfig: TableConfigType<ITagModel> = {
     name: 'tags',
     attributes: {
         id: {
@@ -173,6 +179,25 @@ export const tagTableConfig: TableConfigType<IItemFieldModel> = {
             unique: true,
         },
         value: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        itemTagId: {
+            type: DataTypes.INTEGER.UNSIGNED,
+        },
+    },
+};
+
+export const itemTagTableConfig: TableConfigType<IItemTagModel> = {
+    name: 'itemTags',
+    attributes: {
+        id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            autoIncrement: true,
+            primaryKey: true,
+            unique: true,
+        },
+        tagId: {
             type: DataTypes.STRING,
             allowNull: false,
         },

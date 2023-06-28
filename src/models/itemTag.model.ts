@@ -1,0 +1,12 @@
+import sequelize from '../services/Sequelize.service.js';
+
+import { IItemTagModel } from '../types/itemTags.type.js';
+
+import { itemTagTableConfig } from '../configs/tables.config.js';
+
+const ItemTagModel = sequelize.define<IItemTagModel>(
+    itemTagTableConfig.name,
+    itemTagTableConfig.attributes
+);
+
+export default ItemTagModel;

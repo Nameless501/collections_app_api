@@ -20,18 +20,31 @@ class CollectionService {
     ) {}
 
     public createItem = (payload: ItemCredentialsType): Promise<IItemModel> =>
-        this.itemModel.create(payload, { include: [this.itemFieldModel, this.tagModel] });
+        this.itemModel.create(payload, {
+            include: [this.itemFieldModel, this.tagModel],
+        });
 
     private findItems = (
         param?: Partial<ItemCredentialsType>
     ): Promise<IItemModel[]> =>
-        this.itemModel.findAll(param ? { where: param, include: [this.itemFieldModel, this.tagModel] } : { include: [this.itemFieldModel, this.tagModel] });
+        this.itemModel.findAll(
+            param
+                ? {
+                      where: param,
+                      include: [this.itemFieldModel, this.tagModel],
+                  }
+                : { include: [this.itemFieldModel, this.tagModel] }
+        );
 
     public findCollectionItems = (
         collectionId: number
     ): Promise<IItemModel[]> => this.findItems({ collectionId });
 }
 
-const collectionService = new CollectionService(ItemModel, ItemFieldModel, TagModel);
+const collectionService = new CollectionService(
+    ItemModel,
+    ItemFieldModel,
+    TagModel
+);
 
 export default collectionService;
