@@ -8,6 +8,8 @@ import {
 
 import { ItemFieldCredentialsType } from './itemFields.type.js';
 
+import { TagsCredentialsType } from './tags.types.js';
+
 export interface IItemModel
     extends Model<
         InferAttributes<IItemModel>,
@@ -26,4 +28,5 @@ export type ItemCredentialsType = {
     collectionId: number;
     userId: number;
     itemFields: Array<ItemFieldCredentialsType>;
+    tags: Array<TagsCredentialsType>;
 };

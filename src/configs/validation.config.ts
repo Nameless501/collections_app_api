@@ -36,6 +36,12 @@ const validationOptions: ValidationConfigTypes<Schema> = {
             })
         )
         .required(),
+    tags: Joi.array()
+        .items(
+            Joi.object({
+                value: Joi.string(),
+            })
+        )
 };
 
 export const signUpValidationConfig: ValidationConfigTypes<Schema> = {
@@ -61,4 +67,5 @@ export const newItemValidationConfig: ValidationConfigTypes<Schema> = {
     title: validationOptions.title,
     collectionId: validationOptions.id,
     itemFields: validationOptions.values,
+    tags: validationOptions.tags,
 };

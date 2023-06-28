@@ -22,6 +22,7 @@ export const usersTableConfig: TableConfigType<IUserModel> = {
             autoIncrement: true,
             primaryKey: true,
             allowNull: false,
+            unique: true,
         },
         name: {
             type: DataTypes.STRING,
@@ -55,6 +56,7 @@ export const collectionsTableConfig: TableConfigType<ICollectionModel> = {
             autoIncrement: true,
             primaryKey: true,
             allowNull: false,
+            unique: true,
         },
         title: {
             type: DataTypes.STRING,
@@ -87,6 +89,7 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
             autoIncrement: true,
             primaryKey: true,
             allowNull: false,
+            unique: true,
         },
         title: {
             type: DataTypes.STRING,
@@ -119,6 +122,7 @@ export const fieldTableConfig: TableConfigType<IFieldModel> = {
             autoIncrement: true,
             primaryKey: true,
             allowNull: false,
+            unique: true,
         },
         type: {
             type: DataTypes.ENUM(...Object.values(FieldTypes)),
@@ -144,6 +148,7 @@ export const itemsFieldsConfig: TableConfigType<IItemFieldModel> = {
             type: DataTypes.INTEGER.UNSIGNED,
             autoIncrement: true,
             primaryKey: true,
+            unique: true,
         },
         value: {
             type: DataTypes.JSON,
@@ -151,6 +156,25 @@ export const itemsFieldsConfig: TableConfigType<IItemFieldModel> = {
         },
         fieldId: {
             type: DataTypes.INTEGER.UNSIGNED,
+        },
+        itemId: {
+            type: DataTypes.INTEGER.UNSIGNED,
+        },
+    },
+};
+
+export const tagTableConfig: TableConfigType<IItemFieldModel> = {
+    name: 'tags',
+    attributes: {
+        id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            autoIncrement: true,
+            primaryKey: true,
+            unique: true,
+        },
+        value: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         itemId: {
             type: DataTypes.INTEGER.UNSIGNED,

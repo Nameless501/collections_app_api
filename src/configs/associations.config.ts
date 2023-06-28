@@ -64,3 +64,15 @@ export const userItemAssociation: AssociationConfigType = {
         onUpdate: 'cascade',
     },
 };
+
+export const tagItemAssociation: AssociationConfigType = {
+    name: 'tags',
+    options: {
+        fields: ['itemId'],
+        type: 'foreign key',
+        name: 'tag_ref_item',
+        references: { table: 'items', field: 'id' },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    },
+};
