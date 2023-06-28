@@ -1,77 +1,78 @@
-import Joi, { Schema } from 'joi';
+import Joi from 'joi';
 
-import { CollectionSubjects, FieldTypes } from './common.config.js';
+import { CollectionSubjects, FieldTypes } from './enums.config.js';
 
-import { ValidationConfigTypes } from '../types/common.types.js';
+import {
+    ValidationConfigTypes,
+    ValidationOptionsType,
+} from '../types/common.types.js';
 
-const validationOptions: ValidationConfigTypes<Schema> = {
-    id: Joi.number(),
-    email: Joi.string().email(),
-    password: Joi.string(),
-    name: Joi.string().min(2).max(30),
-    title: Joi.string().min(2),
-    description: Joi.string().min(2),
-    image: Joi.string().uri(),
-    subject: Joi.string().valid(...Object.values(CollectionSubjects)),
-    fields: Joi.array().items(
-        Joi.object({
-            type: Joi.string().valid(...Object.values(FieldTypes)),
-            label: Joi.string(),
-        })
-    ),
-    values: Joi.array().items(
-        Joi.object({
-            value: Joi.string(),
-            fieldId: Joi.number(),
-        })
-    ),
-    items: Joi.array().items(
-        Joi.object({
-            title: Joi.string(),
-        })
-    ),
-    tags: Joi.array().items(
-        Joi.object({
-            value: Joi.string(),
-        })
-    ),
-    idArray: Joi.array().items(Joi.number()),
+const validationOptions: ValidationOptionsType = {
+    getOptionsArray: (options) => Joi.array().items(options),
+    getOptionsObject: (options) => Joi.object(options),
+    getStringValidation: () => Joi.string(),
+    getObjectValuesValidations: (obj) =>
+        Joi.string().valid(...Object.values(obj)),
+    getEmailValidation: () => Joi.string().email(),
+    getUrlValidation: () => Joi.string().uri(),
+    getNumberValidation: () => Joi.number(),
 };
 
-export const signUpValidationConfig: ValidationConfigTypes<Schema> = {
-    email: validationOptions.email,
-    password: validationOptions.password,
-    name: validationOptions.name,
-    image: validationOptions.image,
+export const signInValidationConfig: ValidationConfigTypes = {
+    email: validationOptions.getEmailValidation().required(),
+    password: validationOptions.getStringValidation().required(),
 };
 
-export const signInValidationConfig: ValidationConfigTypes<Schema> = {
-    email: validationOptions.email,
-    password: validationOptions.password,
+export const signUpValidationConfig: ValidationConfigTypes = {
+    ...signInValidationConfig,
+    name: validationOptions.getStringValidation().required(),
 };
 
-export const updateUserValidationConfig: ValidationConfigTypes<Schema> = {
-    email: validationOptions.email,
-    password: validationOptions.password,
-    name: validationOptions.name,
-    image: validationOptions.image,
+export const updateUserValidationConfig: ValidationConfigTypes = {
+    email: validationOptions.getEmailValidation(),
+    password: validationOptions.getStringValidation(),
+    name: validationOptions.getStringValidation(),
 };
 
-export const deleteUsersValidationConfig: ValidationConfigTypes<Schema> = {
-    id: validationOptions.idArray,
+export const deleteUsersValidationConfig: ValidationConfigTypes = {
+    id: validationOptions
+        .getOptionsArray(validationOptions.getNumberValidation())
+        .required(),
 };
 
-export const newCollectionValidationConfig: ValidationConfigTypes<Schema> = {
-    title: validationOptions.title,
-    description: validationOptions.description,
-    image: validationOptions.image,
-    subject: validationOptions.subject,
-    fields: validationOptions.fields,
+export const newCollectionValidationConfig: ValidationConfigTypes = {
+    title: validationOptions.getStringValidation().required(),
+    description: validationOptions.getStringValidation().required(),
+    image: validationOptions.getUrlValidation(),
+    subject: validationOptions
+        .getObjectValuesValidations(CollectionSubjects)
+        .required(),
+    fields: validationOptions
+        .getOptionsArray(
+            validationOptions.getOptionsObject({
+                type: validationOptions.getObjectValuesValidations(FieldTypes),
+                label: validationOptions.getStringValidation(),
+            })
+        )
+        .required(),
 };
 
-export const newItemValidationConfig: ValidationConfigTypes<Schema> = {
-    title: validationOptions.title,
-    collectionId: validationOptions.id,
-    itemFields: validationOptions.values,
-    tags: validationOptions.tags,
+export const newItemValidationConfig: ValidationConfigTypes = {
+    title: validationOptions.getStringValidation().required(),
+    collectionId: validationOptions.getNumberValidation().required(),
+    itemFields: validationOptions
+        .getOptionsArray(
+            validationOptions.getOptionsObject({
+                value: validationOptions.getStringValidation(),
+                fieldId: validationOptions.getNumberValidation(),
+            })
+        )
+        .required(),
+    tags: validationOptions
+        .getOptionsArray(
+            validationOptions.getOptionsObject({
+                value: validationOptions.getStringValidation(),
+            })
+        )
+        .required(),
 };

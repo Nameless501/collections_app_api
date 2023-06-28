@@ -2,6 +2,14 @@ import { Request } from 'express';
 
 import { Model, ModelAttributes, ModelOptions } from 'sequelize';
 
+import {
+    ArraySchema,
+    NumberSchema,
+    ObjectSchema,
+    Schema,
+    StringSchema,
+} from 'joi';
+
 import { migrator } from '../configs/migrations.config.js';
 
 export type ErrorsConfigType<T, U> = {
@@ -22,8 +30,20 @@ export type LoggerConfigType<T, U, W> = {
     getWinstonOptions: (filename: T) => W;
 };
 
-export type ValidationConfigTypes<T> = {
-    [key: string]: T;
+export type ValidationOptionsType = {
+    getOptionsArray: (options: Schema) => ArraySchema;
+    getOptionsObject: (options: { [key: string]: Schema }) => ObjectSchema;
+    getStringValidation: () => StringSchema;
+    getObjectValuesValidations: (obj: {
+        [key: string]: string;
+    }) => StringSchema;
+    getEmailValidation: () => StringSchema;
+    getUrlValidation: () => StringSchema;
+    getNumberValidation: () => NumberSchema;
+};
+
+export type ValidationConfigTypes = {
+    [key: string]: Schema;
 };
 
 export type CookiesConfigType = {

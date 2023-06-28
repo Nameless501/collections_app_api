@@ -15,11 +15,11 @@ import { HttpStatusCodes } from '../configs/httpResponce.config.js';
 
 import { assignToken } from '../utils/token.util.js';
 
-import { cookiesConfig } from '../configs/authorization.config.js';
+import { cookiesConfig } from '../configs/common.config.js';
 
 import { comparePassword, hashPassword } from '../utils/passwordHash.util.js';
 
-import { UsersScopes } from '../configs/common.config.js';
+import { UsersScopes } from '../configs/enums.config.js';
 
 class AuthenticationController {
     constructor(

@@ -1,41 +1,27 @@
-export enum CollectionSubjects {
-    books = 'books',
-    coins = 'coins',
-    postcards = 'postcards',
-    actionFigures = 'actionFigures',
-    vinylRecords = 'vinylRecords',
-    sportsJerseys = 'sportsJerseys',
-    autographs = 'autographs',
-    artPrints = 'artPrints',
-    antiqueFurniture = 'antiqueFurniture',
-    vintageClothing = 'vintageClothing',
-    toys = 'toys',
-    musicalInstruments = 'musicalInstruments',
-    movieProps = 'movieProps',
-    wristwatches = 'wristwatches',
-    jewelry = 'jewelry',
-    videoGames = 'videoGames',
-    comicBooks = 'comicBooks',
-    boardGames = 'boardGames',
-    figurines = 'figurines',
-    posters = 'posters',
-    tickets = 'tickets',
-    magazines = 'magazines',
-    musicalRecords = 'musicalRecords',
-    maps = 'maps',
-    tradingPins = 'tradingPins',
-    artifacts = 'artifacts',
-    other = 'other',
-}
+import { SignOptions } from 'jsonwebtoken';
 
-export enum FieldTypes {
-    integer = 'integer',
-    string = 'string',
-    text = 'text',
-    boolean = 'boolean',
-}
+import { CorsOptions } from 'cors';
 
-export enum UsersScopes {
-    withoutPassword = 'withoutPassword',
-    withCollections = 'withCollections',
-}
+import { CookiesConfigType } from '../types/common.types.js';
+
+export const cookiesConfig: CookiesConfigType = {
+    name: 'jwt',
+    options: {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+    },
+} as const;
+
+export const tokenConfig: SignOptions = {
+    expiresIn: '7d',
+} as const;
+
+export const corsConfig: CorsOptions = {
+    origin: 'http://localhost:3001',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+    credentials: true,
+};

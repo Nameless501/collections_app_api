@@ -6,7 +6,7 @@ import { IUserModel, SignUpInputType } from '../types/users.types.js';
 
 import WrongCredentialsError from '../errors/WrongCredentials.error.js';
 
-import { UsersScopes } from '../configs/common.config.js';
+import { UsersScopes } from '../configs/enums.config.js';
 
 class UserService {
     constructor(private userModel: ModelCtor<IUserModel>) {}

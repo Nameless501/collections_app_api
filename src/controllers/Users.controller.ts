@@ -6,7 +6,7 @@ import userService from '../services/User.service.js';
 
 import { IUserModel } from '../types/users.types.js';
 
-import { UsersScopes } from '../configs/common.config.js';
+import { UsersScopes } from '../configs/enums.config.js';
 
 import { HttpStatusCodes } from '../configs/httpResponce.config.js';
 

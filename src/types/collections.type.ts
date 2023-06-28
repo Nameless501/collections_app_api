@@ -5,7 +5,7 @@ import {
     Model,
 } from 'sequelize';
 
-import { CollectionSubjects } from '../configs/common.config.js';
+import { CollectionSubjects } from '../configs/enums.config.js';
 import { FieldCredentialsType } from './fields.type.js';
 
 export interface ICollectionModel

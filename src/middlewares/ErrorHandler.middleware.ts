@@ -33,10 +33,11 @@ class ErrorHandler {
         }
     };
 
-    private setDefaultError = (): void => this.setError(new DefaultError());
+    private setDefaultError = (err: Error): void =>
+        this.setError(err instanceof HttpError ? err : new DefaultError());
 
     private checkError = (err: Error): void => {
-        this.setDefaultError();
+        this.setDefaultError(err);
         this.handleValidationError(err);
         this.handleEmailConflictError(err);
     };

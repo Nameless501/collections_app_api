@@ -12,7 +12,7 @@ import router from './routes/index.js';
 
 import routesConfig from './configs/routes.config.js';
 
-import corsConfig from './configs/cors.config.js';
+import { corsConfig } from './configs/common.config.js';
 
 import limiter from './configs/limiter.config.js';
 

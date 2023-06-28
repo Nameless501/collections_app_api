@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 
-import { CollectionSubjects, FieldTypes } from './common.config.js';
+import { CollectionSubjects, FieldTypes } from './enums.config.js';
 
 import type { TableConfigType } from '../types/common.types.js';
 
