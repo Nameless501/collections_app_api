@@ -2,6 +2,8 @@ import { NextFunction, Request, Response, Router } from 'express';
 
 import authenticationRouter from './authentication.route.js';
 
+import usersRouter from './users.route.js';
+
 import collectionsRouter from './collections.route.js';
 
 import itemsRouter from './items.route.js';
@@ -12,9 +14,11 @@ import NotFoundError from '../errors/NotFound.error.js';
 
 const router: Router = Router();
 
-const { authentication, collections, items } = routesConfig.root;
+const { authentication, collections, items, users } = routesConfig.root;
 
 router.use(authentication, authenticationRouter);
+
+router.use(users, usersRouter);
 
 router.use(collections, collectionsRouter);
 

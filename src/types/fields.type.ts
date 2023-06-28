@@ -5,7 +5,7 @@ import {
     Model,
 } from 'sequelize';
 
-import { FieldTypes } from '../configs/models.config.js';
+import { FieldTypes } from '../configs/common.config.js';
 
 export interface IFieldModel
     extends Model<

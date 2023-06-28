@@ -34,3 +34,8 @@ export enum FieldTypes {
     text = 'text',
     boolean = 'boolean',
 }
+
+export enum UsersScopes {
+    withoutPassword = 'withoutPassword',
+    withCollections = 'withCollections',
+}

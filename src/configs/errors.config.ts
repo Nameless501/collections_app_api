@@ -1,6 +1,4 @@
-import HttpStatusCodes from './httpCodes.config.js';
-
-import HttpMessages from './httpMessages.config.js';
+import { HttpStatusCodes, HttpMessages } from './httpResponce.config.js';
 
 import { ErrorsConfigType } from '../types/common.types.js';
 

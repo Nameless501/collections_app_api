@@ -6,7 +6,7 @@ import itemService from '../services/Item.service.js';
 
 import { IItemModel, ItemCredentialsType } from '../types/items.types.js';
 
-import HttpStatusCodes from '../configs/httpCodes.config.js';
+import { HttpStatusCodes } from '../configs/httpResponce.config.js';
 
 class ItemsController {
     constructor(

@@ -6,7 +6,8 @@ import { usersTableConfig } from '../configs/tables.config.js';
 
 const UserModel = sequelize.define<IUserModel>(
     usersTableConfig.name,
-    usersTableConfig.attributes
+    usersTableConfig.attributes,
+    usersTableConfig.options
 );
 
 export default UserModel;

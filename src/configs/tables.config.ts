@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 
-import { CollectionSubjects, FieldTypes } from './models.config.js';
+import { CollectionSubjects, FieldTypes } from './common.config.js';
 
 import type { TableConfigType } from '../types/common.types.js';
 
@@ -47,6 +47,18 @@ export const usersTableConfig: TableConfigType<IUserModel> = {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
+        },
+    },
+    options: {
+        scopes: {
+            withoutPassword: {
+                attributes: {
+                    exclude: ['password'],
+                },
+            },
+            withCollections: {
+                include: ['collections'],
+            },
         },
     },
 };

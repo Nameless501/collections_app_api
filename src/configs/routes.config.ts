@@ -6,6 +6,7 @@ const routesConfig: RoutesConfigType = {
         authentication: '/authentication',
         collections: '/collections',
         items: '/items',
+        users: '/users',
     },
     authentication: {
         signIn: '/sign-in',
@@ -19,6 +20,11 @@ const routesConfig: RoutesConfigType = {
     },
     items: {
         newItem: '/new',
+    },
+    users: {
+        allUsers: '/',
+        updateUser: '/:id',
+        deleteUsers: '/',
     },
 } as const;
 

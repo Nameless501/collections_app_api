@@ -9,7 +9,7 @@ import {
     CollectionCredentialsType,
 } from '../types/collections.type.js';
 
-import HttpStatusCodes from '../configs/httpCodes.config.js';
+import { HttpStatusCodes } from '../configs/httpResponce.config.js';
 
 class CollectionsController {
     constructor(

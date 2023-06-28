@@ -1,6 +1,8 @@
 import { Response, Request, NextFunction, ErrorRequestHandler } from 'express';
 
-import { isCelebrateError, CelebrateError } from 'celebrate';
+import { UniqueConstraintError } from 'sequelize';
+
+import { isCelebrateError } from 'celebrate';
 
 import HttpError from '../errors/Http.error.js';
 
@@ -8,23 +10,35 @@ import DefaultError from '../errors/Default.error.js';
 
 import ValidationError from '../errors/Validation.error.js';
 
+import EmailConflictError from '../errors/EmailConflict.error.js';
+
 class ErrorHandler {
     private error: HttpError = new DefaultError();
 
-    private handleValidationError = (err: CelebrateError): void => {
-        const errorBody = err.details.get('body');
-        const message = errorBody?.message;
-        this.error = new ValidationError(undefined, message);
+    private setError = (err: HttpError): void => {
+        this.error = err;
     };
 
-    private handleCustomError = (err: Error): void => {
-        this.error = err instanceof HttpError ? err : new DefaultError();
+    private handleValidationError = (err: Error): void => {
+        if (isCelebrateError(err)) {
+            const errorBody = err.details.get('body');
+            const message = errorBody?.message;
+            this.setError(new ValidationError(undefined, message));
+        }
     };
+
+    private handleEmailConflictError = (err: Error): void => {
+        if (err instanceof UniqueConstraintError) {
+            this.setError(new EmailConflictError());
+        }
+    };
+
+    private setDefaultError = (): void => this.setError(new DefaultError());
 
     private checkError = (err: Error): void => {
-        isCelebrateError(err)
-            ? this.handleValidationError(err)
-            : this.handleCustomError(err);
+        this.setDefaultError();
+        this.handleValidationError(err);
+        this.handleEmailConflictError(err);
     };
 
     private sendResponse = (res: Response): void => {

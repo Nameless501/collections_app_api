@@ -1,17 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import userService from '../services/User.service.js';
 
 import {
     IUserModel,
-    SignUpInputType,
-    SignOutputType,
     SignInInputType,
+    SignOutputType,
+    SignUpInputType,
 } from '../types/users.types.js';
 
 import { CookiesConfigType, TypedRequest } from '../types/common.types.js';
 
-import HttpStatusCodes from '../configs/httpCodes.config.js';
+import { HttpStatusCodes } from '../configs/httpResponce.config.js';
 
 import { assignToken } from '../utils/token.util.js';
 
@@ -19,12 +19,15 @@ import { cookiesConfig } from '../configs/authorization.config.js';
 
 import { comparePassword, hashPassword } from '../utils/passwordHash.util.js';
 
+import { UsersScopes } from '../configs/common.config.js';
+
 class AuthenticationController {
     constructor(
-        private findUser: (email: string) => Promise<IUserModel> | never,
-        private createUser: (
-            payload: SignUpInputType
+        private findUserByEmail: (
+            email: string,
+            scopes?: Array<UsersScopes>
         ) => Promise<IUserModel> | never,
+        private createUser: (payload: SignUpInputType) => Promise<IUserModel>,
         private assignToken: (id: number) => string,
         private hashPassword: (password: string) => Promise<string>,
         private comparePassword: (
@@ -73,7 +76,7 @@ class AuthenticationController {
     ): Promise<void> => {
         try {
             const { email, password } = req.body;
-            const user = await this.findUser(email);
+            const user = await this.findUserByEmail(email);
             await this.comparePassword(password, user.password as string);
             this.setCookieToken(user.id as number, res);
             res.send(this.hideUserPassword(user));
@@ -99,7 +102,7 @@ class AuthenticationController {
 }
 
 const authenticationController = new AuthenticationController(
-    userService.findUser,
+    userService.findUserByEmail,
     userService.createUser,
     assignToken,
     hashPassword,

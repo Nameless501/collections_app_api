@@ -1,41 +1,48 @@
-import { UniqueConstraintError, ModelCtor } from 'sequelize';
+import { ModelCtor } from 'sequelize';
 
 import UserModel from '../models/user.model.js';
 
 import { IUserModel, SignUpInputType } from '../types/users.types.js';
 
-import EmailConflictError from '../errors/EmailConflict.error.js';
-
 import WrongCredentialsError from '../errors/WrongCredentials.error.js';
 
-import DefaultError from '../errors/Default.error.js';
+import { UsersScopes } from '../configs/common.config.js';
 
 class UserService {
-    constructor(private model: ModelCtor<IUserModel>) {}
+    constructor(private userModel: ModelCtor<IUserModel>) {}
 
-    public createUser = async (
-        payload: SignUpInputType
+    public createUser = async (payload: SignUpInputType): Promise<IUserModel> =>
+        await this.userModel.create(payload);
+
+    private findUsers = ({
+        where,
+        scopes = [],
+    }: {
+        where?: Partial<IUserModel>;
+        scopes?: Array<UsersScopes>;
+    }): Promise<IUserModel[]> =>
+        this.userModel.scope(scopes).findAll({ where });
+
+    public findUserByEmail = async (
+        email: string,
+        scopes?: Array<UsersScopes>
     ): Promise<IUserModel> | never => {
-        try {
-            return await this.model.create(payload);
-        } catch (err) {
-            const error =
-                err instanceof UniqueConstraintError
-                    ? EmailConflictError
-                    : DefaultError;
-            throw new error();
-        }
-    };
-
-    public findUser = async (email: string): Promise<IUserModel> | never => {
-        const user: IUserModel | null = await this.model.findOne({
-            where: { email },
-        });
-        if (!user) {
+        const result = await this.findUsers({ where: { email }, scopes });
+        if (result.length === 0) {
             throw new WrongCredentialsError();
         }
-        return user;
+        return result[0];
     };
+
+    public findAllUsers = (
+        scopes: Array<UsersScopes> = []
+    ): Promise<IUserModel[]> => this.findUsers({ scopes });
+
+    public updateUser = (payload: Partial<IUserModel>, id: number) =>
+        this.userModel.update(payload, { where: { id } });
+
+    public deleteUsers = (id: Array<number>) =>
+        this.userModel.destroy({ where: { id } });
 }
 
 const userService = new UserService(UserModel);
