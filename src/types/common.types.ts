@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-import { Model, ModelAttributes, ModelOptions } from 'sequelize';
+import { Model, ModelAttributes, ModelOptions, ScopeOptions } from 'sequelize';
 
 import {
     ArraySchema,
@@ -71,3 +71,5 @@ export type TableConfigType<M extends Model = Model> = {
 };
 
 export type Migration = typeof migrator._types.migration;
+
+export type ScopeType<T> = Array<T> | ScopeOptions;

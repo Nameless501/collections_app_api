@@ -193,6 +193,7 @@ export const tagTableConfig: TableConfigType<ITagModel> = {
         value: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true,
         },
         itemTagId: {
             type: DataTypes.INTEGER.UNSIGNED,

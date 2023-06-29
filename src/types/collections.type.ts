@@ -6,7 +6,8 @@ import {
 } from 'sequelize';
 
 import { CollectionSubjects } from '../configs/enums.config.js';
-import { FieldCredentialsType } from './fields.type.js';
+
+import { FieldCredentialsType, IFieldModel } from './fields.type.js';
 
 export interface ICollectionModel
     extends Model<
@@ -19,6 +20,8 @@ export interface ICollectionModel
     description: string;
     image: CreationOptional<string>;
     userId: CreationOptional<number>;
+    createField: (payload: FieldCredentialsType) => Promise<IFieldModel>;
+    getFields: () => Promise<IFieldModel[]>;
 }
 
 export type CollectionCredentialsType = {
@@ -28,4 +31,9 @@ export type CollectionCredentialsType = {
     image?: string;
     userId: number;
     fields: Array<FieldCredentialsType>;
+};
+
+export type NewCollectionResponse = {
+    collection: ICollectionModel;
+    fields: Array<IFieldModel>;
 };

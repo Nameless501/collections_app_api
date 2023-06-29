@@ -36,4 +36,16 @@ export const down: Migration = async ({
 }: MigrationParams<Sequelize>): Promise<void> => {
     await sequelize.getQueryInterface().dropTable(tagTableConfig.name);
     await sequelize.getQueryInterface().dropTable(itemTagTableConfig.name);
+    await sequelize
+        .getQueryInterface()
+        .removeConstraint(
+            tagItemAssociation.name,
+            tagItemAssociation.options.name as string
+        );
+    await sequelize
+        .getQueryInterface()
+        .removeConstraint(
+            itemTagAssociation.name,
+            itemTagAssociation.options.name as string
+        );
 };

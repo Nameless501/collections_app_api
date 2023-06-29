@@ -4,6 +4,8 @@ import UserModel from '../models/user.model.js';
 
 import { IUserModel, SignUpInputType } from '../types/users.types.js';
 
+import { ScopeType } from '../types/common.types.js';
+
 import WrongCredentialsError from '../errors/WrongCredentials.error.js';
 
 import { UsersScopes } from '../configs/enums.config.js';
@@ -19,13 +21,13 @@ class UserService {
         scopes = [],
     }: {
         where?: Partial<IUserModel>;
-        scopes?: Array<UsersScopes>;
+        scopes?: ScopeType<UsersScopes>;
     }): Promise<IUserModel[]> =>
         this.userModel.scope(scopes).findAll({ where });
 
     public findUserByEmail = async (
         email: string,
-        scopes?: Array<UsersScopes>
+        scopes?: ScopeType<UsersScopes>
     ): Promise<IUserModel> | never => {
         const result = await this.findUsers({ where: { email }, scopes });
         if (result.length === 0) {
@@ -35,7 +37,7 @@ class UserService {
     };
 
     public findAllUsers = (
-        scopes: Array<UsersScopes> = []
+        scopes: ScopeType<UsersScopes> = []
     ): Promise<IUserModel[]> => this.findUsers({ scopes });
 
     public updateUser = (payload: Partial<IUserModel>, id: number) =>

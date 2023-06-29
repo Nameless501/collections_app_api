@@ -7,6 +7,10 @@ import {
 
 import { FieldTypes } from '../configs/enums.config.js';
 
+import { IItemModel } from './items.types.js';
+
+import { IItemFieldModel } from './itemFields.type.js';
+
 export interface IFieldModel
     extends Model<
         InferAttributes<IFieldModel>,
@@ -17,6 +21,14 @@ export interface IFieldModel
     label: string;
     collectionId: CreationOptional<number>;
     itemFieldId: CreationOptional<number>;
+    createItemField: ({
+        itemId,
+        value,
+    }: {
+        itemId: number;
+        value: string;
+    }) => IItemFieldModel;
+    getItems: () => Array<IItemModel>;
 }
 
 export type FieldCredentialsType = {
@@ -24,4 +36,9 @@ export type FieldCredentialsType = {
     label: string;
     collectionId: CreationOptional<number>;
     itemFieldId: CreationOptional<number>;
+};
+
+export type FieldWithValueType = {
+    value: IItemFieldModel;
+    field: IFieldModel;
 };

@@ -4,12 +4,21 @@ import { TypedRequest, UserRequest } from '../types/common.types.js';
 
 import collectionService from '../services/Collection.service.js';
 
+import itemService from '../services/Item.service.js';
+
+import fieldService from '../services/Field.service.js';
+
 import {
     ICollectionModel,
     CollectionCredentialsType,
+    NewCollectionResponse,
 } from '../types/collections.type.js';
 
+import { IItemModel } from '../types/items.types.js';
+
 import { HttpStatusCodes } from '../configs/httpResponce.config.js';
+
+import { FieldWithValueType } from '../types/fields.type.js';
 
 class CollectionsController {
     constructor(
@@ -18,16 +27,28 @@ class CollectionsController {
         ) => Promise<ICollectionModel>,
         private findUserCollections: (
             UserId: number
-        ) => Promise<ICollectionModel[]>
+        ) => Promise<ICollectionModel[]>,
+        private findCollectionItems: (
+            collectionId: number
+        ) => Promise<IItemModel[]>,
+        private findItemFields: (
+            item: IItemModel
+        ) => Promise<FieldWithValueType[]>
     ) {}
 
-    private handleCollectionCreate = (
+    private handleCollectionCreate = async (
         payload: CollectionCredentialsType
-    ): Promise<ICollectionModel> => this.createCollection(payload);
+    ): Promise<NewCollectionResponse> => {
+        const collection = await this.createCollection(payload);
+        const fields = await Promise.all(
+            payload.fields.map((field) => collection.createField(field))
+        );
+        return { collection, fields };
+    };
 
     public handleNewCollection = async (
         req: TypedRequest<CollectionCredentialsType>,
-        res: Response<ICollectionModel>,
+        res: Response<NewCollectionResponse>,
         next: NextFunction
     ): Promise<void> => {
         try {
@@ -41,16 +62,37 @@ class CollectionsController {
         }
     };
 
+    private getCollectionItems = async (collection: ICollectionModel) => {
+        const items = await this.findCollectionItems(collection.id);
+        return await Promise.all(
+            items.map(async (item) => {
+                const fields = await this.findItemFields(item);
+                return { item, fields };
+            })
+        );
+    };
+
+    private getCollectionsWithItems = (collections: Array<ICollectionModel>) =>
+        Promise.all(
+            collections.map(async (collection) => {
+                const items = await this.getCollectionItems(collection);
+                return { collection, items };
+            })
+        );
+
     public handleUserCollections = async (
         req: UserRequest,
-        res: Response<ICollectionModel[]>,
+        res: Response,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collections = await this.findUserCollections(
+            const collectionsList = await this.findUserCollections(
                 req.userId as number
             );
-            res.send(collections);
+            const collectionsWithItems = await this.getCollectionsWithItems(
+                collectionsList
+            );
+            res.send(collectionsWithItems);
         } catch (err) {
             next(err);
         }
@@ -59,7 +101,9 @@ class CollectionsController {
 
 const collectionsController = new CollectionsController(
     collectionService.createCollection,
-    collectionService.findUserCollections
+    collectionService.findUserCollections,
+    itemService.findCollectionItems,
+    fieldService.findItemFields
 );
 
 export default collectionsController;

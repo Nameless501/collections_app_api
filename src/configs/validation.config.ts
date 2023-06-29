@@ -60,7 +60,7 @@ export const newCollectionValidationConfig: ValidationConfigTypes = {
 export const newItemValidationConfig: ValidationConfigTypes = {
     title: validationOptions.getStringValidation().required(),
     collectionId: validationOptions.getNumberValidation().required(),
-    itemFields: validationOptions
+    fields: validationOptions
         .getOptionsArray(
             validationOptions.getOptionsObject({
                 value: validationOptions.getStringValidation(),

@@ -65,6 +65,18 @@ export const userItemAssociation: AssociationConfigType = {
     },
 };
 
+export const collectionItemAssociation: AssociationConfigType = {
+    name: 'items',
+    options: {
+        fields: ['collectionId'],
+        type: 'foreign key',
+        name: 'item_ref_collection',
+        references: { table: 'collections', field: 'id' },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    },
+};
+
 export const tagItemAssociation: AssociationConfigType = {
     name: 'itemTags',
     options: {

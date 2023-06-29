@@ -10,6 +10,8 @@ import TagModel from './tag.model.js';
 
 import ItemTagModel from './itemTag.model.js';
 
+import CollectionModel from './collection.model.js';
+
 import { itemTableConfig } from '../configs/tables.config.js';
 
 const ItemModel = sequelize.define<IItemModel>(
@@ -25,6 +27,10 @@ ItemFieldModel.belongsTo(ItemModel);
 UserModel.hasMany(ItemModel);
 
 ItemModel.belongsTo(UserModel);
+
+CollectionModel.hasMany(ItemModel);
+
+ItemModel.belongsTo(CollectionModel);
 
 ItemModel.belongsToMany(TagModel, { through: ItemTagModel });
 
