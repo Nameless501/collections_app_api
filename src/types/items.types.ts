@@ -11,9 +11,10 @@ import {
     ItemFieldCredentialsType,
 } from './itemFields.type.js';
 
-import { TagsCredentialsType } from './tags.types.js';
+import { ITagModel, TagsCredentialsType } from './tags.types.js';
 
 import { IFieldModel } from './fields.type.js';
+import { IItemTagModel } from './itemTags.type.js';
 
 export interface IItemModel
     extends Model<
@@ -30,6 +31,7 @@ export interface IItemModel
         payload: ItemFieldCredentialsType
     ) => Promise<IItemFieldModel>;
     getItemFields: () => Promise<IItemFieldModel[]>;
+    addTag: (tag: ITagModel) => Promise<IItemTagModel>;
 }
 
 export type ItemCredentialsType = {
@@ -46,4 +48,5 @@ export type ItemResponseType = {
         field: IFieldModel;
         value: IItemFieldModel;
     }>;
+    tags: Array<ITagModel>;
 };

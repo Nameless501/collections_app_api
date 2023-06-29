@@ -6,18 +6,22 @@ import itemService from '../services/Item.service.js';
 
 import fieldService from '../services/Field.service.js';
 
+import tagService from '../services/Tag.service.js';
+
 import {
     IItemModel,
     ItemCredentialsType,
     ItemResponseType,
 } from '../types/items.types.js';
 
-import { HttpStatusCodes } from '../configs/httpResponce.config.js';
-
 import {
     ItemFieldCredentialsType,
     ItemFieldResultType,
 } from '../types/itemFields.type.js';
+
+import { ITagModel, TagsCredentialsType } from '../types/tags.types.js';
+
+import { HttpStatusCodes } from '../configs/httpResponce.config.js';
 
 class ItemsController {
     constructor(
@@ -26,19 +30,39 @@ class ItemsController {
         ) => Promise<IItemModel>,
         private setFieldValue: (
             payload: ItemFieldCredentialsType
-        ) => Promise<ItemFieldResultType>
+        ) => Promise<ItemFieldResultType>,
+        private findOrCreateTag: (
+            payload: TagsCredentialsType
+        ) => Promise<ITagModel>
     ) {}
+
+    private handleNewItemFields = (
+        fieldsList: Array<ItemFieldCredentialsType>,
+        itemId: number
+    ): Promise<ItemFieldResultType[]> =>
+        Promise.all(
+            fieldsList.map((field) => this.setFieldValue({ ...field, itemId }))
+        );
+
+    private handleNewItemTags = async (
+        tagsList: Array<TagsCredentialsType>,
+        item: IItemModel
+    ): Promise<ITagModel[]> =>
+        Promise.all(
+            tagsList.map(async (tag) => {
+                const newTag = await this.findOrCreateTag(tag);
+                await item.addTag(newTag);
+                return newTag;
+            })
+        );
 
     private handleItemCreate = async (
         payload: ItemCredentialsType
     ): Promise<ItemResponseType> => {
         const item = await this.createItem(payload);
-        const fields = await Promise.all(
-            payload.fields.map((field) =>
-                this.setFieldValue({ ...field, itemId: item.id })
-            )
-        );
-        return { item, fields };
+        const fields = await this.handleNewItemFields(payload.fields, item.id);
+        const tags = await this.handleNewItemTags(payload.tags, item);
+        return { item, fields, tags };
     };
 
     public handleNewItem = async (
@@ -60,7 +84,8 @@ class ItemsController {
 
 const itemsController = new ItemsController(
     itemService.createItem,
-    fieldService.setFieldValue
+    fieldService.setFieldValue,
+    tagService.findOrCreateTag
 );
 
 export default itemsController;

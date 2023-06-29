@@ -13,8 +13,8 @@ import { UsersScopes } from '../configs/enums.config.js';
 class UserService {
     constructor(private userModel: ModelCtor<IUserModel>) {}
 
-    public createUser = async (payload: SignUpInputType): Promise<IUserModel> =>
-        await this.userModel.create(payload);
+    public createUser = (payload: SignUpInputType): Promise<IUserModel> =>
+        this.userModel.create(payload);
 
     private findUsers = ({
         where,
