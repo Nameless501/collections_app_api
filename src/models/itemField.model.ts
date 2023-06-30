@@ -2,11 +2,11 @@ import sequelize from '../services/Sequelize.service.js';
 
 import { IItemFieldModel } from '../types/itemFields.type.js';
 
-import { itemsFieldsConfig } from '../configs/tables.config.js';
+import { itemsFieldsTableConfig } from '../configs/tables.config.js';
 
 const ItemFieldModel = sequelize.define<IItemFieldModel>(
-    itemsFieldsConfig.name,
-    itemsFieldsConfig.attributes
+    itemsFieldsTableConfig.name,
+    itemsFieldsTableConfig.attributes
 );
 
 export default ItemFieldModel;

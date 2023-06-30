@@ -2,7 +2,14 @@ import { Sequelize } from 'sequelize';
 
 import { MigrationParams } from 'umzug';
 
-import type { Migration } from '../types/common.types.js';
+import { Migration } from '../types/common.types.js';
+
+import {
+    handleMigrationsAddConstraints,
+    handleMigrationsDropTables,
+    handleMigrationsRemoveConstraints,
+    handleMigrationsTablesCreate,
+} from '../utils/migrations.util.js';
 
 import {
     itemTagAssociation,
@@ -17,35 +24,29 @@ import {
 export const up: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await sequelize
-        .getQueryInterface()
-        .createTable(tagTableConfig.name, tagTableConfig.attributes);
-    await sequelize
-        .getQueryInterface()
-        .createTable(itemTagTableConfig.name, itemTagTableConfig.attributes);
-    await sequelize
-        .getQueryInterface()
-        .addConstraint(tagItemAssociation.name, tagItemAssociation.options);
-    await sequelize
-        .getQueryInterface()
-        .addConstraint(itemTagAssociation.name, itemTagAssociation.options);
+    await handleMigrationsTablesCreate(
+        sequelize,
+        tagTableConfig,
+        itemTagTableConfig
+    );
+    await handleMigrationsAddConstraints(
+        sequelize,
+        tagItemAssociation,
+        itemTagAssociation
+    );
 };
 
 export const down: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await sequelize.getQueryInterface().dropTable(tagTableConfig.name);
-    await sequelize.getQueryInterface().dropTable(itemTagTableConfig.name);
-    await sequelize
-        .getQueryInterface()
-        .removeConstraint(
-            tagItemAssociation.name,
-            tagItemAssociation.options.name as string
-        );
-    await sequelize
-        .getQueryInterface()
-        .removeConstraint(
-            itemTagAssociation.name,
-            itemTagAssociation.options.name as string
-        );
+    await handleMigrationsDropTables(
+        sequelize,
+        tagTableConfig,
+        itemTagTableConfig
+    );
+    await handleMigrationsRemoveConstraints(
+        sequelize,
+        tagItemAssociation,
+        itemTagAssociation
+    );
 };

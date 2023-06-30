@@ -1,6 +1,12 @@
 import { Request } from 'express';
 
-import { Model, ModelAttributes, ModelOptions, ScopeOptions } from 'sequelize';
+import {
+    AddConstraintOptions,
+    Model,
+    ModelAttributes,
+    ModelOptions,
+    ScopeOptions,
+} from 'sequelize';
 
 import {
     ArraySchema,
@@ -68,6 +74,16 @@ export type TableConfigType<M extends Model = Model> = {
     name: string;
     attributes: ModelAttributes<M>;
     options?: ModelOptions;
+};
+
+export type AssociationConfigType = {
+    name: string;
+    options: AddConstraintOptions;
+};
+
+export type SeedsConfigType = {
+    table: string;
+    seeds: Array<object>;
 };
 
 export type Migration = typeof migrator._types.migration;

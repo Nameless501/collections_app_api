@@ -1,16 +1,11 @@
-import { AddConstraintOptions } from 'sequelize';
-
-type AssociationConfigType = {
-    name: string;
-    options: AddConstraintOptions;
-};
+import { AssociationConfigType } from '../types/common.types.js';
 
 export const userCollectionAssociation: AssociationConfigType = {
     name: 'collections',
     options: {
         fields: ['userId'],
         type: 'foreign key',
-        name: 'collections_ref_users',
+        name: 'collection_ref_users',
         references: { table: 'users', field: 'id' },
         onDelete: 'cascade',
         onUpdate: 'cascade',
@@ -22,7 +17,7 @@ export const collectionFieldsAssociation: AssociationConfigType = {
     options: {
         fields: ['collectionId'],
         type: 'foreign key',
-        name: 'item_ref_collections',
+        name: 'field_ref_collections',
         references: { table: 'collections', field: 'id' },
         onDelete: 'cascade',
         onUpdate: 'cascade',

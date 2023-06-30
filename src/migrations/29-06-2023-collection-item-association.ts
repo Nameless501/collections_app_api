@@ -2,28 +2,29 @@ import { Sequelize } from 'sequelize';
 
 import { MigrationParams } from 'umzug';
 
-import type { Migration } from '../types/common.types.js';
+import { Migration } from '../types/common.types.js';
+
+import {
+    handleMigrationsAddConstraints,
+    handleMigrationsRemoveConstraints,
+} from '../utils/migrations.util.js';
 
 import { collectionItemAssociation } from '../configs/associations.config.js';
 
 export const up: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await sequelize
-        .getQueryInterface()
-        .addConstraint(
-            collectionItemAssociation.name,
-            collectionItemAssociation.options
-        );
+    await handleMigrationsAddConstraints(
+        sequelize,
+        collectionItemAssociation
+    );
 };
 
 export const down: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await sequelize
-        .getQueryInterface()
-        .removeConstraint(
-            collectionItemAssociation.name,
-            collectionItemAssociation.options.name as string
-        );
+    await handleMigrationsRemoveConstraints(
+        sequelize,
+        collectionItemAssociation
+    );
 };

@@ -5,6 +5,9 @@ import WrongCredentialsError from '../errors/WrongCredentials.error.js';
 export const hashPassword = (password: string): Promise<string> =>
     bcrypt.hash(password, 10);
 
+export const hashPasswordSync = (password: string): string =>
+    bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
 export const comparePassword = async (
     password: string,
     passwordHash: string
