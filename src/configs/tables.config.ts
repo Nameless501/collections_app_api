@@ -159,7 +159,7 @@ export const fieldTableConfig: TableConfigType<IFieldModel> = {
     },
 };
 
-export const itemsFieldsConfig: TableConfigType<IItemFieldModel> = {
+export const itemsFieldsTableConfig: TableConfigType<IItemFieldModel> = {
     name: 'itemFields',
     attributes: {
         id: {
