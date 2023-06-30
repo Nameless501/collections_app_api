@@ -15,6 +15,7 @@ import { IFieldModel } from '../types/fields.type.js';
 import { IItemFieldModel } from '../types/itemFields.type.js';
 
 import { IItemTagModel } from '../types/itemTags.type.js';
+
 import { ITagModel } from '../types/tags.types.js';
 
 export const usersTableConfig: TableConfigType<IUserModel> = {
@@ -113,12 +114,6 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
         collectionId: {
             type: DataTypes.INTEGER.UNSIGNED,
         },
-        itemFieldId: {
-            type: DataTypes.INTEGER.UNSIGNED,
-        },
-        itemTagId: {
-            type: DataTypes.INTEGER.UNSIGNED,
-        },
         userId: {
             type: DataTypes.INTEGER.UNSIGNED,
         },
@@ -151,9 +146,6 @@ export const fieldTableConfig: TableConfigType<IFieldModel> = {
             allowNull: false,
         },
         collectionId: {
-            type: DataTypes.INTEGER.UNSIGNED,
-        },
-        itemFieldId: {
             type: DataTypes.INTEGER.UNSIGNED,
         },
     },
@@ -194,9 +186,6 @@ export const tagTableConfig: TableConfigType<ITagModel> = {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-        },
-        itemTagId: {
-            type: DataTypes.INTEGER.UNSIGNED,
         },
     },
 };

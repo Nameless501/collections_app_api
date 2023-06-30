@@ -20,10 +20,6 @@ const ItemModel = sequelize.define<IItemModel>(
     itemTableConfig.options
 );
 
-ItemModel.hasMany(ItemFieldModel);
-
-ItemFieldModel.belongsTo(ItemModel);
-
 UserModel.hasMany(ItemModel);
 
 ItemModel.belongsTo(UserModel);
@@ -31,6 +27,10 @@ ItemModel.belongsTo(UserModel);
 CollectionModel.hasMany(ItemModel);
 
 ItemModel.belongsTo(CollectionModel);
+
+ItemModel.hasMany(ItemFieldModel);
+
+ItemFieldModel.belongsTo(ItemModel);
 
 ItemModel.belongsToMany(TagModel, { through: ItemTagModel });
 

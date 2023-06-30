@@ -4,7 +4,7 @@ import { TypedRequest } from '../types/common.types.js';
 
 import itemService from '../services/Item.service.js';
 
-import fieldService from '../services/Field.service.js';
+import itemFieldService from '../services/ItemField.service.js';
 
 import tagService from '../services/Tag.service.js';
 
@@ -84,7 +84,7 @@ class ItemsController {
 
 const itemsController = new ItemsController(
     itemService.createItem,
-    fieldService.setFieldValue,
+    itemFieldService.setFieldValue,
     tagService.findOrCreateTag
 );
 

@@ -11,7 +11,9 @@ export const handleMigrationsTablesCreate = async (
     ...configs: TableConfigType[]
 ): Promise<void> => {
     for (const config of configs) {
-        await sequelize.getQueryInterface().createTable(config.name, config.attributes);
+        await sequelize
+            .getQueryInterface()
+            .createTable(config.name, config.attributes);
     }
 };
 
@@ -29,7 +31,9 @@ export const handleMigrationsAddConstraints = async (
     ...configs: AssociationConfigType[]
 ): Promise<void> => {
     for (const config of configs) {
-        await sequelize.getQueryInterface().addConstraint(config.name, config.options);
+        await sequelize
+            .getQueryInterface()
+            .addConstraint(config.name, config.options);
     }
 };
 
@@ -38,10 +42,9 @@ export const handleMigrationsRemoveConstraints = async (
     ...configs: AssociationConfigType[]
 ): Promise<void> => {
     for (const config of configs) {
-        await sequelize.getQueryInterface().removeConstraint(
-            config.name,
-            config.options.name as string
-        );
+        await sequelize
+            .getQueryInterface()
+            .removeConstraint(config.name, config.options.name as string);
     }
 };
 
@@ -50,7 +53,9 @@ export const handleMigrationsInsertSeeds = async (
     ...configs: SeedsConfigType[]
 ): Promise<void> => {
     for (const config of configs) {
-        await sequelize.getQueryInterface().bulkInsert(config.table, config.seeds);
+        await sequelize
+            .getQueryInterface()
+            .bulkInsert(config.table, config.seeds);
     }
 };
 

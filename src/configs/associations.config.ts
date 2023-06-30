@@ -25,24 +25,24 @@ export const collectionFieldsAssociation: AssociationConfigType = {
 };
 
 export const fieldsItemAssociation: AssociationConfigType = {
-    name: 'fields',
+    name: 'itemFields',
     options: {
-        fields: ['itemFieldId'],
+        fields: ['fieldId'],
         type: 'foreign key',
-        name: 'field_ref_itemFields',
-        references: { table: 'itemFields', field: 'id' },
+        name: 'itemField_ref_fields',
+        references: { table: 'fields', field: 'id' },
         onDelete: 'cascade',
         onUpdate: 'cascade',
     },
 };
 
 export const itemFieldAssociation: AssociationConfigType = {
-    name: 'items',
+    name: 'itemFields',
     options: {
-        fields: ['itemFieldId'],
+        fields: ['itemId'],
         type: 'foreign key',
-        name: 'item_ref_itemFields',
-        references: { table: 'itemFields', field: 'id' },
+        name: 'itemField_ref_items',
+        references: { table: 'items', field: 'id' },
         onDelete: 'cascade',
         onUpdate: 'cascade',
     },

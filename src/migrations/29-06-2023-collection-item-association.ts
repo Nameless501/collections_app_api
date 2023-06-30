@@ -14,10 +14,7 @@ import { collectionItemAssociation } from '../configs/associations.config.js';
 export const up: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await handleMigrationsAddConstraints(
-        sequelize,
-        collectionItemAssociation
-    );
+    await handleMigrationsAddConstraints(sequelize, collectionItemAssociation);
 };
 
 export const down: Migration = async ({

@@ -145,25 +145,25 @@ export const itemFieldsSeedsConfig: SeedsConfigType = {
     seeds: [
         {
             id: 1,
-            value: "1970",
+            value: '1970',
             fieldId: 1,
             itemId: 1,
         },
         {
             id: 2,
-            value: "1971",
+            value: '1971',
             fieldId: 2,
             itemId: 2,
         },
         {
             id: 3,
-            value: "1968",
+            value: '1968',
             fieldId: 3,
             itemId: 3,
         },
         {
             id: 4,
-            value: "1970",
+            value: '1970',
             fieldId: 4,
             itemId: 4,
         },

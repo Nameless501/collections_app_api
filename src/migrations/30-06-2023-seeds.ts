@@ -30,7 +30,7 @@ export const up: Migration = async ({
         itemsSeedsConfig,
         itemFieldsSeedsConfig,
         tagsSeedsConfig,
-        itemTagsSeedsConfig,
+        itemTagsSeedsConfig
     );
 };
 
