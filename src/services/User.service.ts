@@ -47,6 +47,4 @@ class UserService {
         this.userModel.destroy({ where: { id } });
 }
 
-const userService = new UserService(UserModel);
-
-export default userService;
+export default new UserService(UserModel);

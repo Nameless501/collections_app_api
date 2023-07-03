@@ -1,4 +1,4 @@
-import { HttpStatusCodes, HttpMessages } from './httpResponce.config.js';
+import { HttpStatusCodes, HttpMessages } from './httpResponse.config.js';
 
 import { ErrorsConfigType } from '../types/common.types.js';
 
@@ -34,6 +34,10 @@ const errorsConfig: ErrorsConfigType<HttpStatusCodes, HttpMessages> = {
     tooManyRequests: {
         statusCode: HttpStatusCodes.tooManyRequests,
         message: HttpMessages.tooManyRequests,
+    },
+    exceedFileSize: {
+        statusCode: HttpStatusCodes.largeRequestEntity,
+        message: HttpMessages.exceedFileSize,
     },
     default: {
         statusCode: HttpStatusCodes.defaultError,

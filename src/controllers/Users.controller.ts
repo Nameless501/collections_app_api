@@ -8,7 +8,7 @@ import { IUserModel } from '../types/users.types.js';
 
 import { UsersScopes } from '../configs/enums.config.js';
 
-import { HttpStatusCodes } from '../configs/httpResponce.config.js';
+import { HttpStatusCodes } from '../configs/httpResponse.config.js';
 
 import { hashPassword } from '../utils/passwordHash.util.js';
 
@@ -72,11 +72,9 @@ class UsersController {
     };
 }
 
-const usersController = new UsersController(
+export default new UsersController(
     userService.findAllUsers,
     userService.updateUser,
     userService.deleteUsers,
     hashPassword
 );
-
-export default usersController;

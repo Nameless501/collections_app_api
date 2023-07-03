@@ -4,6 +4,8 @@ import { UniqueConstraintError } from 'sequelize';
 
 import { isCelebrateError } from 'celebrate';
 
+import { MulterError } from 'multer';
+
 import HttpError from '../errors/Http.error.js';
 
 import DefaultError from '../errors/Default.error.js';
@@ -11,6 +13,8 @@ import DefaultError from '../errors/Default.error.js';
 import ValidationError from '../errors/Validation.error.js';
 
 import EmailConflictError from '../errors/EmailConflict.error.js';
+
+import FileSizeError from '../errors/FileSize.error.js';
 
 class ErrorHandler {
     private error: HttpError = new DefaultError();
@@ -33,13 +37,24 @@ class ErrorHandler {
         }
     };
 
+    private handleFileSizeError = (err: Error) => {
+        if (err instanceof MulterError) {
+            this.setError(new FileSizeError());
+        }
+    };
+
     private setDefaultError = (err: Error): void =>
         this.setError(err instanceof HttpError ? err : new DefaultError());
 
+    private getErrorHandlersList = () => [
+        this.setDefaultError,
+        this.handleValidationError,
+        this.handleEmailConflictError,
+        this.handleFileSizeError,
+    ];
+
     private checkError = (err: Error): void => {
-        this.setDefaultError(err);
-        this.handleValidationError(err);
-        this.handleEmailConflictError(err);
+        this.getErrorHandlersList().forEach((handler) => handler(err));
     };
 
     private sendResponse = (res: Response): void => {
@@ -58,6 +73,4 @@ class ErrorHandler {
     };
 }
 
-const errorHandler = new ErrorHandler();
-
-export default errorHandler;
+export default new ErrorHandler();

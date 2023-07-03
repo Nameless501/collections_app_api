@@ -1,16 +1,16 @@
 import { Umzug, SequelizeStorage } from 'umzug';
 
-import sequelize from '../services/Sequelize.service.js';
+import { fileURLToPath } from 'node:url';
+
+import sequelize from './db.config.js';
 
 import { Sequelize } from 'sequelize';
 
-import * as url from 'url';
-
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-
 export const migrator: Umzug<Sequelize> = new Umzug({
     migrations: {
-        glob: __dirname + '../migrations/*.{ts,js}',
+        glob:
+            fileURLToPath(new URL('.', import.meta.url)) +
+            '../migrations/*.{ts,js}',
         resolve: (params) => {
             return {
                 name: params.name,

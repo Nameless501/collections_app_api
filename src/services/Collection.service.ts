@@ -22,8 +22,13 @@ class CollectionService {
     public findUserCollections = (
         userId: number
     ): Promise<ICollectionModel[]> => this.findCollections({ userId });
+
+    public updateCollection = async (
+        payload: Partial<CollectionCredentialsType>,
+        id: number
+    ): Promise<void> => {
+        await this.collectionModel.update(payload, { where: { id } });
+    };
 }
 
-const collectionService = new CollectionService(CollectionModel);
-
-export default collectionService;
+export default new CollectionService(CollectionModel);

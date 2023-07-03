@@ -10,6 +10,7 @@ import {
 
 import {
     ArraySchema,
+    BinarySchema,
     NumberSchema,
     ObjectSchema,
     Schema,
@@ -46,6 +47,7 @@ export type ValidationOptionsType = {
     getEmailValidation: () => StringSchema;
     getUrlValidation: () => StringSchema;
     getNumberValidation: () => NumberSchema;
+    getFileValidation: () => BinarySchema;
 };
 
 export type ValidationConfigTypes = {

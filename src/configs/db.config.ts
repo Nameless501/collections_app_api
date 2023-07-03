@@ -1,4 +1,4 @@
-import { Options } from 'sequelize';
+import { Options, Sequelize } from 'sequelize';
 
 import 'dotenv/config.js';
 
@@ -22,4 +22,4 @@ const dbConfig: Options = {
     },
 } as const;
 
-export default dbConfig;
+export default new Sequelize(dbConfig);

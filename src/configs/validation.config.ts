@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { CollectionSubjects, FieldTypes } from './enums.config.js';
+import { CollectionSubjects } from './enums.config.js';
 
 import {
     ValidationConfigTypes,
@@ -16,6 +16,7 @@ const validationOptions: ValidationOptionsType = {
     getEmailValidation: () => Joi.string().email(),
     getUrlValidation: () => Joi.string().uri(),
     getNumberValidation: () => Joi.number(),
+    getFileValidation: () => Joi.binary(),
 };
 
 export const signInValidationConfig: ValidationConfigTypes = {
@@ -47,14 +48,7 @@ export const newCollectionValidationConfig: ValidationConfigTypes = {
     subject: validationOptions
         .getObjectValuesValidations(CollectionSubjects)
         .required(),
-    fields: validationOptions
-        .getOptionsArray(
-            validationOptions.getOptionsObject({
-                type: validationOptions.getObjectValuesValidations(FieldTypes),
-                label: validationOptions.getStringValidation(),
-            })
-        )
-        .required(),
+    fields: validationOptions.getStringValidation().required(),
 };
 
 export const newItemValidationConfig: ValidationConfigTypes = {
@@ -76,3 +70,5 @@ export const newItemValidationConfig: ValidationConfigTypes = {
         )
         .required(),
 };
+
+export const uploadImageValidation = validationOptions.getFileValidation();

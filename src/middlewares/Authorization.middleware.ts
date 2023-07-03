@@ -36,6 +36,4 @@ class Authorization {
     };
 }
 
-const authorization = new Authorization();
-
-export default authorization;
+export default new Authorization();

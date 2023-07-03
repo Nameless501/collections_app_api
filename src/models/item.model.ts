@@ -1,4 +1,4 @@
-import sequelize from '../services/Sequelize.service.js';
+import sequelize from '../configs/db.config.js';
 
 import { IItemModel } from '../types/items.types.js';
 

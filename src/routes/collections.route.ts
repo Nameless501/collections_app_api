@@ -10,6 +10,8 @@ import { newCollectionValidationConfig } from '../configs/validation.config.js';
 
 import routesConfig from '../configs/routes.config.js';
 
+import fileParser from '../configs/multer.config.js';
+
 const { newCollection, userCollections } = routesConfig.collections;
 
 const router: Router = Router();
@@ -18,6 +20,7 @@ router.use(authorization.authorize);
 
 router.post(
     newCollection,
+    fileParser,
     createRequestValidator(newCollectionValidationConfig),
     collectionsController.handleNewCollection
 );

@@ -11,7 +11,7 @@ import {
 
 import { CookiesConfigType, TypedRequest } from '../types/common.types.js';
 
-import { HttpStatusCodes } from '../configs/httpResponce.config.js';
+import { HttpStatusCodes } from '../configs/httpResponse.config.js';
 
 import { assignToken } from '../utils/token.util.js';
 
@@ -101,7 +101,7 @@ class AuthenticationController {
     };
 }
 
-const authenticationController = new AuthenticationController(
+export default new AuthenticationController(
     userService.findUserByEmail,
     userService.createUser,
     assignToken,
@@ -109,5 +109,3 @@ const authenticationController = new AuthenticationController(
     comparePassword,
     cookiesConfig
 );
-
-export default authenticationController;

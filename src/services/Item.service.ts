@@ -19,6 +19,4 @@ class CollectionService {
     ): Promise<IItemModel[]> => this.findItems({ collectionId });
 }
 
-const collectionService = new CollectionService(ItemModel);
-
-export default collectionService;
+export default new CollectionService(ItemModel);

@@ -17,6 +17,4 @@ class TagService {
     public findAllTags = (): Promise<ITagModel[]> => this.tagModel.findAll();
 }
 
-const tagService = new TagService(TagModel);
-
-export default tagService;
+export default new TagService(TagModel);

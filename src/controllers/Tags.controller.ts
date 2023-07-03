@@ -21,6 +21,4 @@ class TagsController {
     };
 }
 
-const tagsController = new TagsController(tagService.findAllTags);
-
-export default tagsController;
+export default new TagsController(tagService.findAllTags);

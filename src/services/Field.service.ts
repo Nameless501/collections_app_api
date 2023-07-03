@@ -33,6 +33,4 @@ class FieldService {
     };
 }
 
-const fieldService = new FieldService(FieldModel);
-
-export default fieldService;
+export default new FieldService(FieldModel);

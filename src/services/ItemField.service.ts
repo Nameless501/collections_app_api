@@ -20,6 +20,4 @@ class ItemFieldService {
     };
 }
 
-const itemFieldService = new ItemFieldService(ItemFieldModel);
-
-export default itemFieldService;
+export default new ItemFieldService(ItemFieldModel);

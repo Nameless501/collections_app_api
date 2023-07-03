@@ -34,8 +34,8 @@ export interface IFieldModel
 export type FieldCredentialsType = {
     type: FieldTypes;
     label: string;
-    collectionId: CreationOptional<number>;
-    itemFieldId: CreationOptional<number>;
+    collectionId?: number;
+    itemFieldId?: number;
 };
 
 export type FieldWithValueType = {

@@ -7,6 +7,7 @@ export enum HttpStatusCodes {
     forbidden = 403,
     notFound = 404,
     emailConflict = 409,
+    largeRequestEntity = 413,
     tooManyRequests = 429,
     defaultError = 500,
 }
@@ -20,5 +21,6 @@ export enum HttpMessages {
     emailConflict = 'Error: This email is already used.',
     tooManyRequests = 'Error: Too many requests maid from this IP, please try again after 15 minutes.',
     wrongCredentials = 'Error: Wrong email or password.',
+    exceedFileSize = 'Error: File size exceeds the maximum limit.',
     defaultError = 'Error: Something went wrong. Try again Later.',
 }

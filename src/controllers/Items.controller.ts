@@ -21,7 +21,7 @@ import {
 
 import { ITagModel, TagsCredentialsType } from '../types/tags.types.js';
 
-import { HttpStatusCodes } from '../configs/httpResponce.config.js';
+import { HttpStatusCodes } from '../configs/httpResponse.config.js';
 
 class ItemsController {
     constructor(
@@ -82,10 +82,8 @@ class ItemsController {
     };
 }
 
-const itemsController = new ItemsController(
+export default new ItemsController(
     itemService.createItem,
     itemFieldService.setFieldValue,
     tagService.findOrCreateTag
 );
-
-export default itemsController;
