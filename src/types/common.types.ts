@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 import {
     AddConstraintOptions,
@@ -64,6 +64,10 @@ export type CookiesConfigType = {
 export interface UserRequest extends Request {
     userId?: number;
 }
+
+export type ResponseWithMessage<T = string> = Response<{
+    message: T;
+}>
 
 export interface TypedRequest<T> extends UserRequest {
     body: T;

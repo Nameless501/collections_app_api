@@ -22,5 +22,6 @@ export enum HttpMessages {
     tooManyRequests = 'Error: Too many requests maid from this IP, please try again after 15 minutes.',
     wrongCredentials = 'Error: Wrong email or password.',
     exceedFileSize = 'Error: File size exceeds the maximum limit.',
+    signOut = 'Sign out complete.',
     defaultError = 'Error: Something went wrong. Try again Later.',
 }
