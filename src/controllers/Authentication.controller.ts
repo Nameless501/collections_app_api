@@ -23,8 +23,8 @@ import { UsersScopes } from '../configs/enums.config.js';
 
 class AuthenticationController {
     constructor(
-        private findUserByEmail: (
-            email: string,
+        private findUserByCredentials: (
+            credentials: Partial<IUserModel>,
             scopes?: Array<UsersScopes>
         ) => Promise<IUserModel> | never,
         private createUser: (payload: SignUpInputType) => Promise<IUserModel>,
@@ -76,7 +76,7 @@ class AuthenticationController {
     ): Promise<void> => {
         try {
             const { email, password } = req.body;
-            const user = await this.findUserByEmail(email);
+            const user = await this.findUserByCredentials({ email });
             await this.comparePassword(password, user.password as string);
             this.setCookieToken(user.id as number, res);
             res.send(this.hideUserPassword(user));
@@ -102,7 +102,7 @@ class AuthenticationController {
 }
 
 export default new AuthenticationController(
-    userService.findUserByEmail,
+    userService.findUserByCredentials,
     userService.createUser,
     assignToken,
     hashPassword,

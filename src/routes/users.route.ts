@@ -1,5 +1,7 @@
 import { Router } from 'express';
 
+import authorization from '../middlewares/Authorization.middleware.js';
+
 import createRequestValidator from '../utils/validation.util.js';
 
 import usersController from '../controllers/Users.controller.js';
@@ -11,11 +13,17 @@ import {
     deleteUsersValidationConfig,
 } from '../configs/validation.config.js';
 
-const { allUsers, updateUser, deleteUsers } = routesConfig.users;
+const { allUsers, currentUser, updateUser, deleteUsers } = routesConfig.users;
 
 const router: Router = Router();
 
 router.get(allUsers, usersController.handleGetAllUsers);
+
+router.get(
+    currentUser,
+    authorization.authorize,
+    usersController.handleGetCurrentUser
+);
 
 router.patch(
     updateUser,

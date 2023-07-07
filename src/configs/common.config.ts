@@ -18,7 +18,10 @@ export const tokenConfig: SignOptions = {
 } as const;
 
 export const corsConfig: CorsOptions = {
-    origin: ['http://127.0.0.1:5173', 'https://projectfrontend-production.up.railway.app'],
+    origin: [
+        'http://127.0.0.1:5173',
+        'https://projectfrontend-production.up.railway.app',
+    ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     preflightContinue: false,
     optionsSuccessStatus: 204,

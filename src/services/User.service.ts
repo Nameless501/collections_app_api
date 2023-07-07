@@ -25,11 +25,11 @@ class UserService {
     }): Promise<IUserModel[]> =>
         this.userModel.scope(scopes).findAll({ where });
 
-    public findUserByEmail = async (
-        email: string,
+    public findUserByCredentials = async (
+        credentials: Partial<IUserModel>,
         scopes?: ScopeType<UsersScopes>
     ): Promise<IUserModel> | never => {
-        const result = await this.findUsers({ where: { email }, scopes });
+        const result = await this.findUsers({ where: credentials, scopes });
         if (result.length === 0) {
             throw new WrongCredentialsError();
         }

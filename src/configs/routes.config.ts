@@ -26,6 +26,7 @@ const routesConfig: RoutesConfigType = {
         allUsers: '/',
         updateUser: '/:id',
         deleteUsers: '/',
+        currentUser: '/me',
     },
     tags: {
         allTags: '/',

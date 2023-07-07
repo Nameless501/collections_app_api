@@ -17,6 +17,10 @@ class UsersController {
         private findAllUsers: (
             scopes?: Array<UsersScopes>
         ) => Promise<IUserModel[]>,
+        private findUserByCredentials: (
+            credentials: Partial<IUserModel>,
+            scopes?: Array<UsersScopes>
+        ) => Promise<IUserModel> | never,
         private updateUser: (
             payload: Partial<IUserModel>,
             id: number
@@ -36,6 +40,21 @@ class UsersController {
                 UsersScopes.withCollections,
             ]);
             res.send(users);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    public handleGetCurrentUser = async (
+        req: UserRequest,
+        res: Response<IUserModel>,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const user = await this.findUserByCredentials({ id: req.userId }, [
+                UsersScopes.withoutPassword,
+            ]);
+            res.send(user);
         } catch (err) {
             next(err);
         }
@@ -74,6 +93,7 @@ class UsersController {
 
 export default new UsersController(
     userService.findAllUsers,
+    userService.findUserByCredentials,
     userService.updateUser,
     userService.deleteUsers,
     hashPassword
