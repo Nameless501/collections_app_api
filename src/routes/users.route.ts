@@ -11,9 +11,11 @@ import routesConfig from '../configs/routes.config.js';
 import {
     updateUserValidationConfig,
     deleteUsersValidationConfig,
+    updateRoleValidationConfig,
 } from '../configs/validation.config.js';
 
-const { allUsers, currentUser, updateUser, deleteUsers } = routesConfig.users;
+const { allUsers, currentUser, updateUser, updateRole, deleteUsers } =
+    routesConfig.users;
 
 const router: Router = Router();
 
@@ -23,6 +25,12 @@ router.get(
     currentUser,
     authorization.authorize,
     usersController.handleGetCurrentUser
+);
+
+router.patch(
+    updateRole,
+    createRequestValidator(updateRoleValidationConfig),
+    usersController.handleUsersRoleUpdate
 );
 
 router.patch(

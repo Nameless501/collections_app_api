@@ -17,6 +17,7 @@ const validationOptions: ValidationOptionsType = {
     getUrlValidation: () => Joi.string().uri(),
     getNumberValidation: () => Joi.number(),
     getFileValidation: () => Joi.binary(),
+    getBooleanValidation: () => Joi.boolean(),
 };
 
 export const signInValidationConfig: ValidationConfigTypes = {
@@ -33,6 +34,13 @@ export const updateUserValidationConfig: ValidationConfigTypes = {
     email: validationOptions.getEmailValidation(),
     password: validationOptions.getStringValidation(),
     name: validationOptions.getStringValidation(),
+};
+
+export const updateRoleValidationConfig: ValidationConfigTypes = {
+    id: validationOptions
+        .getOptionsArray(validationOptions.getNumberValidation())
+        .required(),
+    isAdmin: validationOptions.getBooleanValidation().required(),
 };
 
 export const deleteUsersValidationConfig: ValidationConfigTypes = {

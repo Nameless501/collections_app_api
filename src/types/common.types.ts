@@ -11,6 +11,7 @@ import {
 import {
     ArraySchema,
     BinarySchema,
+    BooleanSchema,
     NumberSchema,
     ObjectSchema,
     Schema,
@@ -48,6 +49,7 @@ export type ValidationOptionsType = {
     getUrlValidation: () => StringSchema;
     getNumberValidation: () => NumberSchema;
     getFileValidation: () => BinarySchema;
+    getBooleanValidation: () => BooleanSchema;
 };
 
 export type ValidationConfigTypes = {
@@ -67,7 +69,7 @@ export interface UserRequest extends Request {
 
 export type ResponseWithMessage<T = string> = Response<{
     message: T;
-}>
+}>;
 
 export interface TypedRequest<T> extends UserRequest {
     body: T;

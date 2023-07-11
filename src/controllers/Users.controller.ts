@@ -1,6 +1,10 @@
 import { Response, NextFunction } from 'express';
 
-import { TypedRequest, UserRequest } from '../types/common.types.js';
+import {
+    TypedRequest,
+    UserRequest,
+    ResponseWithMessage,
+} from '../types/common.types.js';
 
 import userService from '../services/User.service.js';
 
@@ -8,7 +12,10 @@ import { IUserModel } from '../types/users.types.js';
 
 import { UsersScopes } from '../configs/enums.config.js';
 
-import { HttpStatusCodes } from '../configs/httpResponse.config.js';
+import {
+    HttpStatusCodes,
+    HttpMessages,
+} from '../configs/httpResponse.config.js';
 
 import { hashPassword } from '../utils/passwordHash.util.js';
 
@@ -23,7 +30,7 @@ class UsersController {
         ) => Promise<IUserModel> | never,
         private updateUser: (
             payload: Partial<IUserModel>,
-            id: number
+            id: number | number[]
         ) => Promise<[affectedCount: number]>,
         private deleteUsers: (id: Array<number>) => Promise<number>,
         private hashPassword: (password: string) => Promise<string>
@@ -62,12 +69,12 @@ class UsersController {
 
     public handleDeleteUsers = async (
         req: TypedRequest<{ id: number[] }>,
-        res: Response<HttpStatusCodes>,
+        res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
             await this.deleteUsers(req.body.id);
-            res.sendStatus(HttpStatusCodes.success);
+            res.send({ message: HttpMessages.deleteUsers });
         } catch (err) {
             next(err);
         }
@@ -75,7 +82,7 @@ class UsersController {
 
     public handleUpdateUser = async (
         req: TypedRequest<Partial<IUserModel>>,
-        res: Response<HttpStatusCodes>,
+        res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
@@ -84,7 +91,25 @@ class UsersController {
                 payload.password = await this.hashPassword(payload.password);
             }
             await this.updateUser(payload, Number(req.params.id));
-            res.sendStatus(HttpStatusCodes.dataUpdated);
+            res.status(HttpStatusCodes.dataUpdated).send({
+                message: HttpMessages.updateUsers,
+            });
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    public handleUsersRoleUpdate = async (
+        req: TypedRequest<{ id: number[]; isAdmin: boolean }>,
+        res: ResponseWithMessage,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const { id, isAdmin } = req.body;
+            await this.updateUser({ isAdmin }, id);
+            res.status(HttpStatusCodes.dataUpdated).send({
+                message: HttpMessages.updateUsers,
+            });
         } catch (err) {
             next(err);
         }

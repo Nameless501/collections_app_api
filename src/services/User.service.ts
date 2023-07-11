@@ -40,7 +40,7 @@ class UserService {
         scopes: ScopeType<UsersScopes> = []
     ): Promise<IUserModel[]> => this.findUsers({ scopes });
 
-    public updateUser = (payload: Partial<IUserModel>, id: number) =>
+    public updateUser = (payload: Partial<IUserModel>, id: number | number[]) =>
         this.userModel.update(payload, { where: { id } });
 
     public deleteUsers = (id: Array<number>) =>

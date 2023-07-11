@@ -9,9 +9,16 @@ import {
     SignUpInputType,
 } from '../types/users.types.js';
 
-import { CookiesConfigType, TypedRequest, ResponseWithMessage } from '../types/common.types.js';
+import {
+    CookiesConfigType,
+    TypedRequest,
+    ResponseWithMessage,
+} from '../types/common.types.js';
 
-import { HttpStatusCodes, HttpMessages } from '../configs/httpResponse.config.js';
+import {
+    HttpStatusCodes,
+    HttpMessages,
+} from '../configs/httpResponse.config.js';
 
 import { assignToken } from '../utils/token.util.js';
 
@@ -91,10 +98,9 @@ class AuthenticationController {
         next: NextFunction
     ): void => {
         try {
-            res.clearCookie(
-                this.cookiesConfig.name,
-                this.cookiesConfig.options
-            ).status(HttpStatusCodes.success).send({ message: HttpMessages.signOut });
+            res.clearCookie(this.cookiesConfig.name, this.cookiesConfig.options)
+                .status(HttpStatusCodes.success)
+                .send({ message: HttpMessages.signOut });
         } catch (err) {
             next(err);
         }
