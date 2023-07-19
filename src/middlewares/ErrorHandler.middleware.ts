@@ -67,7 +67,7 @@ class ErrorHandler {
         res: Response,
         _next: NextFunction
     ): void => {
-        console.log(err)
+        console.log(err);
         this.checkError(err);
         this.sendResponse(res);
     };

@@ -50,7 +50,7 @@ class ItemsController {
         private findOrCreateTag: (
             payload: TagsCredentialsType
         ) => Promise<ITagModel>
-    ) { }
+    ) {}
 
     private handleNewItemFields = (
         fieldsList: Array<FieldValueCredentialsType>,
@@ -97,10 +97,15 @@ class ItemsController {
         }
     };
 
-    private getItemFields = (items: IItemModel[]): Promise<ItemResponseType[]> => Promise.all(items.map(async (item) => {
-        const fields = await this.findItemFieldsValues(item.id);
-        return {item, fields};
-    }));
+    private getItemFields = (
+        items: IItemModel[]
+    ): Promise<ItemResponseType[]> =>
+        Promise.all(
+            items.map(async (item) => {
+                const fields = await this.findItemFieldsValues(item.id);
+                return { item, fields };
+            })
+        );
 
     public handleCollectionItems = async (
         req: UserRequest,
@@ -112,7 +117,7 @@ class ItemsController {
                 Number(req.params.collectionId),
                 [ItemScopes.withCollection]
             );
-            const itemWithFields = await this.getItemFields(items)
+            const itemWithFields = await this.getItemFields(items);
             res.send(itemWithFields);
         } catch (err) {
             next(err);
@@ -125,9 +130,7 @@ class ItemsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const items = await this.findAllItems(
-                [ItemScopes.withCollection, ]
-            );
+            const items = await this.findAllItems([ItemScopes.withCollection]);
             items.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
             const itemWithFields = await this.getItemFields(items.slice(0, 5));
             res.send(itemWithFields);

@@ -21,8 +21,8 @@ import { FieldValueScopes } from '../configs/enums.config.js';
 class FieldService {
     constructor(
         private fieldModel: ModelCtor<IFieldModel>,
-        private fieldValueModel: ModelCtor<IFieldValueModel>,
-    ) { }
+        private fieldValueModel: ModelCtor<IFieldValueModel>
+    ) {}
 
     public createFields = (
         payload: Array<FieldCredentialsType>
@@ -34,8 +34,7 @@ class FieldService {
     private findFieldValues = (
         payload: Partial<IFieldValueModel>,
         scopes?: ScopeType<FieldValueScopes>
-    ) =>
-        this.fieldValueModel.scope(scopes).findAll({ where: payload });
+    ) => this.fieldValueModel.scope(scopes).findAll({ where: payload });
 
     public findItemFields = async (
         item: IItemModel
@@ -51,7 +50,8 @@ class FieldService {
 
     public findItemFieldsValues = (
         itemId: number
-    ): Promise<IFieldValueModel[]> => this.findFieldValues({ itemId }, [FieldValueScopes.withField]);
+    ): Promise<IFieldValueModel[]> =>
+        this.findFieldValues({ itemId }, [FieldValueScopes.withField]);
 
     public findFieldById = async (id: number): Promise<IFieldModel> => {
         const fields = await this.findFields({ id });

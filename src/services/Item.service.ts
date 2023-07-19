@@ -17,7 +17,8 @@ class CollectionService {
     private findItems = (
         param?: Partial<ItemCredentialsType>,
         scopes?: ScopeType<ItemScopes>
-    ): Promise<IItemModel[]> => this.itemModel.scope(scopes).findAll({ where: param });
+    ): Promise<IItemModel[]> =>
+        this.itemModel.scope(scopes).findAll({ where: param });
 
     public findCollectionItems = (
         collectionId: number,
