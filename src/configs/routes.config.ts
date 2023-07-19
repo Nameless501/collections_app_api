@@ -5,6 +5,7 @@ const routesConfig: RoutesConfigType = {
         main: '/',
         authentication: '/authentication',
         collections: '/collections',
+        fields: '/fields',
         items: '/items',
         users: '/users',
         tags: '/tags',
@@ -15,19 +16,31 @@ const routesConfig: RoutesConfigType = {
         signOut: '/sign-out',
     },
     collections: {
-        root: '/collections',
         newCollection: '/new',
         userCollections: '/my',
+        collectionData: '/:collectionId',
+        updateCollection: '/:collectionId',
+        deleteCollection: '/',
+        allCollections: '/',
+        topCollections: '/top',
+        newCollectionFields: '/:collectionId/fields',
+        updateCollectionFields: '/:collectionId/fields',
+    },
+    fields: {
+        updateField: '/:fieldId',
+        deleteField: '/',
     },
     items: {
         newItem: '/new',
     },
     users: {
         allUsers: '/',
-        updateUser: '/:id',
+        updateUser: '/:userId',
         updateRole: '/role',
         deleteUsers: '/',
         currentUser: '/me',
+        userData: '/:userId',
+        userCollections: '/:userId/collections'
     },
     tags: {
         allTags: '/',

@@ -95,6 +95,19 @@ export const collectionsTableConfig: TableConfigType<ICollectionModel> = {
             type: DataTypes.INTEGER.UNSIGNED,
         },
     },
+    options: {
+        scopes: {
+            withUser: {
+                include: ['user'],
+            },
+            withItems: {
+                include: ['items'],
+            },
+            withFields: {
+                include: ['fields'],
+            },
+        },
+    },
 };
 
 export const itemTableConfig: TableConfigType<IItemModel> = {

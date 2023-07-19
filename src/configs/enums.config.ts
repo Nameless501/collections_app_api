@@ -39,3 +39,9 @@ export enum UsersScopes {
     withoutPassword = 'withoutPassword',
     withCollections = 'withCollections',
 }
+
+export enum CollectionScopes {
+    withUser = 'withUser',
+    withItems = 'withItems',
+    withFields = 'withFields',
+}

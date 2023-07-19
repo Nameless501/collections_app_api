@@ -23,7 +23,7 @@ export enum HttpMessages {
     wrongCredentials = 'Error: Wrong email or password.',
     exceedFileSize = 'Error: File size exceeds the maximum limit.',
     signOut = 'Sign out complete.',
-    deleteUsers = 'Users successfully deleted',
-    updateUsers = 'Users data updated',
+    deleteSuccess = 'Data successfully deleted',
+    updateSuccess = 'Data successfully updated',
     defaultError = 'Error: Something went wrong. Try again Later.',
 }

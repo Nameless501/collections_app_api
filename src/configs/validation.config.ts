@@ -52,11 +52,46 @@ export const deleteUsersValidationConfig: ValidationConfigTypes = {
 export const newCollectionValidationConfig: ValidationConfigTypes = {
     title: validationOptions.getStringValidation().required(),
     description: validationOptions.getStringValidation().required(),
-    image: validationOptions.getUrlValidation(),
+    file: validationOptions.getFileValidation(),
     subject: validationOptions
         .getObjectValuesValidations(CollectionSubjects)
         .required(),
-    fields: validationOptions.getStringValidation().required(),
+};
+
+export const updateCollectionValidationConfig: ValidationConfigTypes = {
+    title: validationOptions.getStringValidation(),
+    description: validationOptions.getStringValidation(),
+    file: validationOptions.getFileValidation(),
+    subject: validationOptions
+        .getObjectValuesValidations(CollectionSubjects),
+};
+
+export const newFieldsValidationConfig: ValidationConfigTypes = {
+    fields: validationOptions
+        .getOptionsArray(
+            validationOptions.getOptionsObject({
+                label: validationOptions.getStringValidation(),
+                type: validationOptions.getStringValidation(),
+            })
+        )
+        .required(),
+};
+
+export const updateFieldValidationConfig: ValidationConfigTypes = {
+    label: validationOptions.getStringValidation(),
+    type: validationOptions.getStringValidation(),
+};
+
+export const deleteCollectionValidationConfig: ValidationConfigTypes = {
+    id: validationOptions
+        .getOptionsArray(validationOptions.getNumberValidation())
+        .required(),
+};
+
+export const deleteFieldsValidationConfig: ValidationConfigTypes = {
+    id: validationOptions
+        .getOptionsArray(validationOptions.getNumberValidation())
+        .required(),
 };
 
 export const newItemValidationConfig: ValidationConfigTypes = {

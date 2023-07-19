@@ -9,6 +9,8 @@ import { CollectionSubjects } from '../configs/enums.config.js';
 
 import { FieldCredentialsType, IFieldModel } from './fields.type.js';
 
+import { IItemModel } from './items.types.js';
+
 export interface ICollectionModel
     extends Model<
         InferAttributes<ICollectionModel>,
@@ -22,6 +24,7 @@ export interface ICollectionModel
     userId: CreationOptional<number>;
     createField: (payload: FieldCredentialsType) => Promise<IFieldModel>;
     getFields: () => Promise<IFieldModel[]>;
+    items?: IItemModel[];
 }
 
 export type CollectionCredentialsType = {
@@ -30,10 +33,5 @@ export type CollectionCredentialsType = {
     description: string;
     image?: string;
     userId: number;
-    fields: Array<FieldCredentialsType>;
-};
-
-export type NewCollectionResponse = {
-    collection: ICollectionModel;
-    fields: Array<IFieldModel>;
+    id?: number;
 };

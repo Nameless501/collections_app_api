@@ -6,6 +6,8 @@ import createRequestValidator from '../utils/validation.util.js';
 
 import usersController from '../controllers/Users.controller.js';
 
+import collectionsController from '../controllers/Collections.controller.js';
+
 import routesConfig from '../configs/routes.config.js';
 
 import {
@@ -14,7 +16,7 @@ import {
     updateRoleValidationConfig,
 } from '../configs/validation.config.js';
 
-const { allUsers, currentUser, updateUser, updateRole, deleteUsers } =
+const { allUsers, currentUser, userData, userCollections, updateUser, updateRole, deleteUsers } =
     routesConfig.users;
 
 const router: Router = Router();
@@ -25,6 +27,18 @@ router.get(
     currentUser,
     authorization.authorize,
     usersController.handleGetCurrentUser
+);
+
+router.get(
+    userData,
+    authorization.authorize,
+    usersController.handleGetUserData
+);
+
+router.get(
+    userCollections,
+    authorization.authorize,
+    collectionsController.handleUserCollections
 );
 
 router.patch(

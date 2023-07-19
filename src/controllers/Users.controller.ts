@@ -52,15 +52,30 @@ class UsersController {
         }
     };
 
+    private findUserData = (id: number, ): Promise<IUserModel> => this.findUserByCredentials({ id }, [
+        UsersScopes.withoutPassword,
+    ]);
+
     public handleGetCurrentUser = async (
         req: UserRequest,
         res: Response<IUserModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const user = await this.findUserByCredentials({ id: req.userId }, [
-                UsersScopes.withoutPassword,
-            ]);
+            const user = await this.findUserData(req.userId as number);
+            res.send(user);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    public handleGetUserData = async (
+        req: UserRequest,
+        res: Response<IUserModel>,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const user = await this.findUserData(Number(req.params.userId));
             res.send(user);
         } catch (err) {
             next(err);
@@ -74,7 +89,7 @@ class UsersController {
     ): Promise<void> => {
         try {
             await this.deleteUsers(req.body.id);
-            res.send({ message: HttpMessages.deleteUsers });
+            res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
         }
@@ -90,9 +105,9 @@ class UsersController {
             if (payload.password) {
                 payload.password = await this.hashPassword(payload.password);
             }
-            await this.updateUser(payload, Number(req.params.id));
+            await this.updateUser(payload, Number(req.params.userId));
             res.status(HttpStatusCodes.dataUpdated).send({
-                message: HttpMessages.updateUsers,
+                message: HttpMessages.updateSuccess,
             });
         } catch (err) {
             next(err);
@@ -108,7 +123,7 @@ class UsersController {
             const { id, isAdmin } = req.body;
             await this.updateUser({ isAdmin }, id);
             res.status(HttpStatusCodes.dataUpdated).send({
-                message: HttpMessages.updateUsers,
+                message: HttpMessages.updateSuccess,
             });
         } catch (err) {
             next(err);

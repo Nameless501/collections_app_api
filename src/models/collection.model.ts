@@ -10,7 +10,8 @@ import FieldModel from './field.model.js';
 
 const CollectionModel = sequelize.define<ICollectionModel>(
     collectionsTableConfig.name,
-    collectionsTableConfig.attributes
+    collectionsTableConfig.attributes,
+    collectionsTableConfig.options
 );
 
 UserModel.hasMany(CollectionModel);
