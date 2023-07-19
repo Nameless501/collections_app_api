@@ -8,10 +8,6 @@ import {
 
 import collectionService from '../services/Collection.service.js';
 
-import itemService from '../services/Item.service.js';
-
-import fieldService from '../services/Field.service.js';
-
 import cloudStorageService from '../services/CloudStorage.service.js';
 
 import {
@@ -27,8 +23,6 @@ import {
     HttpStatusCodes,
     HttpMessages,
 } from '../configs/httpResponse.config.js';
-
-import { FieldWithValueType } from '../types/fields.type.js';
 
 import { CollectionScopes } from '../configs/enums.config.js';
 
@@ -55,12 +49,6 @@ class CollectionsController {
         private findAllCollections: (
             scopes?: ScopeType<CollectionScopes>
         ) => Promise<ICollectionModel[]>,
-        private findCollectionItems: (
-            collectionId: number
-        ) => Promise<IItemModel[]>,
-        private findItemFields: (
-            item: IItemModel
-        ) => Promise<FieldWithValueType[]>,
         private uploadCollectionImage: (
             file: Express.Multer.File,
             collectionId: number
@@ -259,7 +247,5 @@ export default new CollectionsController(
     collectionService.findUserCollections,
     collectionService.findCollectionById,
     collectionService.findAllCollections,
-    itemService.findCollectionItems,
-    fieldService.findItemFields,
     cloudStorageService.uploadCollectionImage
 );

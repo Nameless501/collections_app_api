@@ -9,7 +9,7 @@ import { FieldTypes } from '../configs/enums.config.js';
 
 import { IItemModel } from './items.types.js';
 
-import { IItemFieldModel } from './itemFields.type.js';
+import { IFieldValueModel } from './fieldValues.type.js';
 
 export interface IFieldModel
     extends Model<
@@ -27,7 +27,7 @@ export interface IFieldModel
     }: {
         itemId: number;
         value: string;
-    }) => IItemFieldModel;
+    }) => IFieldValueModel;
     getItems: () => Array<IItemModel>;
 }
 
@@ -39,6 +39,6 @@ export type FieldCredentialsType = {
 };
 
 export type FieldWithValueType = {
-    value: IItemFieldModel;
+    value: IFieldValueModel;
     field: IFieldModel;
 };

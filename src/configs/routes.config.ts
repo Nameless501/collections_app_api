@@ -32,6 +32,11 @@ const routesConfig: RoutesConfigType = {
     },
     items: {
         newItem: '/new',
+        itemData: '/:itemId',
+        updateItem: '/:itemId',
+        deleteItems: '/',
+        collectionItems: '/collection/:collectionId',
+        topNewest: '/top',
     },
     users: {
         allUsers: '/',

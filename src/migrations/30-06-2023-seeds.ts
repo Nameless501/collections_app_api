@@ -12,7 +12,7 @@ import {
 import {
     usersSeedsConfig,
     collectionsSeedsConfig,
-    itemFieldsSeedsConfig,
+    fieldValueSeedsConfig,
     tagsSeedsConfig,
     itemTagsSeedsConfig,
     fieldsSeedsConfig,
@@ -28,7 +28,7 @@ export const up: Migration = async ({
         collectionsSeedsConfig,
         fieldsSeedsConfig,
         itemsSeedsConfig,
-        itemFieldsSeedsConfig,
+        fieldValueSeedsConfig,
         tagsSeedsConfig,
         itemTagsSeedsConfig
     );
@@ -41,7 +41,7 @@ export const down: Migration = async ({
         sequelize,
         usersSeedsConfig,
         collectionsSeedsConfig,
-        itemFieldsSeedsConfig,
+        fieldValueSeedsConfig,
         tagsSeedsConfig,
         itemTagsSeedsConfig,
         fieldsSeedsConfig,

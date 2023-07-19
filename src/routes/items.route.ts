@@ -10,9 +10,13 @@ import { newItemValidationConfig } from '../configs/validation.config.js';
 
 import routesConfig from '../configs/routes.config.js';
 
-const { newItem } = routesConfig.items;
+const { newItem, topNewest, collectionItems } = routesConfig.items;
 
 const router: Router = Router();
+
+router.get(collectionItems, itemsController.handleCollectionItems);
+
+router.get(topNewest, itemsController.handleRecentItems);
 
 router.use(authorization.authorize);
 

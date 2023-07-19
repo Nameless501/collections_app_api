@@ -15,21 +15,19 @@ import {
     collectionFieldsAssociation,
     fieldsItemAssociation,
     userCollectionAssociation,
-    itemFieldAssociation,
-    userItemAssociation,
+    fieldValueAssociation,
 } from '../configs/associations.config.js';
 
-import { itemsFieldsTableConfig } from '../configs/tables.config.js';
+import { fieldValueTableConfig } from '../configs/tables.config.js';
 
 export const up: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await handleMigrationsTablesCreate(sequelize, itemsFieldsTableConfig);
+    await handleMigrationsTablesCreate(sequelize, fieldValueTableConfig);
     await handleMigrationsAddConstraints(
         sequelize,
         collectionFieldsAssociation,
-        itemFieldAssociation,
-        userItemAssociation,
+        fieldValueAssociation,
         userCollectionAssociation,
         fieldsItemAssociation
     );
@@ -38,13 +36,12 @@ export const up: Migration = async ({
 export const down: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await handleMigrationsDropTables(sequelize, itemsFieldsTableConfig);
+    await handleMigrationsDropTables(sequelize, fieldValueTableConfig);
     await handleMigrationsRemoveConstraints(
         sequelize,
         collectionFieldsAssociation,
         fieldsItemAssociation,
-        itemFieldAssociation,
-        userCollectionAssociation,
-        userItemAssociation
+        fieldValueAssociation,
+        userCollectionAssociation
     );
 };

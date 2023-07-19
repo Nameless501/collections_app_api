@@ -7,10 +7,10 @@ import {
 
 import { IFieldModel } from './fields.type.js';
 
-export interface IItemFieldModel
+export interface IFieldValueModel
     extends Model<
-        InferAttributes<IItemFieldModel>,
-        InferCreationAttributes<IItemFieldModel>
+        InferAttributes<IFieldValueModel>,
+        InferCreationAttributes<IFieldValueModel>
     > {
     id: CreationOptional<number>;
     itemId: CreationOptional<number>;
@@ -19,13 +19,13 @@ export interface IItemFieldModel
     getField: () => Promise<IFieldModel>;
 }
 
-export type ItemFieldCredentialsType = {
+export type FieldValueCredentialsType = {
     itemId: number;
     fieldId: number;
     value: string;
 };
 
-export type ItemFieldResultType = {
+export type FieldValueResultType = {
     field: IFieldModel;
-    value: IItemFieldModel;
+    value: IFieldValueModel;
 };

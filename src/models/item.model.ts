@@ -2,9 +2,7 @@ import sequelize from '../configs/db.config.js';
 
 import { IItemModel } from '../types/items.types.js';
 
-import ItemFieldModel from './itemField.model.js';
-
-import UserModel from './user.model.js';
+import FieldValueModel from './fieldValue.model.js';
 
 import TagModel from './tag.model.js';
 
@@ -20,17 +18,13 @@ const ItemModel = sequelize.define<IItemModel>(
     itemTableConfig.options
 );
 
-UserModel.hasMany(ItemModel);
-
-ItemModel.belongsTo(UserModel);
-
 CollectionModel.hasMany(ItemModel);
 
 ItemModel.belongsTo(CollectionModel);
 
-ItemModel.hasMany(ItemFieldModel);
+ItemModel.hasMany(FieldValueModel);
 
-ItemFieldModel.belongsTo(ItemModel);
+FieldValueModel.belongsTo(ItemModel);
 
 ItemModel.belongsToMany(TagModel, { through: ItemTagModel });
 

@@ -45,3 +45,12 @@ export enum CollectionScopes {
     withItems = 'withItems',
     withFields = 'withFields',
 }
+
+export enum ItemScopes {
+    withCollection = 'withCollection',
+    withFields = 'withFields',
+}
+
+export enum FieldValueScopes {
+    withField = 'withField',
+}

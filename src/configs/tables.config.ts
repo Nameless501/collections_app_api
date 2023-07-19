@@ -12,7 +12,7 @@ import { IItemModel } from '../types/items.types.js';
 
 import { IFieldModel } from '../types/fields.type.js';
 
-import { IItemFieldModel } from '../types/itemFields.type.js';
+import { IFieldValueModel } from '../types/fieldValues.type.js';
 
 import { IItemTagModel } from '../types/itemTags.type.js';
 
@@ -127,9 +127,6 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
         collectionId: {
             type: DataTypes.INTEGER.UNSIGNED,
         },
-        userId: {
-            type: DataTypes.INTEGER.UNSIGNED,
-        },
         createdAt: {
             type: DataTypes.DATE,
         },
@@ -137,6 +134,14 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
     options: {
         timestamps: true,
         updatedAt: false,
+        scopes: {
+            withCollection: {
+                include: ['collection'],
+            },
+            withFields: {
+                include: ['fieldValues'],
+            },
+        },
     },
 };
 
@@ -164,8 +169,8 @@ export const fieldTableConfig: TableConfigType<IFieldModel> = {
     },
 };
 
-export const itemsFieldsTableConfig: TableConfigType<IItemFieldModel> = {
-    name: 'itemFields',
+export const fieldValueTableConfig: TableConfigType<IFieldValueModel> = {
+    name: 'fieldValues',
     attributes: {
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
@@ -182,6 +187,13 @@ export const itemsFieldsTableConfig: TableConfigType<IItemFieldModel> = {
         },
         itemId: {
             type: DataTypes.INTEGER.UNSIGNED,
+        },
+    },
+    options: {
+        scopes: {
+            withField: {
+                include: ['field'],
+            },
         },
     },
 };

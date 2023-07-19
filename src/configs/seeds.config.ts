@@ -113,35 +113,31 @@ export const itemsSeedsConfig: SeedsConfigType = {
             id: 1,
             title: 'McCartney',
             collectionId: 1,
-            userId: 1,
             createdAt: new Date(),
         },
         {
             id: 2,
             title: 'Imagine',
             collectionId: 2,
-            userId: 2,
             createdAt: new Date(),
         },
         {
             id: 3,
             title: 'Wonderwall Music',
             collectionId: 3,
-            userId: 3,
             createdAt: new Date(),
         },
         {
             id: 4,
             title: 'Sentimental Journey ',
             collectionId: 4,
-            userId: 4,
             createdAt: new Date(),
         },
     ],
 };
 
-export const itemFieldsSeedsConfig: SeedsConfigType = {
-    table: 'itemFields',
+export const fieldValueSeedsConfig: SeedsConfigType = {
+    table: 'fieldValues',
     seeds: [
         {
             id: 1,

@@ -1,6 +1,6 @@
 import sequelize from '../configs/db.config.js';
 
-import ItemFieldModel from './itemField.model.js';
+import FieldValueModel from './fieldValue.model.js';
 
 import { IFieldModel } from '../types/fields.type.js';
 
@@ -11,8 +11,8 @@ const FieldModel = sequelize.define<IFieldModel>(
     fieldTableConfig.attributes
 );
 
-FieldModel.hasMany(ItemFieldModel);
+FieldModel.hasMany(FieldValueModel);
 
-ItemFieldModel.belongsTo(FieldModel);
+FieldValueModel.belongsTo(FieldModel);
 
 export default FieldModel;
