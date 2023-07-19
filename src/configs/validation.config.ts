@@ -93,6 +93,12 @@ export const deleteFieldsValidationConfig: ValidationConfigTypes = {
         .required(),
 };
 
+export const deleteItemsValidationConfig: ValidationConfigTypes = {
+    id: validationOptions
+        .getOptionsArray(validationOptions.getNumberValidation())
+        .required(),
+};
+
 export const newItemValidationConfig: ValidationConfigTypes = {
     title: validationOptions.getStringValidation().required(),
     collectionId: validationOptions.getNumberValidation().required(),

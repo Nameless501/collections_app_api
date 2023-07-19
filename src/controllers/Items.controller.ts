@@ -1,6 +1,11 @@
 import { Response, NextFunction } from 'express';
 
-import { ScopeType, TypedRequest, UserRequest } from '../types/common.types.js';
+import {
+    ResponseWithMessage,
+    ScopeType,
+    TypedRequest,
+    UserRequest,
+} from '../types/common.types.js';
 
 import itemService from '../services/Item.service.js';
 
@@ -25,7 +30,10 @@ import { ITagModel, TagsCredentialsType } from '../types/tags.types.js';
 
 import { IFieldValueModel } from '../types/fieldValues.type.js';
 
-import { HttpStatusCodes } from '../configs/httpResponse.config.js';
+import {
+    HttpMessages,
+    HttpStatusCodes,
+} from '../configs/httpResponse.config.js';
 
 import { ItemScopes } from '../configs/enums.config.js';
 
@@ -34,6 +42,10 @@ class ItemsController {
         private findAllItems: (
             scopes?: ScopeType<ItemScopes>
         ) => Promise<IItemModel[]>,
+        private findItemById: (
+            id: number,
+            scopes?: ScopeType<ItemScopes>
+        ) => Promise<IItemModel>,
         private createItem: (
             payload: ItemCredentialsType
         ) => Promise<IItemModel>,
@@ -44,6 +56,7 @@ class ItemsController {
         private findItemFieldsValues: (
             itemId: number
         ) => Promise<IFieldValueModel[]>,
+        private deleteItems: (id: number | number[]) => Promise<void>,
         private setFieldValue: (
             payload: FieldValueCredentialsType
         ) => Promise<FieldValueResultType>,
@@ -97,15 +110,17 @@ class ItemsController {
         }
     };
 
-    private getItemFields = (
+    private getItemFields = async (
+        item: IItemModel
+    ): Promise<ItemResponseType> => {
+        const fields = await this.findItemFieldsValues(item.id);
+        return { item, fields };
+    };
+
+    private getItemsFields = async (
         items: IItemModel[]
     ): Promise<ItemResponseType[]> =>
-        Promise.all(
-            items.map(async (item) => {
-                const fields = await this.findItemFieldsValues(item.id);
-                return { item, fields };
-            })
-        );
+        Promise.all(items.map((item) => this.getItemFields(item)));
 
     public handleCollectionItems = async (
         req: UserRequest,
@@ -117,7 +132,7 @@ class ItemsController {
                 Number(req.params.collectionId),
                 [ItemScopes.withCollection]
             );
-            const itemWithFields = await this.getItemFields(items);
+            const itemWithFields = await this.getItemsFields(items);
             res.send(itemWithFields);
         } catch (err) {
             next(err);
@@ -132,7 +147,36 @@ class ItemsController {
         try {
             const items = await this.findAllItems([ItemScopes.withCollection]);
             items.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-            const itemWithFields = await this.getItemFields(items.slice(0, 5));
+            const itemWithFields = await this.getItemsFields(items.slice(0, 5));
+            res.send(itemWithFields);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    public handleItemsDelete = async (
+        req: TypedRequest<{ id: number | number[] }>,
+        res: ResponseWithMessage,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            await this.deleteItems(req.body.id);
+            res.send({ message: HttpMessages.deleteSuccess });
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    public handleItemData = async (
+        req: UserRequest,
+        res: Response<ItemResponseType>,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const item = await this.findItemById(Number(req.params.itemId), [
+                ItemScopes.withCollection,
+            ]);
+            const itemWithFields = await this.getItemFields(item);
             res.send(itemWithFields);
         } catch (err) {
             next(err);
@@ -142,9 +186,11 @@ class ItemsController {
 
 export default new ItemsController(
     itemService.findAllItems,
+    itemService.findItemById,
     itemService.createItem,
     itemService.findCollectionItems,
     fieldService.findItemFieldsValues,
+    itemService.deleteItems,
     itemFieldService.setFieldValue,
     tagService.findOrCreateTag
 );

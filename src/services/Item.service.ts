@@ -15,7 +15,7 @@ class CollectionService {
         this.itemModel.create(payload);
 
     private findItems = (
-        param?: Partial<ItemCredentialsType>,
+        param?: Partial<IItemModel>,
         scopes?: ScopeType<ItemScopes>
     ): Promise<IItemModel[]> =>
         this.itemModel.scope(scopes).findAll({ where: param });
@@ -28,6 +28,18 @@ class CollectionService {
     public findAllItems = (
         scopes?: ScopeType<ItemScopes>
     ): Promise<IItemModel[]> => this.findItems(undefined, scopes);
+
+    public findItemById = async (
+        id: number,
+        scopes?: ScopeType<ItemScopes>
+    ): Promise<IItemModel> => {
+        const items = await this.findItems({ id }, scopes);
+        return items[0];
+    };
+
+    public deleteItems = async (id: number | number[]): Promise<void> => {
+        await this.itemModel.destroy({ where: { id } });
+    };
 }
 
 export default new CollectionService(ItemModel);
