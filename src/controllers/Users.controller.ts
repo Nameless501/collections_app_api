@@ -52,9 +52,8 @@ class UsersController {
         }
     };
 
-    private findUserData = (id: number, ): Promise<IUserModel> => this.findUserByCredentials({ id }, [
-        UsersScopes.withoutPassword,
-    ]);
+    private findUserData = (id: number): Promise<IUserModel> =>
+        this.findUserByCredentials({ id }, [UsersScopes.withoutPassword]);
 
     public handleGetCurrentUser = async (
         req: UserRequest,

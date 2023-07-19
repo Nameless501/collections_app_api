@@ -40,7 +40,7 @@ const routesConfig: RoutesConfigType = {
         deleteUsers: '/',
         currentUser: '/me',
         userData: '/:userId',
-        userCollections: '/:userId/collections'
+        userCollections: '/:userId/collections',
     },
     tags: {
         allTags: '/',

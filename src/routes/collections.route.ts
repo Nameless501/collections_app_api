@@ -6,30 +6,34 @@ import authorization from '../middlewares/Authorization.middleware.js';
 
 import createRequestValidator from '../utils/validation.util.js';
 
-import { newCollectionValidationConfig, newFieldsValidationConfig, updateCollectionValidationConfig, deleteCollectionValidationConfig } from '../configs/validation.config.js';
+import {
+    newCollectionValidationConfig,
+    newFieldsValidationConfig,
+    updateCollectionValidationConfig,
+    deleteCollectionValidationConfig,
+} from '../configs/validation.config.js';
 
 import routesConfig from '../configs/routes.config.js';
 
 import fileParser from '../configs/multer.config.js';
 
-const { allCollections, topCollections, collectionData, newCollection, newCollectionFields, updateCollection, deleteCollection } = routesConfig.collections;
+const {
+    allCollections,
+    topCollections,
+    collectionData,
+    newCollection,
+    newCollectionFields,
+    updateCollection,
+    deleteCollection,
+} = routesConfig.collections;
 
 const router: Router = Router();
 
-router.get(
-    allCollections,
-    collectionsController.handleAllCollections
-);
+router.get(allCollections, collectionsController.handleAllCollections);
 
-router.get(
-    topCollections,
-    collectionsController.handleCollectionsTop
-);
+router.get(topCollections, collectionsController.handleCollectionsTop);
 
-router.get(
-    collectionData,
-    collectionsController.handleCollectionData
-);
+router.get(collectionData, collectionsController.handleCollectionData);
 
 router.use(authorization.authorize);
 
@@ -56,7 +60,7 @@ router.patch(
 router.delete(
     deleteCollection,
     createRequestValidator(deleteCollectionValidationConfig),
-    collectionsController.handleDeleteCollections,
+    collectionsController.handleDeleteCollections
 );
 
 export default router;

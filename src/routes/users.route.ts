@@ -16,8 +16,15 @@ import {
     updateRoleValidationConfig,
 } from '../configs/validation.config.js';
 
-const { allUsers, currentUser, userData, userCollections, updateUser, updateRole, deleteUsers } =
-    routesConfig.users;
+const {
+    allUsers,
+    currentUser,
+    userData,
+    userCollections,
+    updateUser,
+    updateRole,
+    deleteUsers,
+} = routesConfig.users;
 
 const router: Router = Router();
 

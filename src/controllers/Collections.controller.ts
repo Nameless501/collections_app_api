@@ -1,6 +1,10 @@
 import { Response, NextFunction, Request } from 'express';
 
-import { ResponseWithMessage, TypedRequest, UserRequest } from '../types/common.types.js';
+import {
+    ResponseWithMessage,
+    TypedRequest,
+    UserRequest,
+} from '../types/common.types.js';
 
 import collectionService from '../services/Collection.service.js';
 
@@ -19,7 +23,10 @@ import { FieldCredentialsType } from '../types/fields.type.js';
 
 import { IItemModel } from '../types/items.types.js';
 
-import { HttpStatusCodes, HttpMessages } from '../configs/httpResponse.config.js';
+import {
+    HttpStatusCodes,
+    HttpMessages,
+} from '../configs/httpResponse.config.js';
 
 import { FieldWithValueType } from '../types/fields.type.js';
 
@@ -36,9 +43,7 @@ class CollectionsController {
             payload: Partial<CollectionCredentialsType>,
             id: number
         ) => Promise<void>,
-        private deleteCollection: (
-            id: number[]
-        ) => Promise<void>,
+        private deleteCollection: (id: number[]) => Promise<void>,
         private findUserCollections: (
             UserId: number,
             scopes?: ScopeType<CollectionScopes>
@@ -94,20 +99,28 @@ class CollectionsController {
 
     private handleCollectionImageUpdate = ({
         file,
-        params
+        params,
     }: TypedRequest<CollectionCredentialsType>) => {
-        if(file) {
-            return this.uploadCollectionImage(file, Number(params.collectionId));
+        if (file) {
+            return this.uploadCollectionImage(
+                file,
+                Number(params.collectionId)
+            );
         }
     };
 
-    private handleCollectionUpdate = async (req: TypedRequest<CollectionCredentialsType>) => {
+    private handleCollectionUpdate = async (
+        req: TypedRequest<CollectionCredentialsType>
+    ) => {
         const image = await this.handleCollectionImageUpdate(req);
-        await this.updateCollection({ ...req.body, image }, Number(req.params.collectionId));
-        return await this.findCollectionById(
-            Number(req.params.collectionId),
-            [CollectionScopes.withFields, CollectionScopes.withUser]
+        await this.updateCollection(
+            { ...req.body, image },
+            Number(req.params.collectionId)
         );
+        return await this.findCollectionById(Number(req.params.collectionId), [
+            CollectionScopes.withFields,
+            CollectionScopes.withUser,
+        ]);
     };
 
     public handleNewCollection = async (
@@ -137,13 +150,18 @@ class CollectionsController {
     };
 
     public handleNewCollectionFields = async (
-        req: TypedRequest<{fields: FieldCredentialsType[]}>,
+        req: TypedRequest<{ fields: FieldCredentialsType[] }>,
         res: Response,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collection = await this.findCollectionById(Number(req.params.collectionId));
-            const fields = await this.createCollectionFields(req.body.fields, collection);
+            const collection = await this.findCollectionById(
+                Number(req.params.collectionId)
+            );
+            const fields = await this.createCollectionFields(
+                req.body.fields,
+                collection
+            );
             res.status(HttpStatusCodes.dataCreated).send(fields);
         } catch (err) {
             next(err);
@@ -156,9 +174,18 @@ class CollectionsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collections = await this.findAllCollections([CollectionScopes.withItems, CollectionScopes.withUser]);
-            collections.sort((a, b) => (b.items as IItemModel[]).length - (a.items as IItemModel[]).length);
-            res.status(HttpStatusCodes.dataCreated).send(collections.slice(0, 5));
+            const collections = await this.findAllCollections([
+                CollectionScopes.withItems,
+                CollectionScopes.withUser,
+            ]);
+            collections.sort(
+                (a, b) =>
+                    (b.items as IItemModel[]).length -
+                    (a.items as IItemModel[]).length
+            );
+            res.status(HttpStatusCodes.dataCreated).send(
+                collections.slice(0, 5)
+            );
         } catch (err) {
             next(err);
         }
@@ -186,7 +213,10 @@ class CollectionsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collectionsList = await this.findUserCollections(Number(req.params.userId), [CollectionScopes.withUser]);
+            const collectionsList = await this.findUserCollections(
+                Number(req.params.userId),
+                [CollectionScopes.withUser]
+            );
             res.send(collectionsList);
         } catch (err) {
             next(err);
@@ -199,7 +229,9 @@ class CollectionsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collectionsList = await this.findAllCollections([CollectionScopes.withUser]);
+            const collectionsList = await this.findAllCollections([
+                CollectionScopes.withUser,
+            ]);
             res.send(collectionsList);
         } catch (err) {
             next(err);

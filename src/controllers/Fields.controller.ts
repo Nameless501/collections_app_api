@@ -6,7 +6,10 @@ import fieldService from '../services/Field.service.js';
 
 import { FieldCredentialsType, IFieldModel } from '../types/fields.type.js';
 
-import { HttpStatusCodes, HttpMessages } from '../configs/httpResponse.config.js';
+import {
+    HttpStatusCodes,
+    HttpMessages,
+} from '../configs/httpResponse.config.js';
 
 class FieldsController {
     constructor(
@@ -14,19 +17,15 @@ class FieldsController {
             payload: Partial<IFieldModel>,
             id: number
         ) => Promise<void>,
-        private deleteField: (
-            id: number[]
-        ) => Promise<void>,
-        private findFieldById: (
-            id: number
-        ) => Promise<IFieldModel>,
+        private deleteField: (id: number[]) => Promise<void>,
+        private findFieldById: (id: number) => Promise<IFieldModel>
     ) {}
 
-    private updateFieldData = async (req: TypedRequest<FieldCredentialsType>) => {
+    private updateFieldData = async (
+        req: TypedRequest<FieldCredentialsType>
+    ) => {
         await this.updateField(req.body, Number(req.params.fieldId));
-        return await this.findFieldById(
-            Number(req.params.fieldId)
-        );
+        return await this.findFieldById(Number(req.params.fieldId));
     };
 
     public handleUpdateCollection = async (
@@ -59,5 +58,5 @@ class FieldsController {
 export default new FieldsController(
     fieldService.updateField,
     fieldService.deleteField,
-    fieldService.findFieldById,
+    fieldService.findFieldById
 );

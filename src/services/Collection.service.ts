@@ -36,17 +36,21 @@ class CollectionService {
         await this.collectionModel.update(payload, { where: { id } });
     };
 
-    public findAllCollections = (scopes?: ScopeType<CollectionScopes>): Promise<ICollectionModel[]> =>
-        this.findCollections(undefined, scopes);
+    public findAllCollections = (
+        scopes?: ScopeType<CollectionScopes>
+    ): Promise<ICollectionModel[]> => this.findCollections(undefined, scopes);
 
     public deleteCollection = async (id: number[]): Promise<void> => {
         await this.collectionModel.destroy({ where: { id } });
-    }
+    };
 
-    public findCollectionById = async (id: number, scopes?: ScopeType<CollectionScopes>): Promise<ICollectionModel> => {
+    public findCollectionById = async (
+        id: number,
+        scopes?: ScopeType<CollectionScopes>
+    ): Promise<ICollectionModel> => {
         const collections = await this.findCollections({ id }, scopes);
         return collections[0];
-    }
+    };
 }
 
 export default new CollectionService(CollectionModel);

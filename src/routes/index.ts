@@ -8,7 +8,7 @@ import collectionsRouter from './collections.route.js';
 
 import itemsRouter from './items.route.js';
 
-import fieldsRouter from './fields.route.js'
+import fieldsRouter from './fields.route.js';
 
 import tagsRouter from './tags.route.js';
 
@@ -18,7 +18,8 @@ import NotFoundError from '../errors/NotFound.error.js';
 
 const router: Router = Router();
 
-const { authentication, collections, fields, items, users, tags } = routesConfig.root;
+const { authentication, collections, fields, items, users, tags } =
+    routesConfig.root;
 
 router.use(authentication, authenticationRouter);
 

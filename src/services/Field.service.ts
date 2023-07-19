@@ -32,10 +32,10 @@ class FieldService {
         );
     };
 
-    public findFieldById = async (id: number): Promise<IFieldModel>  => {
+    public findFieldById = async (id: number): Promise<IFieldModel> => {
         const fields = await this.findFields({ id });
-        return fields[0]
-    }
+        return fields[0];
+    };
 
     public updateField = async (
         payload: Partial<IFieldModel>,
@@ -46,7 +46,7 @@ class FieldService {
 
     public deleteField = async (id: number[]): Promise<void> => {
         await this.fieldModel.destroy({ where: { id } });
-    }
+    };
 }
 
 export default new FieldService(FieldModel);

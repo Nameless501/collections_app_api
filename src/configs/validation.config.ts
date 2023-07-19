@@ -62,8 +62,7 @@ export const updateCollectionValidationConfig: ValidationConfigTypes = {
     title: validationOptions.getStringValidation(),
     description: validationOptions.getStringValidation(),
     file: validationOptions.getFileValidation(),
-    subject: validationOptions
-        .getObjectValuesValidations(CollectionSubjects),
+    subject: validationOptions.getObjectValuesValidations(CollectionSubjects),
 };
 
 export const newFieldsValidationConfig: ValidationConfigTypes = {
