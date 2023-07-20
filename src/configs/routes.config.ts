@@ -9,6 +9,7 @@ const routesConfig: RoutesConfigType = {
         items: '/items',
         users: '/users',
         tags: '/tags',
+        likes: '/likes',
     },
     authentication: {
         signIn: '/sign-in',
@@ -51,6 +52,10 @@ const routesConfig: RoutesConfigType = {
     tags: {
         allTags: '/',
     },
+    likes: {
+        setLike: '/item/:itemId',
+        deleteLike: '/item/:itemId',
+    }
 } as const;
 
 export default routesConfig;

@@ -12,13 +12,15 @@ import fieldsRouter from './fields.route.js';
 
 import tagsRouter from './tags.route.js';
 
+import likesRouter from './likes.route.js';
+
 import routesConfig from '../configs/routes.config.js';
 
 import NotFoundError from '../errors/NotFound.error.js';
 
 const router: Router = Router();
 
-const { authentication, collections, fields, items, users, tags } =
+const { authentication, collections, fields, items, users, tags, likes } =
     routesConfig.root;
 
 router.use(authentication, authenticationRouter);
@@ -32,6 +34,8 @@ router.use(fields, fieldsRouter);
 router.use(items, itemsRouter);
 
 router.use(tags, tagsRouter);
+
+router.use(likes, likesRouter);
 
 router.use((req: Request, res: Response, next: NextFunction) =>
     next(new NotFoundError())
