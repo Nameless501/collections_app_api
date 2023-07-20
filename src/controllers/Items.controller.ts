@@ -59,7 +59,7 @@ class ItemsController {
             payload: FieldValueCredentialsType
         ) => Promise<IFieldValueModel>,
         private findOrCreateTag: (value: string) => Promise<ITagModel>
-    ) {}
+    ) { }
 
     private handleNewItemFields = (
         fieldsList: Array<FieldValueCredentialsType>,
@@ -136,7 +136,7 @@ class ItemsController {
         try {
             const items = await this.findCollectionItems(
                 Number(req.params.collectionId),
-                [ItemScopes.withCollection]
+                [ItemScopes.withCollection, ItemScopes.withLikes]
             );
             const itemWithFields = await this.getItemsFields(items);
             res.send(itemWithFields);
@@ -145,15 +145,20 @@ class ItemsController {
         }
     };
 
+    private findMostRecentItems = async (): Promise<IItemModel[]> => {
+        const items = await this.findAllItems([ItemScopes.withCollection, ItemScopes.withLikes]);
+        items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        return items.slice(0, 5);
+    }
+
     public handleRecentItems = async (
         req: UserRequest,
         res: Response<ItemResponseType[]>,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const items = await this.findAllItems([ItemScopes.withCollection]);
-            items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-            const itemWithFields = await this.getItemsFields(items.slice(0, 5));
+            const items = await this.findMostRecentItems();
+            const itemWithFields = await this.getItemsFields(items);
             res.send(itemWithFields);
         } catch (err) {
             next(err);
@@ -182,6 +187,7 @@ class ItemsController {
             const item = await this.findItemById(Number(req.params.itemId), [
                 ItemScopes.withCollection,
                 ItemScopes.withTags,
+                ItemScopes.withLikes
             ]);
             const itemWithFields = await this.getItemFields(item);
             res.send(itemWithFields);

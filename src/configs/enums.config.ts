@@ -48,6 +48,7 @@ export enum CollectionScopes {
 
 export enum ItemScopes {
     withCollection = 'withCollection',
+    withLikes = 'withLikes',
     withTags = 'withTags',
 }
 

@@ -139,6 +139,9 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
             withCollection: {
                 include: ['collection'],
             },
+            withLikes: {
+                include: ['likes'],
+            },
             withTags: {
                 include: ['tags'],
             },
