@@ -55,7 +55,7 @@ const routesConfig: RoutesConfigType = {
     likes: {
         setLike: '/item/:itemId',
         deleteLike: '/item/:itemId',
-    }
+    },
 } as const;
 
 export default routesConfig;

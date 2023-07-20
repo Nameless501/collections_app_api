@@ -14,11 +14,8 @@ class LikesController {
             itemId: number,
             userId: number
         ) => Promise<ILikeModel>,
-        private deleteLike: (
-            itemId: number,
-            userId: number
-        ) => Promise<void>,
-    ) { }
+        private deleteLike: (itemId: number, userId: number) => Promise<void>
+    ) {}
 
     public handleLikeSet = async (
         req: UserRequest,
@@ -53,5 +50,5 @@ class LikesController {
 
 export default new LikesController(
     likeService.findOrSetLike,
-    likeService.deleteLike,
+    likeService.deleteLike
 );
