@@ -152,7 +152,7 @@ class ItemsController {
     ): Promise<void> => {
         try {
             const items = await this.findAllItems([ItemScopes.withCollection]);
-            items.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+            items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
             const itemWithFields = await this.getItemsFields(items.slice(0, 5));
             res.send(itemWithFields);
         } catch (err) {
