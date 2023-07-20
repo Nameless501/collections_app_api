@@ -59,7 +59,7 @@ class ItemsController {
             payload: FieldValueCredentialsType
         ) => Promise<IFieldValueModel>,
         private findOrCreateTag: (value: string) => Promise<ITagModel>
-    ) { }
+    ) {}
 
     private handleNewItemFields = (
         fieldsList: Array<FieldValueCredentialsType>,
@@ -146,10 +146,13 @@ class ItemsController {
     };
 
     private findMostRecentItems = async (): Promise<IItemModel[]> => {
-        const items = await this.findAllItems([ItemScopes.withCollection, ItemScopes.withLikes]);
+        const items = await this.findAllItems([
+            ItemScopes.withCollection,
+            ItemScopes.withLikes,
+        ]);
         items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
         return items.slice(0, 5);
-    }
+    };
 
     public handleRecentItems = async (
         req: UserRequest,
@@ -187,7 +190,7 @@ class ItemsController {
             const item = await this.findItemById(Number(req.params.itemId), [
                 ItemScopes.withCollection,
                 ItemScopes.withTags,
-                ItemScopes.withLikes
+                ItemScopes.withLikes,
             ]);
             const itemWithFields = await this.getItemFields(item);
             res.send(itemWithFields);

@@ -106,4 +106,4 @@ export const itemLikesAssociation: AssociationConfigType = {
         onDelete: 'cascade',
         onUpdate: 'cascade',
     },
-};
+}

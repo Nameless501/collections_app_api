@@ -248,7 +248,7 @@ export const likesTableConfig: TableConfigType<ILikeModel> = {
             unique: true,
         },
         userId: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },
         itemId: {
