@@ -19,14 +19,12 @@ import {
     IItemModel,
     ItemCredentialsType,
     ItemResponseType,
+    ItemRequestType,
 } from '../types/items.types.js';
 
-import {
-    FieldValueCredentialsType,
-    FieldValueResultType,
-} from '../types/fieldValues.type.js';
+import { FieldValueCredentialsType } from '../types/fieldValues.type.js';
 
-import { ITagModel, TagsCredentialsType } from '../types/tags.types.js';
+import { ITagModel } from '../types/tags.types.js';
 
 import { IFieldValueModel } from '../types/fieldValues.type.js';
 
@@ -59,22 +57,20 @@ class ItemsController {
         private deleteItems: (id: number | number[]) => Promise<void>,
         private setFieldValue: (
             payload: FieldValueCredentialsType
-        ) => Promise<FieldValueResultType>,
-        private findOrCreateTag: (
-            payload: TagsCredentialsType
-        ) => Promise<ITagModel>
+        ) => Promise<IFieldValueModel>,
+        private findOrCreateTag: (value: string) => Promise<ITagModel>
     ) {}
 
     private handleNewItemFields = (
         fieldsList: Array<FieldValueCredentialsType>,
         itemId: number
-    ): Promise<FieldValueResultType[]> =>
+    ): Promise<IFieldValueModel[]> =>
         Promise.all(
             fieldsList.map((field) => this.setFieldValue({ ...field, itemId }))
         );
 
     private handleNewItemTags = async (
-        tagsList: Array<TagsCredentialsType>,
+        tagsList: string[],
         item: IItemModel
     ): Promise<ITagModel[]> =>
         Promise.all(
@@ -85,25 +81,35 @@ class ItemsController {
             })
         );
 
-    private handleItemCreate = async (
-        payload: ItemCredentialsType
+    private handleItemCreate = async ({
+        title,
+        collectionId,
+    }: ItemRequestType): Promise<IItemModel> => {
+        const item = await this.createItem({ title, collectionId });
+        const collection = await item.getCollection();
+        item.setDataValue('collection', collection);
+        return item;
+    };
+
+    private createItemWithFields = async (
+        req: TypedRequest<ItemRequestType>
     ): Promise<ItemResponseType> => {
-        const item = await this.createItem(payload);
-        const fields = await this.handleNewItemFields(payload.fields, item.id);
-        const tags = await this.handleNewItemTags(payload.tags, item);
-        return { item, fields: [] };
+        const item = await this.handleItemCreate({
+            ...req.body,
+            collectionId: Number(req.params.collectionId),
+        });
+        const fields = await this.handleNewItemFields(req.body.fields, item.id);
+        const tags = await this.handleNewItemTags(req.body.tags, item);
+        return { item, fields, tags };
     };
 
     public handleNewItem = async (
-        req: TypedRequest<ItemCredentialsType>,
+        req: TypedRequest<ItemRequestType>,
         res: Response<ItemResponseType>,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const item = await this.handleItemCreate({
-                ...req.body,
-                userId: req.userId as number,
-            });
+            const item = await this.createItemWithFields(req);
             res.status(HttpStatusCodes.dataCreated).send(item);
         } catch (err) {
             next(err);
@@ -175,6 +181,7 @@ class ItemsController {
         try {
             const item = await this.findItemById(Number(req.params.itemId), [
                 ItemScopes.withCollection,
+                ItemScopes.withTags,
             ]);
             const itemWithFields = await this.getItemFields(item);
             res.send(itemWithFields);

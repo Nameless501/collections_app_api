@@ -17,7 +17,3 @@ export interface ITagModel
     itemTagId: CreationOptional<number>;
     addItem: (item: IItemModel) => Promise<IItemTagModel>;
 }
-
-export type TagsCredentialsType = {
-    value: string;
-};

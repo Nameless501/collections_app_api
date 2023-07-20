@@ -5,7 +5,6 @@ import FieldValueModel from '../models/fieldValue.model.js';
 import {
     IFieldValueModel,
     FieldValueCredentialsType,
-    FieldValueResultType,
 } from '../types/fieldValues.type.js';
 
 class ItemFieldService {
@@ -13,10 +12,11 @@ class ItemFieldService {
 
     public setFieldValue = async (
         payload: FieldValueCredentialsType
-    ): Promise<FieldValueResultType> => {
+    ): Promise<IFieldValueModel> => {
         const value = await this.itemFieldModel.create(payload);
         const field = await value.getField();
-        return { field, value };
+        value.setDataValue('field', field);
+        return value;
     };
 }
 

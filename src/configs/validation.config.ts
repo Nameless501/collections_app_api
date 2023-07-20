@@ -101,7 +101,6 @@ export const deleteItemsValidationConfig: ValidationConfigTypes = {
 
 export const newItemValidationConfig: ValidationConfigTypes = {
     title: validationOptions.getStringValidation().required(),
-    collectionId: validationOptions.getNumberValidation().required(),
     fields: validationOptions
         .getOptionsArray(
             validationOptions.getOptionsObject({
@@ -111,11 +110,7 @@ export const newItemValidationConfig: ValidationConfigTypes = {
         )
         .required(),
     tags: validationOptions
-        .getOptionsArray(
-            validationOptions.getOptionsObject({
-                value: validationOptions.getStringValidation(),
-            })
-        )
+        .getOptionsArray(validationOptions.getStringValidation())
         .required(),
 };
 

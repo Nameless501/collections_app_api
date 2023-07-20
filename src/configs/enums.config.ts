@@ -49,6 +49,7 @@ export enum CollectionScopes {
 export enum ItemScopes {
     withCollection = 'withCollection',
     withFields = 'withFields',
+    withTags = 'withTags',
 }
 
 export enum FieldValueScopes {

@@ -2,15 +2,13 @@ import { ModelCtor } from 'sequelize';
 
 import TagModel from '../models/tag.model.js';
 
-import { ITagModel, TagsCredentialsType } from '../types/tags.types.js';
+import { ITagModel } from '../types/tags.types.js';
 
 class TagService {
     constructor(private tagModel: ModelCtor<ITagModel>) {}
 
-    public findOrCreateTag = async (
-        payload: TagsCredentialsType
-    ): Promise<ITagModel> => {
-        const tag = await this.tagModel.findOrCreate({ where: payload });
+    public findOrCreateTag = async (value: string): Promise<ITagModel> => {
+        const tag = await this.tagModel.findOrCreate({ where: { value } });
         return tag[0];
     };
 

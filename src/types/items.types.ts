@@ -10,11 +10,11 @@ import {
     FieldValueCredentialsType,
 } from './fieldValues.type.js';
 
-import { ITagModel, TagsCredentialsType } from './tags.types.js';
-
-import { IFieldModel } from './fields.type.js';
+import { ITagModel } from './tags.types.js';
 
 import { IItemTagModel } from './itemTags.type.js';
+
+import { ICollectionModel } from './collections.type.js';
 
 export interface IItemModel
     extends Model<
@@ -25,23 +25,29 @@ export interface IItemModel
     title: string;
     createdAt: CreationOptional<Date>;
     collectionId: CreationOptional<number>;
-    userId: CreationOptional<number>;
+    collection?: ICollectionModel;
     createItemField: (
         payload: FieldValueCredentialsType
     ) => Promise<IFieldValueModel>;
     getItemFields: () => Promise<IFieldValueModel[]>;
     addTag: (tag: ITagModel) => Promise<IItemTagModel>;
+    getCollection: () => Promise<ICollectionModel>;
 }
 
-export type ItemCredentialsType = {
-    title: string;
+export type ItemRequestType = {
     collectionId: number;
-    userId: number;
+    title: string;
     fields: Array<FieldValueCredentialsType>;
-    tags: Array<TagsCredentialsType>;
+    tags: string[];
+};
+
+export type ItemCredentialsType = {
+    collectionId: number;
+    title: string;
 };
 
 export type ItemResponseType = {
     item: IItemModel;
     fields: Array<IFieldValueModel>;
+    tags?: Array<ITagModel>;
 };

@@ -16,6 +16,7 @@ export interface IFieldValueModel
     itemId: CreationOptional<number>;
     fieldId: CreationOptional<number>;
     value: string;
+    field?: IFieldModel;
     getField: () => Promise<IFieldModel>;
 }
 

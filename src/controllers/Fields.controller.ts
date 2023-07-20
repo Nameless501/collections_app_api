@@ -1,6 +1,10 @@
 import { Response, NextFunction } from 'express';
 
-import { ResponseWithMessage, TypedRequest } from '../types/common.types.js';
+import {
+    ResponseWithMessage,
+    TypedRequest,
+    UserRequest,
+} from '../types/common.types.js';
 
 import fieldService from '../services/Field.service.js';
 
@@ -18,7 +22,10 @@ class FieldsController {
             id: number
         ) => Promise<void>,
         private deleteField: (id: number[]) => Promise<void>,
-        private findFieldById: (id: number) => Promise<IFieldModel>
+        private findFieldById: (id: number) => Promise<IFieldModel>,
+        private findCollectionFields: (
+            collectionId: number
+        ) => Promise<IFieldModel[]>
     ) {}
 
     private updateFieldData = async (
@@ -53,10 +60,26 @@ class FieldsController {
             next(err);
         }
     };
+
+    public handleCollectionFields = async (
+        req: UserRequest,
+        res: Response<IFieldModel[]>,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const fields = await this.findCollectionFields(
+                Number(req.params.collectionId)
+            );
+            res.send(fields);
+        } catch (err) {
+            next(err);
+        }
+    };
 }
 
 export default new FieldsController(
     fieldService.updateField,
     fieldService.deleteField,
-    fieldService.findFieldById
+    fieldService.findFieldById,
+    fieldService.findCollectionFields
 );

@@ -53,6 +53,11 @@ class FieldService {
     ): Promise<IFieldValueModel[]> =>
         this.findFieldValues({ itemId }, [FieldValueScopes.withField]);
 
+    public findCollectionFields = (
+        collectionId: number
+    ): Promise<IFieldModel[]> =>
+        this.fieldModel.findAll({ where: { collectionId } });
+
     public findFieldById = async (id: number): Promise<IFieldModel> => {
         const fields = await this.findFields({ id });
         return fields[0];

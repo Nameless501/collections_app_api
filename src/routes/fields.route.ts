@@ -13,11 +13,13 @@ import {
 
 import routesConfig from '../configs/routes.config.js';
 
-const { updateField, deleteField } = routesConfig.fields;
+const { updateField, deleteField, collectionFields } = routesConfig.fields;
 
 const router: Router = Router();
 
 router.use(authorization.authorize);
+
+router.get(collectionFields, fieldsController.handleCollectionFields);
 
 router.patch(
     updateField,
