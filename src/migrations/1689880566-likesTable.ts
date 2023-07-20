@@ -13,20 +13,15 @@ import {
 
 import {
     userLikesAssociation,
-    itemLikesAssociation
+    itemLikesAssociation,
 } from '../configs/associations.config.js';
 
-import {
-    likesTableConfig
-} from '../configs/tables.config.js';
+import { likesTableConfig } from '../configs/tables.config.js';
 
 export const up: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await handleMigrationsTablesCreate(
-        sequelize,
-        likesTableConfig
-    );
+    await handleMigrationsTablesCreate(sequelize, likesTableConfig);
     await handleMigrationsAddConstraints(
         sequelize,
         userLikesAssociation,
@@ -37,10 +32,7 @@ export const up: Migration = async ({
 export const down: Migration = async ({
     context: sequelize,
 }: MigrationParams<Sequelize>): Promise<void> => {
-    await handleMigrationsDropTables(
-        sequelize,
-        likesTableConfig
-    );
+    await handleMigrationsDropTables(sequelize, likesTableConfig);
     await handleMigrationsRemoveConstraints(
         sequelize,
         userLikesAssociation,
