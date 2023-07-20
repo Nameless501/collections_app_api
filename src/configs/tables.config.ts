@@ -17,6 +17,7 @@ import { IFieldValueModel } from '../types/fieldValues.type.js';
 import { IItemTagModel } from '../types/itemTags.type.js';
 
 import { ITagModel } from '../types/tags.types.js';
+import { ILikeModel } from '../types/likes.type.js';
 
 export const usersTableConfig: TableConfigType<IUserModel> = {
     name: 'users',
@@ -138,9 +139,6 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
             withCollection: {
                 include: ['collection'],
             },
-            withFields: {
-                include: ['fieldValues'],
-            },
             withTags: {
                 include: ['tags'],
             },
@@ -233,6 +231,26 @@ export const itemTagTableConfig: TableConfigType<IItemTagModel> = {
         },
         itemId: {
             type: DataTypes.INTEGER.UNSIGNED,
+        },
+    },
+};
+
+export const likesTableConfig: TableConfigType<ILikeModel> = {
+    name: 'likes',
+    attributes: {
+        id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            autoIncrement: true,
+            primaryKey: true,
+            unique: true,
+        },
+        userId: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        itemId: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
         },
     },
 };

@@ -83,3 +83,27 @@ export const itemTagAssociation: AssociationConfigType = {
         onUpdate: 'cascade',
     },
 };
+
+export const userLikesAssociation: AssociationConfigType = {
+    name: 'likes',
+    options: {
+        fields: ['userId'],
+        type: 'foreign key',
+        name: 'user_ref_like',
+        references: { table: 'users', field: 'id' },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    },
+};
+
+export const itemLikesAssociation: AssociationConfigType = {
+    name: 'likes',
+    options: {
+        fields: ['itemId'],
+        type: 'foreign key',
+        name: 'item_ref_like',
+        references: { table: 'items', field: 'id' },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    },
+}
