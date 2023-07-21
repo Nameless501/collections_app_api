@@ -55,3 +55,7 @@ export enum ItemScopes {
 export enum FieldValueScopes {
     withField = 'withField',
 }
+
+export enum TagsScopes {
+    withItemTags = 'withItemTags',
+}

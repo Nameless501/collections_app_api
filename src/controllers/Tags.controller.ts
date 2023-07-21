@@ -4,8 +4,16 @@ import { ITagModel } from '../types/tags.types.js';
 
 import tagService from '../services/Tag.service.js';
 
+import { ScopeType } from '../types/common.types.js';
+
+import { TagsScopes } from '../configs/enums.config.js';
+
 class TagsController {
-    constructor(private findAllTags: () => Promise<ITagModel[]>) {}
+    constructor(
+        private findAllTags: (
+            scopes?: ScopeType<TagsScopes>
+        ) => Promise<ITagModel[]>
+    ) {}
 
     public handleTagsList = async (
         req: Request,
@@ -13,7 +21,7 @@ class TagsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const tagsList = await this.findAllTags();
+            const tagsList = await this.findAllTags([TagsScopes.withItemTags]);
             res.send(tagsList);
         } catch (err) {
             next(err);

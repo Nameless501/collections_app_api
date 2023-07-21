@@ -222,6 +222,16 @@ export const tagTableConfig: TableConfigType<ITagModel> = {
             unique: true,
         },
     },
+    options: {
+        defaultScope: {
+            attributes: { exclude: ['itemTags'] }
+        },
+        scopes: {
+            withItemTags: {
+                include: ['itemTags'],
+            },
+        },
+    },
 };
 
 export const itemTagTableConfig: TableConfigType<IItemTagModel> = {
