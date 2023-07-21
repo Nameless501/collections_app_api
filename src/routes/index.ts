@@ -14,14 +14,24 @@ import tagsRouter from './tags.route.js';
 
 import likesRouter from './likes.route.js';
 
+import commentsRouter from './comments.route.js';
+
 import routesConfig from '../configs/routes.config.js';
 
 import NotFoundError from '../errors/NotFound.error.js';
 
 const router: Router = Router();
 
-const { authentication, collections, fields, items, users, tags, likes } =
-    routesConfig.root;
+const {
+    authentication,
+    collections,
+    fields,
+    items,
+    users,
+    tags,
+    likes,
+    comments,
+} = routesConfig.root;
 
 router.use(authentication, authenticationRouter);
 
@@ -36,6 +46,8 @@ router.use(items, itemsRouter);
 router.use(tags, tagsRouter);
 
 router.use(likes, likesRouter);
+
+router.use(comments, commentsRouter);
 
 router.use((req: Request, res: Response, next: NextFunction) =>
     next(new NotFoundError())

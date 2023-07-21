@@ -224,7 +224,7 @@ export const tagTableConfig: TableConfigType<ITagModel> = {
     },
     options: {
         defaultScope: {
-            attributes: { exclude: ['itemTags'] }
+            attributes: { exclude: ['itemTags'] },
         },
         scopes: {
             withItemTags: {
@@ -269,6 +269,42 @@ export const likesTableConfig: TableConfigType<ILikeModel> = {
         itemId: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
+        },
+    },
+};
+
+export const commentTableConfig: TableConfigType<ILikeModel> = {
+    name: 'comments',
+    attributes: {
+        id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            autoIncrement: true,
+            primaryKey: true,
+            unique: true,
+        },
+        userId: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
+        },
+        itemId: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
+        },
+        value: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+        },
+    },
+    options: {
+        timestamps: true,
+        updatedAt: false,
+        scopes: {
+            withUser: {
+                include: ['user'],
+            },
         },
     },
 };

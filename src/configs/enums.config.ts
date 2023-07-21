@@ -59,3 +59,7 @@ export enum FieldValueScopes {
 export enum TagsScopes {
     withItemTags = 'withItemTags',
 }
+
+export enum CommentScopes {
+    withUser = 'withUser',
+}

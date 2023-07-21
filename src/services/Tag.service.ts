@@ -16,7 +16,9 @@ class TagService {
         return tag[0];
     };
 
-    public findAllTags = (scopes?: ScopeType<TagsScopes>): Promise<ITagModel[]> => this.tagModel.scope(scopes).findAll();
+    public findAllTags = (
+        scopes?: ScopeType<TagsScopes>
+    ): Promise<ITagModel[]> => this.tagModel.scope(scopes).findAll();
 }
 
 export default new TagService(TagModel);
