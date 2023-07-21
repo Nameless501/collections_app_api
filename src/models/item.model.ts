@@ -34,10 +34,6 @@ ItemModel.belongsToMany(TagModel, { through: ItemTagModel });
 
 TagModel.belongsToMany(ItemModel, { through: ItemTagModel });
 
-// ItemModel.belongsToMany(UserModel, { through: LikeModel });
-
-// UserModel.belongsToMany(ItemModel, { through: LikeModel });
-
 LikeModel.belongsTo(ItemModel);
 
 ItemModel.hasMany(LikeModel);
