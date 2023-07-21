@@ -10,6 +10,7 @@ import { CollectionSubjects } from '../configs/enums.config.js';
 import { FieldCredentialsType, IFieldModel } from './fields.type.js';
 
 import { IItemModel } from './items.types.js';
+import { IUserModel } from './users.types.js';
 
 export interface ICollectionModel
     extends Model<
@@ -22,9 +23,11 @@ export interface ICollectionModel
     description: string;
     image: CreationOptional<string>;
     userId: CreationOptional<number>;
+    items?: IItemModel[];
+    user?: IUserModel;
     createField: (payload: FieldCredentialsType) => Promise<IFieldModel>;
     getFields: () => Promise<IFieldModel[]>;
-    items?: IItemModel[];
+    getUser: () => Promise<IUserModel>;
 }
 
 export type CollectionCredentialsType = {

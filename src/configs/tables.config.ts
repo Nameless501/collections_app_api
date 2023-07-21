@@ -52,6 +52,11 @@ export const usersTableConfig: TableConfigType<IUserModel> = {
         },
     },
     options: {
+        defaultScope: {
+            attributes: {
+                exclude: ['password'],
+            },
+        },
         scopes: {
             withoutPassword: {
                 attributes: {

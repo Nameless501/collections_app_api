@@ -17,7 +17,7 @@ const routesConfig: RoutesConfigType = {
         signOut: '/sign-out',
     },
     collections: {
-        newCollection: '/new',
+        newCollection: '/new/:userId',
         userCollections: '/my',
         collectionData: '/:collectionId',
         updateCollection: '/:collectionId',

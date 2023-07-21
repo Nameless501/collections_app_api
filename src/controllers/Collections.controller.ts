@@ -72,12 +72,23 @@ class CollectionsController {
         collection: ICollectionModel
     ) => Promise.all(fieldsList.map((field) => collection.createField(field)));
 
+    private findCollectionUser = async (
+        collection: ICollectionModel
+    ): Promise<void> => {
+        const user = await collection.getUser();
+        collection.setDataValue('user', user);
+    };
+
     private handleCollectionCreate = async ({
         body,
         file,
-        userId,
+        params,
     }: UserRequest) => {
-        const collection = await this.createCollection({ ...body, userId });
+        const collection = await this.createCollection({
+            ...body,
+            userId: Number(params.userId),
+        });
+        await this.findCollectionUser(collection);
         const collectionWithImage = await this.handleCollectionImage(
             file,
             collection
