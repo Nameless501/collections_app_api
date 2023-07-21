@@ -94,7 +94,7 @@ class AuthenticationController {
 
     public handleSignOut = (
         req: Request,
-        res: ResponseWithMessage<HttpMessages.signOut>,
+        res: ResponseWithMessage,
         next: NextFunction
     ): void => {
         try {

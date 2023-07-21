@@ -7,9 +7,9 @@ import {
 
 import { FieldTypes } from '../configs/enums.config.js';
 
-import { IItemModel } from './items.types.js';
-
 import { IFieldValueModel } from './fieldValues.type.js';
+
+import { ICollectionModel } from './collections.type.js';
 
 export interface IFieldModel
     extends Model<
@@ -21,14 +21,7 @@ export interface IFieldModel
     label: string;
     collectionId: CreationOptional<number>;
     itemFieldId: CreationOptional<number>;
-    createItemField: ({
-        itemId,
-        value,
-    }: {
-        itemId: number;
-        value: string;
-    }) => IFieldValueModel;
-    getItems: () => Array<IItemModel>;
+    getCollection: () => Promise<ICollectionModel>;
 }
 
 export type FieldCredentialsType = {

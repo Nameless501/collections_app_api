@@ -65,6 +65,7 @@ export type CookiesConfigType = {
 
 export interface UserRequest extends Request {
     userId?: number;
+    isAdmin?: boolean;
 }
 
 export type ResponseWithMessage<T = string> = Response<{

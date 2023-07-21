@@ -81,24 +81,6 @@ export const updateFieldValidationConfig: ValidationConfigTypes = {
     type: validationOptions.getStringValidation(),
 };
 
-export const deleteCollectionValidationConfig: ValidationConfigTypes = {
-    id: validationOptions
-        .getOptionsArray(validationOptions.getNumberValidation().required())
-        .required(),
-};
-
-export const deleteFieldsValidationConfig: ValidationConfigTypes = {
-    id: validationOptions
-        .getOptionsArray(validationOptions.getNumberValidation().required())
-        .required(),
-};
-
-export const deleteItemsValidationConfig: ValidationConfigTypes = {
-    id: validationOptions
-        .getOptionsArray(validationOptions.getNumberValidation().required())
-        .required(),
-};
-
 export const newItemValidationConfig: ValidationConfigTypes = {
     title: validationOptions.getStringValidation().required(),
     fields: validationOptions
@@ -117,11 +99,5 @@ export const newItemValidationConfig: ValidationConfigTypes = {
 export const uploadImageValidation = validationOptions.getFileValidation();
 
 export const newCommentValidationConfig: ValidationConfigTypes = {
-    value: validationOptions.getStringValidation().required()
-};
-
-export const deleteCommentValidationConfig: ValidationConfigTypes = {
-    id: validationOptions
-        .getOptionsArray(validationOptions.getNumberValidation().required())
-        .required(),
+    value: validationOptions.getStringValidation().required(),
 };

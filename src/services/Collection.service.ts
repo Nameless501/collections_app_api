@@ -40,7 +40,7 @@ class CollectionService {
         scopes?: ScopeType<CollectionScopes>
     ): Promise<ICollectionModel[]> => this.findCollections(undefined, scopes);
 
-    public deleteCollection = async (id: number[]): Promise<void> => {
+    public deleteCollection = async (id: number): Promise<void> => {
         await this.collectionModel.destroy({ where: { id } });
     };
 

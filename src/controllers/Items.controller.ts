@@ -34,6 +34,7 @@ import {
 } from '../configs/httpResponse.config.js';
 
 import { ItemScopes } from '../configs/enums.config.js';
+import { checkEditRights } from '../utils/helpers.util.js';
 
 class ItemsController {
     constructor(
@@ -54,7 +55,7 @@ class ItemsController {
         private findItemFieldsValues: (
             itemId: number
         ) => Promise<IFieldValueModel[]>,
-        private deleteItems: (id: number | number[]) => Promise<void>,
+        private deleteItems: (id: number) => Promise<void>,
         private setFieldValue: (
             payload: FieldValueCredentialsType
         ) => Promise<IFieldValueModel>,
@@ -128,7 +129,7 @@ class ItemsController {
     ): Promise<ItemResponseType[]> =>
         Promise.all(items.map((item) => this.getItemFields(item)));
 
-    public handleCollectionItems = async (
+    public handleGetCollectionItems = async (
         req: UserRequest,
         res: Response<ItemResponseType[]>,
         next: NextFunction
@@ -168,13 +169,20 @@ class ItemsController {
         }
     };
 
-    public handleItemsDelete = async (
-        req: TypedRequest<{ id: number | number[] }>,
+    private checkItemEditRights = async (req: UserRequest): Promise<void> => {
+        const item = await this.findItemById(Number(req.params.itemId));
+        const { userId } = await item.getCollection();
+        checkEditRights(req, userId);
+    };
+
+    public handleItemDelete = async (
+        req: UserRequest,
         res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
-            await this.deleteItems(req.body.id);
+            await this.checkItemEditRights(req);
+            await this.deleteItems(Number(req.params.itemId));
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);

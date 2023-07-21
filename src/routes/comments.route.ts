@@ -8,7 +8,7 @@ import authorization from '../middlewares/Authorization.middleware.js';
 
 import createRequestValidator from '../utils/validation.util.js';
 
-import { newCommentValidationConfig, deleteCommentValidationConfig } from '../configs/validation.config.js';
+import { newCommentValidationConfig } from '../configs/validation.config.js';
 
 const { itemComments, leaveComment, deleteComment } = routesConfig.comments;
 
@@ -24,10 +24,6 @@ router.post(
     commentsController.handleLeaveComment
 );
 
-router.delete(
-    deleteComment,
-    createRequestValidator(deleteCommentValidationConfig),
-    commentsController.handleDeleteComment
-);
+router.delete(deleteComment, commentsController.handleDeleteComment);
 
 export default router;

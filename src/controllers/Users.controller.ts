@@ -8,16 +8,21 @@ import {
 
 import userService from '../services/User.service.js';
 
-import { IUserModel } from '../types/users.types.js';
+import {
+    IUserModel,
+    UpdateRoleRequestType,
+    DeleteUsersRequestType,
+} from '../types/users.types.js';
 
 import { UsersScopes } from '../configs/enums.config.js';
 
-import {
-    HttpStatusCodes,
-    HttpMessages,
-} from '../configs/httpResponse.config.js';
+import { HttpMessages } from '../configs/httpResponse.config.js';
 
 import { hashPassword } from '../utils/passwordHash.util.js';
+
+import { checkEditRights } from '../utils/helpers.util.js';
+
+import ForbiddenError from '../errors/Forbidden.error.js';
 
 class UsersController {
     constructor(
@@ -74,6 +79,7 @@ class UsersController {
         next: NextFunction
     ): Promise<void> => {
         try {
+            checkEditRights(req, Number(req.params.userId));
             const user = await this.findUserData(Number(req.params.userId));
             res.send(user);
         } catch (err) {
@@ -82,7 +88,7 @@ class UsersController {
     };
 
     public handleDeleteUsers = async (
-        req: TypedRequest<{ id: number[] }>,
+        req: TypedRequest<DeleteUsersRequestType>,
         res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
@@ -94,18 +100,31 @@ class UsersController {
         }
     };
 
+    private updatePassword = async (
+        payload: Partial<IUserModel>
+    ): Promise<void> => {
+        if (payload.password) {
+            payload.password = await this.hashPassword(payload.password);
+        }
+    };
+
+    private updateUserData = async (
+        req: TypedRequest<Partial<IUserModel>>
+    ): Promise<void> => {
+        const payload = req.body;
+        await this.updatePassword(payload);
+        await this.updateUser(payload, Number(req.params.userId));
+    };
+
     public handleUpdateUser = async (
         req: TypedRequest<Partial<IUserModel>>,
         res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const payload = req.body;
-            if (payload.password) {
-                payload.password = await this.hashPassword(payload.password);
-            }
-            await this.updateUser(payload, Number(req.params.userId));
-            res.status(HttpStatusCodes.dataUpdated).send({
+            checkEditRights(req, Number(req.params.userId));
+            await this.updateUserData(req);
+            res.send({
                 message: HttpMessages.updateSuccess,
             });
         } catch (err) {
@@ -113,15 +132,22 @@ class UsersController {
         }
     };
 
+    private checkIsAdmin = (req: TypedRequest<UpdateRoleRequestType>): void => {
+        if (!req.isAdmin) {
+            throw new ForbiddenError();
+        }
+    };
+
     public handleUsersRoleUpdate = async (
-        req: TypedRequest<{ id: number[]; isAdmin: boolean }>,
+        req: TypedRequest<UpdateRoleRequestType>,
         res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
+            this.checkIsAdmin(req);
             const { id, isAdmin } = req.body;
             await this.updateUser({ isAdmin }, id);
-            res.status(HttpStatusCodes.dataUpdated).send({
+            res.send({
                 message: HttpMessages.updateSuccess,
             });
         } catch (err) {

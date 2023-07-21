@@ -26,10 +26,13 @@ class CommentService {
         scopes?: ScopeType<CommentScopes>
     ): Promise<ICommentModel[]> => this.findAllComments({ itemId }, scopes);
 
-    public deleteItemComments = async (
-        id: number | number[]
-    ): Promise<void> => {
+    public deleteItemComments = async (id: number): Promise<void> => {
         await this.commentModel.destroy({ where: { id } });
+    };
+
+    public findCommentById = async (id: number): Promise<ICommentModel> => {
+        const [comment] = await this.commentModel.findAll({ where: { id } });
+        return comment;
     };
 }
 

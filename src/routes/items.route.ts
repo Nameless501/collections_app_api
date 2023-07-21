@@ -6,19 +6,16 @@ import createRequestValidator from '../utils/validation.util.js';
 
 import authorization from '../middlewares/Authorization.middleware.js';
 
-import {
-    newItemValidationConfig,
-    deleteItemsValidationConfig,
-} from '../configs/validation.config.js';
+import { newItemValidationConfig } from '../configs/validation.config.js';
 
 import routesConfig from '../configs/routes.config.js';
 
-const { newItem, topNewest, itemData, collectionItems, deleteItems } =
+const { newItem, topNewest, itemData, collectionItems, deleteItem } =
     routesConfig.items;
 
 const router: Router = Router();
 
-router.get(collectionItems, itemsController.handleCollectionItems);
+router.get(collectionItems, itemsController.handleGetCollectionItems);
 
 router.get(topNewest, itemsController.handleRecentItems);
 
@@ -32,10 +29,6 @@ router.post(
     itemsController.handleNewItem
 );
 
-router.delete(
-    deleteItems,
-    createRequestValidator(deleteItemsValidationConfig),
-    itemsController.handleItemsDelete
-);
+router.delete(deleteItem, itemsController.handleItemDelete);
 
 export default router;

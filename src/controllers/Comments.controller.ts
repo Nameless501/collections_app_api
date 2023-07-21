@@ -6,6 +6,7 @@ import {
     ResponseWithMessage,
     ScopeType,
     TypedRequest,
+    UserRequest,
 } from '../types/common.types.js';
 
 import { CommentScopes } from '../configs/enums.config.js';
@@ -16,6 +17,7 @@ import {
     HttpMessages,
     HttpStatusCodes,
 } from '../configs/httpResponse.config.js';
+import { checkEditRights } from '../utils/helpers.util.js';
 
 class CommentsController {
     constructor(
@@ -26,9 +28,8 @@ class CommentsController {
             itemId: number,
             scopes?: ScopeType<CommentScopes>
         ) => Promise<ICommentModel[]>,
-        private deleteItemComments: (
-            commentId: number | number[]
-        ) => Promise<void>
+        private deleteItemComments: (commentId: number) => Promise<void>,
+        private findCommentById: (commentId: number) => Promise<ICommentModel>
     ) {}
 
     private handleCreateComment = (req: TypedRequest<CommentRequestType>) =>
@@ -73,13 +74,23 @@ class CommentsController {
         }
     };
 
+    private checkCommentEditRights = async (
+        req: UserRequest
+    ): Promise<void> => {
+        const { userId } = await this.findCommentById(
+            Number(req.params.commentId)
+        );
+        checkEditRights(req, userId);
+    };
+
     public handleDeleteComment = async (
-        req: TypedRequest<{ id: number | number[] }>,
+        req: UserRequest,
         res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
-            await this.deleteItemComments(req.body.id);
+            await this.checkCommentEditRights(req);
+            await this.deleteItemComments(Number(req.params.commentId));
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
@@ -90,5 +101,6 @@ class CommentsController {
 export default new CommentsController(
     commentService.createComment,
     commentService.findItemComments,
-    commentService.deleteItemComments
+    commentService.deleteItemComments,
+    commentService.findCommentById
 );

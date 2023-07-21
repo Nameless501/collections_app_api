@@ -10,10 +10,9 @@ import fieldService from '../services/Field.service.js';
 
 import { FieldCredentialsType, IFieldModel } from '../types/fields.type.js';
 
-import {
-    HttpStatusCodes,
-    HttpMessages,
-} from '../configs/httpResponse.config.js';
+import { HttpMessages } from '../configs/httpResponse.config.js';
+
+import { checkEditRights } from '../utils/helpers.util.js';
 
 class FieldsController {
     constructor(
@@ -21,12 +20,20 @@ class FieldsController {
             payload: Partial<IFieldModel>,
             id: number
         ) => Promise<void>,
-        private deleteField: (id: number[]) => Promise<void>,
+        private deleteField: (id: number) => Promise<void>,
         private findFieldById: (id: number) => Promise<IFieldModel>,
         private findCollectionFields: (
             collectionId: number
         ) => Promise<IFieldModel[]>
     ) {}
+
+    private checkFieldEditRights = async (
+        req: TypedRequest<FieldCredentialsType> | UserRequest
+    ): Promise<void> => {
+        const field = await this.findFieldById(Number(req.params.fieldId));
+        const { userId } = await field.getCollection();
+        checkEditRights(req, userId);
+    };
 
     private updateFieldData = async (
         req: TypedRequest<FieldCredentialsType>
@@ -35,33 +42,35 @@ class FieldsController {
         return await this.findFieldById(Number(req.params.fieldId));
     };
 
-    public handleUpdateCollection = async (
+    public handleUpdateField = async (
         req: TypedRequest<FieldCredentialsType>,
         res: Response<IFieldModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
+            await this.checkFieldEditRights(req);
             const field = await this.updateFieldData(req);
-            res.status(HttpStatusCodes.dataCreated).send(field);
+            res.send(field);
         } catch (err) {
             next(err);
         }
     };
 
-    public handleDeleteFields = async (
-        req: TypedRequest<{ id: number[] }>,
+    public handleDeleteField = async (
+        req: UserRequest,
         res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
-            await this.deleteField(req.body.id);
+            await this.checkFieldEditRights(req);
+            await this.deleteField(Number(req.params.fieldId));
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
         }
     };
 
-    public handleCollectionFields = async (
+    public handleGetCollectionFields = async (
         req: UserRequest,
         res: Response<IFieldModel[]>,
         next: NextFunction

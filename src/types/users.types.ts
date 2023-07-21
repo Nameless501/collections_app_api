@@ -27,3 +27,12 @@ export type SignInInputType = {
 export type SignUpInputType = SignInInputType & {
     name: string;
 };
+
+export type UpdateRoleRequestType = {
+    id: number[];
+    isAdmin: boolean;
+};
+
+export type DeleteUsersRequestType = {
+    id: number[];
+};

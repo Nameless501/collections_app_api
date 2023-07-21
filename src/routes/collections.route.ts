@@ -10,7 +10,6 @@ import {
     newCollectionValidationConfig,
     newFieldsValidationConfig,
     updateCollectionValidationConfig,
-    deleteCollectionValidationConfig,
 } from '../configs/validation.config.js';
 
 import routesConfig from '../configs/routes.config.js';
@@ -20,6 +19,7 @@ import fileParser from '../configs/multer.config.js';
 const {
     allCollections,
     topCollections,
+    userCollections,
     collectionData,
     newCollection,
     newCollectionFields,
@@ -34,6 +34,8 @@ router.get(allCollections, collectionsController.handleAllCollections);
 router.get(topCollections, collectionsController.handleCollectionsTop);
 
 router.get(collectionData, collectionsController.handleCollectionData);
+
+router.get(userCollections, collectionsController.handleUserCollections);
 
 router.use(authorization.authorize);
 
@@ -57,10 +59,6 @@ router.patch(
     collectionsController.handleUpdateCollection
 );
 
-router.delete(
-    deleteCollection,
-    createRequestValidator(deleteCollectionValidationConfig),
-    collectionsController.handleDeleteCollections
-);
+router.delete(deleteCollection, collectionsController.handleDeleteCollection);
 
 export default router;

@@ -37,7 +37,7 @@ class CollectionService {
         return items[0];
     };
 
-    public deleteItems = async (id: number | number[]): Promise<void> => {
+    public deleteItems = async (id: number): Promise<void> => {
         await this.itemModel.destroy({ where: { id } });
     };
 }

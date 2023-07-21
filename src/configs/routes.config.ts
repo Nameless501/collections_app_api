@@ -19,10 +19,10 @@ const routesConfig: RoutesConfigType = {
     },
     collections: {
         newCollection: '/new/:userId',
-        userCollections: '/my',
+        userCollections: '/user/:userId',
         collectionData: '/:collectionId',
         updateCollection: '/:collectionId',
-        deleteCollection: '/',
+        deleteCollection: '/:collectionId',
         allCollections: '/',
         topCollections: '/top',
         newCollectionFields: '/:collectionId/fields',
@@ -30,14 +30,14 @@ const routesConfig: RoutesConfigType = {
     },
     fields: {
         updateField: '/:fieldId',
-        deleteField: '/',
+        deleteField: '/:fieldId',
         collectionFields: '/collection/:collectionId',
     },
     items: {
         newItem: '/collection/:collectionId',
         itemData: '/:itemId',
         updateItem: '/:itemId',
-        deleteItems: '/',
+        deleteItem: '/:itemId',
         collectionItems: '/collection/:collectionId',
         topNewest: '/top',
     },
@@ -48,7 +48,6 @@ const routesConfig: RoutesConfigType = {
         deleteUsers: '/',
         currentUser: '/me',
         userData: '/:userId',
-        userCollections: '/:userId/collections',
     },
     tags: {
         allTags: '/',
@@ -60,7 +59,7 @@ const routesConfig: RoutesConfigType = {
     comments: {
         itemComments: '/item/:itemId',
         leaveComment: '/item/:itemId',
-        deleteComment: '/',
+        deleteComment: '/:commentId',
     },
 } as const;
 

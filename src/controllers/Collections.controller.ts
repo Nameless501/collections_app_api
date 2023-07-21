@@ -15,7 +15,7 @@ import {
     CollectionCredentialsType,
 } from '../types/collections.type.js';
 
-import { FieldCredentialsType } from '../types/fields.type.js';
+import { FieldCredentialsType, IFieldModel } from '../types/fields.type.js';
 
 import { IItemModel } from '../types/items.types.js';
 
@@ -27,6 +27,7 @@ import {
 import { CollectionScopes } from '../configs/enums.config.js';
 
 import { ScopeType } from '../types/common.types.js';
+import { checkEditRights } from '../utils/helpers.util.js';
 
 class CollectionsController {
     constructor(
@@ -37,7 +38,7 @@ class CollectionsController {
             payload: Partial<CollectionCredentialsType>,
             id: number
         ) => Promise<void>,
-        private deleteCollection: (id: number[]) => Promise<void>,
+        private deleteCollection: (id: number) => Promise<void>,
         private findUserCollections: (
             UserId: number,
             scopes?: ScopeType<CollectionScopes>
@@ -67,11 +68,6 @@ class CollectionsController {
         return collection;
     };
 
-    private createCollectionFields = (
-        fieldsList: Array<FieldCredentialsType>,
-        collection: ICollectionModel
-    ) => Promise.all(fieldsList.map((field) => collection.createField(field)));
-
     private findCollectionUser = async (
         collection: ICollectionModel
     ): Promise<void> => {
@@ -96,6 +92,46 @@ class CollectionsController {
         return collectionWithImage;
     };
 
+    public handleNewCollection = async (
+        req: TypedRequest<CollectionCredentialsType>,
+        res: Response<ICollectionModel>,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            checkEditRights(req, Number(req.params.userId));
+            const collection = await this.handleCollectionCreate(req);
+            res.status(HttpStatusCodes.dataCreated).send(collection);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    private createCollectionFields = (
+        fieldsList: Array<FieldCredentialsType>,
+        collection: ICollectionModel
+    ): Promise<IFieldModel[]> =>
+        Promise.all(fieldsList.map((field) => collection.createField(field)));
+
+    public handleNewCollectionFields = async (
+        req: TypedRequest<{ fields: FieldCredentialsType[] }>,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const collection = await this.findCollectionById(
+                Number(req.params.collectionId)
+            );
+            checkEditRights(req, Number(collection.userId));
+            const fields = await this.createCollectionFields(
+                req.body.fields,
+                collection
+            );
+            res.status(HttpStatusCodes.dataCreated).send(fields);
+        } catch (err) {
+            next(err);
+        }
+    };
+
     private handleCollectionImageUpdate = ({
         file,
         params,
@@ -106,6 +142,15 @@ class CollectionsController {
                 Number(params.collectionId)
             );
         }
+    };
+
+    private checkCollectionEditRights = async (
+        req: TypedRequest<CollectionCredentialsType>
+    ) => {
+        const { userId } = await this.findCollectionById(
+            Number(req.params.collectionId)
+        );
+        checkEditRights(req, userId);
     };
 
     private handleCollectionUpdate = async (
@@ -122,46 +167,15 @@ class CollectionsController {
         ]);
     };
 
-    public handleNewCollection = async (
-        req: TypedRequest<CollectionCredentialsType>,
-        res: Response<ICollectionModel>,
-        next: NextFunction
-    ): Promise<void> => {
-        try {
-            const collection = await this.handleCollectionCreate(req);
-            res.status(HttpStatusCodes.dataCreated).send(collection);
-        } catch (err) {
-            next(err);
-        }
-    };
-
     public handleUpdateCollection = async (
         req: TypedRequest<CollectionCredentialsType>,
         res: Response<ICollectionModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
+            await this.checkCollectionEditRights(req);
             const collection = await this.handleCollectionUpdate(req);
-            res.status(HttpStatusCodes.dataCreated).send(collection);
-        } catch (err) {
-            next(err);
-        }
-    };
-
-    public handleNewCollectionFields = async (
-        req: TypedRequest<{ fields: FieldCredentialsType[] }>,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> => {
-        try {
-            const collection = await this.findCollectionById(
-                Number(req.params.collectionId)
-            );
-            const fields = await this.createCollectionFields(
-                req.body.fields,
-                collection
-            );
-            res.status(HttpStatusCodes.dataCreated).send(fields);
+            res.send(collection);
         } catch (err) {
             next(err);
         }
@@ -182,9 +196,7 @@ class CollectionsController {
                     (b.items as IItemModel[]).length -
                     (a.items as IItemModel[]).length
             );
-            res.status(HttpStatusCodes.dataCreated).send(
-                collections.slice(0, 5)
-            );
+            res.send(collections.slice(0, 5));
         } catch (err) {
             next(err);
         }
@@ -200,7 +212,7 @@ class CollectionsController {
                 Number(req.params.collectionId),
                 [CollectionScopes.withFields, CollectionScopes.withUser]
             );
-            res.status(HttpStatusCodes.dataCreated).send(collection);
+            res.send(collection);
         } catch (err) {
             next(err);
         }
@@ -237,13 +249,14 @@ class CollectionsController {
         }
     };
 
-    public handleDeleteCollections = async (
-        req: TypedRequest<{ id: number[] }>,
+    public handleDeleteCollection = async (
+        req: UserRequest,
         res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
-            await this.deleteCollection(req.body.id);
+            await this.checkCollectionEditRights(req);
+            await this.deleteCollection(Number(req.params.collectionId));
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);

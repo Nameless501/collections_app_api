@@ -70,7 +70,7 @@ class FieldService {
         await this.fieldModel.update(payload, { where: { id } });
     };
 
-    public deleteField = async (id: number[]): Promise<void> => {
+    public deleteField = async (id: number): Promise<void> => {
         await this.fieldModel.destroy({ where: { id } });
     };
 }

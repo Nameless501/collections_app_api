@@ -1,7 +1,6 @@
 export enum HttpStatusCodes {
     success = 200,
     dataCreated = 201,
-    dataUpdated = 204,
     badRequest = 400,
     dataAccessError = 401,
     forbidden = 403,
