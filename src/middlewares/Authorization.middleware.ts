@@ -57,8 +57,12 @@ class Authorization {
         res: Response,
         next: NextFunction
     ): Promise<void> => {
-        await this.verifyUser(req);
-        next();
+        try {
+            await this.verifyUser(req);
+            next();
+        } catch (err) {
+            next(err);
+        }
     };
 }
 
