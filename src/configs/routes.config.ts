@@ -11,6 +11,7 @@ const routesConfig: RoutesConfigType = {
         tags: '/tags',
         likes: '/likes',
         comments: '/comments',
+        search: '/search',
     },
     authentication: {
         signIn: '/sign-in',
@@ -60,6 +61,9 @@ const routesConfig: RoutesConfigType = {
         itemComments: '/item/:itemId',
         leaveComment: '/item/:itemId',
         deleteComment: '/:commentId',
+    },
+    search: {
+        search: '/',
     },
 } as const;
 

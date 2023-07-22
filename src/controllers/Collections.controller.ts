@@ -10,6 +10,8 @@ import collectionService from '../services/Collection.service.js';
 
 import cloudStorageService from '../services/CloudStorage.service.js';
 
+import searchService from '../services/Search.service.js';
+
 import {
     ICollectionModel,
     CollectionCredentialsType,
@@ -24,7 +26,7 @@ import {
     HttpMessages,
 } from '../configs/httpResponse.config.js';
 
-import { CollectionScopes } from '../configs/enums.config.js';
+import { CollectionScopes, SearchIndexes } from '../configs/enums.config.js';
 
 import { ScopeType } from '../types/common.types.js';
 import { checkEditRights } from '../utils/helpers.util.js';
@@ -53,7 +55,12 @@ class CollectionsController {
         private uploadCollectionImage: (
             file: Express.Multer.File,
             collectionId: number
-        ) => Promise<string>
+        ) => Promise<string>,
+        private index: (
+            index: SearchIndexes,
+            id: number,
+            document: { [key: string]: string | number }
+        ) => Promise<void>
     ) {}
 
     private handleCollectionImage = async (
@@ -92,6 +99,18 @@ class CollectionsController {
         return collectionWithImage;
     };
 
+    private indexCollection = ({
+        id,
+        title,
+        subject,
+        description,
+    }: ICollectionModel) =>
+        this.index(SearchIndexes.collections, id, {
+            title,
+            subject,
+            description,
+        });
+
     public handleNewCollection = async (
         req: TypedRequest<CollectionCredentialsType>,
         res: Response<ICollectionModel>,
@@ -100,6 +119,7 @@ class CollectionsController {
         try {
             checkEditRights(req, Number(req.params.userId));
             const collection = await this.handleCollectionCreate(req);
+            await this.indexCollection(collection);
             res.status(HttpStatusCodes.dataCreated).send(collection);
         } catch (err) {
             next(err);
@@ -271,5 +291,6 @@ export default new CollectionsController(
     collectionService.findUserCollections,
     collectionService.findCollectionById,
     collectionService.findAllCollections,
-    cloudStorageService.uploadCollectionImage
+    cloudStorageService.uploadCollectionImage,
+    searchService.index
 );

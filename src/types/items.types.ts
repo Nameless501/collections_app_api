@@ -26,9 +26,6 @@ export interface IItemModel
     createdAt: CreationOptional<Date>;
     collectionId: CreationOptional<number>;
     collection?: ICollectionModel;
-    createItemField: (
-        payload: FieldValueCredentialsType
-    ) => Promise<IFieldValueModel>;
     getItemFields: () => Promise<IFieldValueModel[]>;
     addTag: (tag: ITagModel) => Promise<IItemTagModel>;
     getCollection: () => Promise<ICollectionModel>;

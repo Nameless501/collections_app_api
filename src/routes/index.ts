@@ -16,6 +16,8 @@ import likesRouter from './likes.route.js';
 
 import commentsRouter from './comments.route.js';
 
+import searchRouter from './search.route.js';
+
 import routesConfig from '../configs/routes.config.js';
 
 import NotFoundError from '../errors/NotFound.error.js';
@@ -31,6 +33,7 @@ const {
     tags,
     likes,
     comments,
+    search,
 } = routesConfig.root;
 
 router.use(authentication, authenticationRouter);
@@ -48,6 +51,8 @@ router.use(tags, tagsRouter);
 router.use(likes, likesRouter);
 
 router.use(comments, commentsRouter);
+
+router.use(search, searchRouter);
 
 router.use((req: Request, res: Response, next: NextFunction) =>
     next(new NotFoundError())

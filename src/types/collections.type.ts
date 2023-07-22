@@ -27,7 +27,6 @@ export interface ICollectionModel
     items?: IItemModel[];
     user?: IUserModel;
     createField: (payload: FieldCredentialsType) => Promise<IFieldModel>;
-    getFields: () => Promise<IFieldModel[]>;
     getUser: () => Promise<IUserModel>;
 }
 

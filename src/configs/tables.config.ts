@@ -150,6 +150,12 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
             withTags: {
                 include: ['tags'],
             },
+            withComments: {
+                include: ['comments'],
+            },
+            withFieldValues: {
+                include: ['fieldValues'],
+            },
         },
     },
 };

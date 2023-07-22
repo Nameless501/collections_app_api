@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 
 import commentService from '../services/Comment.service.js';
 
+import searchService from '../services/Search.service.js';
+
 import {
     ResponseWithMessage,
     ScopeType,
@@ -9,7 +11,7 @@ import {
     UserRequest,
 } from '../types/common.types.js';
 
-import { CommentScopes } from '../configs/enums.config.js';
+import { CommentScopes, SearchIndexes } from '../configs/enums.config.js';
 
 import { ICommentModel, CommentRequestType } from '../types/comments.type.js';
 
@@ -29,7 +31,12 @@ class CommentsController {
             scopes?: ScopeType<CommentScopes>
         ) => Promise<ICommentModel[]>,
         private deleteItemComments: (commentId: number) => Promise<void>,
-        private findCommentById: (commentId: number) => Promise<ICommentModel>
+        private findCommentById: (commentId: number) => Promise<ICommentModel>,
+        private index: (
+            index: SearchIndexes,
+            id: number,
+            document: { [key: string]: string | number }
+        ) => Promise<void>
     ) {}
 
     private handleCreateComment = (req: TypedRequest<CommentRequestType>) =>
@@ -44,6 +51,9 @@ class CommentsController {
         comment.setDataValue('user', user);
     };
 
+    private indexComment = ({ id, itemId, value }: ICommentModel) =>
+        this.index(SearchIndexes.comments, id, { itemId, value });
+
     public handleLeaveComment = async (
         req: TypedRequest<CommentRequestType>,
         res: Response<ICommentModel>,
@@ -52,6 +62,7 @@ class CommentsController {
         try {
             const comment = await this.handleCreateComment(req);
             await this.getCommentUser(comment);
+            await this.indexComment(comment);
             res.status(HttpStatusCodes.dataCreated).send(comment);
         } catch (err) {
             next(err);
@@ -102,5 +113,6 @@ export default new CommentsController(
     commentService.createComment,
     commentService.findItemComments,
     commentService.deleteItemComments,
-    commentService.findCommentById
+    commentService.findCommentById,
+    searchService.index
 );

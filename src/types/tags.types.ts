@@ -4,7 +4,7 @@ import {
     InferCreationAttributes,
     Model,
 } from 'sequelize';
-import { IItemModel } from './items.types.js';
+
 import { IItemTagModel } from './itemTags.type.js';
 
 export interface ITagModel
@@ -15,5 +15,5 @@ export interface ITagModel
     id: CreationOptional<number>;
     value: string;
     itemTagId: CreationOptional<number>;
-    addItem: (item: IItemModel) => Promise<IItemTagModel>;
+    itemTags?: IItemTagModel | IItemTagModel[];
 }
