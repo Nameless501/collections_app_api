@@ -56,7 +56,7 @@ class ItemsController {
         private setFieldValue: SetFieldValue,
         private findOrCreateTag: FindOrCreateTag,
         private index: Index
-    ) {}
+    ) { }
 
     private createNewItemFields = async (
         fieldsList: Array<FieldValueCredentialsType>,
@@ -129,35 +129,38 @@ class ItemsController {
     private indexItem = ({ id, title }: IItemModel): Promise<void> =>
         this.index(SearchIndexes.items, id, { itemId: id, title });
 
-    private indexFields = (fields: IFieldValueModel[]): Promise<void[]> =>
-        Promise.all(
-            fields.map(({ id, value, itemId }) =>
-                this.index(SearchIndexes.fieldValues, id, { itemId, value })
-            )
-        );
+    private indexFields = async (fields?: IFieldValueModel[]): Promise<void> => {
+        if (fields) {
+            await Promise.all(
+                fields.map(({ id, value, itemId }) =>
+                    this.index(SearchIndexes.fieldValues, id, { itemId, value })
+                )
+            );
+        }
+    }
 
-    private indexTags = (tags: ITagModel[]): Promise<void[]> =>
-        Promise.all(
-            tags.map((tag) => {
-                const itemTag = tag.getDataValue('itemTags');
-                if (typeof itemTag === 'object' && !Array.isArray(itemTag)) {
-                    this.index(SearchIndexes.tags, itemTag.id, {
-                        itemId: itemTag.itemId,
-                        value: tag.value,
-                    });
-                }
-            })
-        );
+    private indexTags = async (tags?: ITagModel[]): Promise<void> => {
+        if (tags) {
+            await Promise.all(
+                tags.map((tag) => {
+                    const itemTag = tag.getDataValue('itemTags');
+                    if (typeof itemTag === 'object' && !Array.isArray(itemTag)) {
+                        this.index(SearchIndexes.tags, itemTag.id, {
+                            itemId: itemTag.itemId,
+                            value: tag.value,
+                        });
+                    }
+                })
+            );
+        }
+    }
 
     private indexNewItem = async (item: IItemModel) => {
         await this.indexItem(item);
-        if (item.fields) {
-            await this.indexFields(item.fields);
-        }
-        if (item.tags) {
-            await this.indexTags(item.tags);
-        }
+        await this.indexFields(item.getDataValue('fields'));
+        await this.indexTags(item.getDataValue('tags'));
     };
+
 
     public handleNewItem = async (
         req: TypedRequest<ItemRequestType>,

@@ -25,8 +25,10 @@ import {
     HttpMessages,
     HttpStatusCodes,
 } from '../configs/httpResponse.config.js';
+
 import { checkEditRights } from '../utils/helpers.util.js';
-import { Index } from '../types/search.types.js';
+
+import { DeleteIndex, Index } from '../types/search.types.js';
 
 class CommentsController {
     constructor(
@@ -34,8 +36,11 @@ class CommentsController {
         private findItemComments: FindItemComments,
         private deleteItemComments: DeleteItemComments,
         private findCommentById: FindCommentById,
-        private index: Index
+        private index: Index,
+        private deleteIndex: DeleteIndex,
     ) {}
+
+    private getParamsId = (req: Request) => Number(req.params.itemId)
 
     private handleCreateComment = (req: TypedRequest<CommentRequestType>) =>
         this.createComment({
@@ -86,11 +91,11 @@ class CommentsController {
     private checkCommentEditRights = async (
         req: UserRequest
     ): Promise<void> => {
-        const { userId } = await this.findCommentById(
-            Number(req.params.commentId)
-        );
+        const { userId } = await this.findCommentById(this.getParamsId(req));
         checkEditRights(req, userId);
     };
+
+    private deleteCommentIndex = (commentId: number): Promise<void> => this.deleteIndex(SearchIndexes.comments, commentId);
 
     public handleDeleteComment = async (
         req: UserRequest,
@@ -99,7 +104,8 @@ class CommentsController {
     ): Promise<void> => {
         try {
             await this.checkCommentEditRights(req);
-            await this.deleteItemComments(Number(req.params.commentId));
+            await this.deleteItemComments(this.getParamsId(req));
+            await this.deleteCommentIndex(this.getParamsId(req));
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
@@ -112,5 +118,6 @@ export default new CommentsController(
     commentService.findItemComments,
     commentService.deleteItemComments,
     commentService.findCommentById,
-    searchService.index
+    searchService.index,
+    searchService.deleteIndex,
 );

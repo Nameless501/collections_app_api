@@ -32,7 +32,7 @@ export interface IItemModel
     collection?: ICollectionModel;
     fields?: Array<IFieldValueModel>;
     tags?: Array<ITagModel>;
-    getItemFields: () => Promise<IFieldValueModel[]>;
+    getFieldValues: () => Promise<IFieldValueModel[]>;
     addTag: (tag: ITagModel) => Promise<IItemTagModel>;
     getCollection: () => Promise<ICollectionModel>;
 }

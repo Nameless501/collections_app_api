@@ -25,7 +25,7 @@ import {
 
 import { UploadCollectionImage } from '../types/cloudStorage.types.js';
 
-import { Index } from '../types/search.types.js';
+import { DeleteIndex, Index } from '../types/search.types.js';
 
 import {
     HttpStatusCodes,
@@ -36,6 +36,8 @@ import { CollectionScopes, SearchIndexes } from '../configs/enums.config.js';
 
 import { checkEditRights } from '../utils/helpers.util.js';
 
+import { IItemModel } from '../types/items.types.js';
+
 class CollectionsController {
     constructor(
         private create: CreateCollection,
@@ -45,8 +47,9 @@ class CollectionsController {
         private findCollectionById: FindCollectionById,
         private findAllCollections: FindAllCollections,
         private uploadImage: UploadCollectionImage,
-        private index: Index
-    ) {}
+        private index: Index,
+        private deleteIndex: DeleteIndex,
+    ) { }
 
     private getReqIdParam = (req: Request): number =>
         Number(req.params.collectionId);
@@ -116,15 +119,6 @@ class CollectionsController {
         }
     };
 
-    private checkCollectionEditRights = async (
-        req: TypedRequest<CollectionCredentialsType>
-    ) => {
-        const { userId } = await this.findCollectionById(
-            this.getReqIdParam(req)
-        );
-        checkEditRights(req, userId);
-    };
-
     private updateCollectionData = async (
         req: TypedRequest<CollectionCredentialsType>
     ) => {
@@ -145,9 +139,10 @@ class CollectionsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            await this.checkCollectionEditRights(req);
-            const collection = await this.updateCollectionData(req);
-            res.send(collection);
+            const collection = await this.findCollectionById(this.getReqIdParam(req));
+            checkEditRights(req, collection.userId);
+            const updatedCollection = await this.updateCollectionData(req);
+            res.send(updatedCollection);
         } catch (err) {
             next(err);
         }
@@ -226,14 +221,37 @@ class CollectionsController {
         }
     };
 
+    public deleteCollectionItemIndex = async (item: IItemModel): Promise<void> => {
+        const fieldsValues = await item.getFieldValues();
+        await Promise.all(fieldsValues.map(({ id }): Promise<void> => this.deleteIndex(SearchIndexes.fieldValues, id)));
+        await this.deleteIndex(SearchIndexes.items, item.id);
+    }
+
+    public deleteCollectionItemsIndexes = async (items: IItemModel[]): Promise<void> => {
+        await Promise.all(items.map(this.deleteCollectionItemIndex));
+    }
+
+    private deleteCollectionIndex = async (collection: ICollectionModel): Promise<void> => {
+        await this.deleteIndex(SearchIndexes.collections, collection.id);
+        if (collection.items) {
+            await this.deleteCollectionItemsIndexes(collection.items);
+        }
+    }
+
+    private deleteCollectionData = async (collection: ICollectionModel): Promise<void> => {
+        await this.deleteCollectionIndex(collection);
+        await this.deleteCollection(collection.id);
+    }
+
     public handleDeleteCollection = async (
         req: UserRequest,
         res: ResponseWithMessage,
         next: NextFunction
     ): Promise<void> => {
         try {
-            await this.checkCollectionEditRights(req);
-            await this.deleteCollection(Number(this.getReqIdParam(req)));
+            const collection = await this.findCollectionById(Number(this.getReqIdParam(req)), [CollectionScopes.withItems]);
+            checkEditRights(req, collection.userId);
+            await this.deleteCollectionData(collection)
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
@@ -249,5 +267,6 @@ export default new CollectionsController(
     collectionService.findCollectionById,
     collectionService.findAllCollections,
     cloudStorageService.uploadCollectionImage,
-    searchService.index
+    searchService.index,
+    searchService.deleteIndex,
 );
