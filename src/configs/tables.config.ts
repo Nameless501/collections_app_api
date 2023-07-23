@@ -6,18 +6,18 @@ import type { TableConfigType } from '../types/common.types.js';
 
 import { IUserModel } from '../types/users.types.js';
 
-import { ICollectionModel } from '../types/collections.type.js';
+import { ICollectionModel } from '../types/collections.types.js';
 
 import { IItemModel } from '../types/items.types.js';
 
-import { IFieldModel } from '../types/fields.type.js';
+import { IFieldModel } from '../types/fields.types.js';
 
-import { IFieldValueModel } from '../types/fieldValues.type.js';
+import { IFieldValueModel } from '../types/fieldValues.types.js';
 
-import { IItemTagModel } from '../types/itemTags.type.js';
+import { IItemTagModel } from '../types/itemTags.types.js';
 
 import { ITagModel } from '../types/tags.types.js';
-import { ILikeModel } from '../types/likes.type.js';
+import { ILikeModel } from '../types/likes.types.js';
 
 export const usersTableConfig: TableConfigType<IUserModel> = {
     name: 'users',
@@ -149,6 +149,12 @@ export const itemTableConfig: TableConfigType<IItemModel> = {
             },
             withTags: {
                 include: ['tags'],
+            },
+            withComments: {
+                include: ['comments'],
+            },
+            withFieldValues: {
+                include: ['fieldValues'],
             },
         },
     },

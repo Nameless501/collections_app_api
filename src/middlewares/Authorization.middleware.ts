@@ -31,7 +31,9 @@ class Authorization {
     private verifyToken = (): void => {
         try {
             const payload = verifyToken(this.token as string);
-            this.userId = payload.id;
+            if (typeof payload === 'object') {
+                this.userId = payload.id;
+            }
         } catch (err) {
             throw new DataAccessError();
         }

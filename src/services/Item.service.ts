@@ -1,45 +1,45 @@
-import { ModelCtor } from 'sequelize';
+import { ModelCtor, Op } from 'sequelize';
 
 import ItemModel from '../models/item.model.js';
 
-import { ScopeType } from '../types/common.types.js';
-
-import { IItemModel, ItemCredentialsType } from '../types/items.types.js';
-
-import { ItemScopes } from '../configs/enums.config.js';
+import {
+    BulkFindItemById,
+    CreateItem,
+    DeleteItem,
+    FindAllItems,
+    FindCollectionItems,
+    FindItemById,
+    FindItems,
+    IItemModel,
+} from '../types/items.types.js';
 
 class CollectionService {
     constructor(private itemModel: ModelCtor<IItemModel>) {}
 
-    public createItem = (payload: ItemCredentialsType): Promise<IItemModel> =>
-        this.itemModel.create(payload);
+    public createItem: CreateItem = (payload) => this.itemModel.create(payload);
 
-    private findItems = (
-        param?: Partial<IItemModel>,
-        scopes?: ScopeType<ItemScopes>
-    ): Promise<IItemModel[]> =>
+    private findItems: FindItems = (param, scopes) =>
         this.itemModel.scope(scopes).findAll({ where: param });
 
-    public findCollectionItems = (
-        collectionId: number,
-        scopes?: ScopeType<ItemScopes>
-    ): Promise<IItemModel[]> => this.findItems({ collectionId }, scopes);
+    public findCollectionItems: FindCollectionItems = (collectionId, scopes) =>
+        this.findItems({ collectionId }, scopes);
 
-    public findAllItems = (
-        scopes?: ScopeType<ItemScopes>
-    ): Promise<IItemModel[]> => this.findItems(undefined, scopes);
+    public findAllItems: FindAllItems = (scopes) =>
+        this.findItems(undefined, scopes);
 
-    public findItemById = async (
-        id: number,
-        scopes?: ScopeType<ItemScopes>
-    ): Promise<IItemModel> => {
-        const items = await this.findItems({ id }, scopes);
-        return items[0];
+    public findItemById: FindItemById = async (id, scopes) => {
+        const [item] = await this.findItems({ id }, scopes);
+        return item;
     };
 
-    public deleteItems = async (id: number): Promise<void> => {
+    public deleteItem: DeleteItem = async (id) => {
         await this.itemModel.destroy({ where: { id } });
     };
+
+    public bulkFindItemsById: BulkFindItemById = async (id, scopes) =>
+        await this.itemModel
+            .scope(scopes)
+            .findAll({ where: { id: { [Op.in]: id } } });
 }
 
 export default new CollectionService(ItemModel);

@@ -4,6 +4,7 @@ import {
     TypedRequest,
     UserRequest,
     ResponseWithMessage,
+    HashPassword,
 } from '../types/common.types.js';
 
 import userService from '../services/User.service.js';
@@ -12,6 +13,10 @@ import {
     IUserModel,
     UpdateRoleRequestType,
     DeleteUsersRequestType,
+    FindAllUsers,
+    FindUserByCredentials,
+    UpdateUsers,
+    DeleteUsers,
 } from '../types/users.types.js';
 
 import { UsersScopes } from '../configs/enums.config.js';
@@ -26,20 +31,14 @@ import ForbiddenError from '../errors/Forbidden.error.js';
 
 class UsersController {
     constructor(
-        private findAllUsers: (
-            scopes?: Array<UsersScopes>
-        ) => Promise<IUserModel[]>,
-        private findUserByCredentials: (
-            credentials: Partial<IUserModel>,
-            scopes?: Array<UsersScopes>
-        ) => Promise<IUserModel> | never,
-        private updateUser: (
-            payload: Partial<IUserModel>,
-            id: number | number[]
-        ) => Promise<[affectedCount: number]>,
-        private deleteUsers: (id: Array<number>) => Promise<number>,
-        private hashPassword: (password: string) => Promise<string>
+        private findAllUsers: FindAllUsers,
+        private findUserByCredentials: FindUserByCredentials,
+        private updateUsers: UpdateUsers,
+        private deleteUsers: DeleteUsers,
+        private hashPassword: HashPassword
     ) {}
+
+    private getReqIdParam = (req: UserRequest) => Number(req.params.userId);
 
     public handleGetAllUsers = async (
         req: UserRequest,
@@ -79,8 +78,8 @@ class UsersController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            checkEditRights(req, Number(req.params.userId));
-            const user = await this.findUserData(Number(req.params.userId));
+            checkEditRights(req, this.getReqIdParam(req));
+            const user = await this.findUserData(this.getReqIdParam(req));
             res.send(user);
         } catch (err) {
             next(err);
@@ -108,12 +107,12 @@ class UsersController {
         }
     };
 
-    private updateUserData = async (
+    private updateUsersData = async (
         req: TypedRequest<Partial<IUserModel>>
     ): Promise<void> => {
         const payload = req.body;
         await this.updatePassword(payload);
-        await this.updateUser(payload, Number(req.params.userId));
+        await this.updateUsers(payload, this.getReqIdParam(req));
     };
 
     public handleUpdateUser = async (
@@ -122,8 +121,8 @@ class UsersController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            checkEditRights(req, Number(req.params.userId));
-            await this.updateUserData(req);
+            checkEditRights(req, this.getReqIdParam(req));
+            await this.updateUsersData(req);
             res.send({
                 message: HttpMessages.updateSuccess,
             });
@@ -146,7 +145,7 @@ class UsersController {
         try {
             this.checkIsAdmin(req);
             const { id, isAdmin } = req.body;
-            await this.updateUser({ isAdmin }, id);
+            await this.updateUsers({ isAdmin }, id);
             res.send({
                 message: HttpMessages.updateSuccess,
             });
@@ -159,7 +158,7 @@ class UsersController {
 export default new UsersController(
     userService.findAllUsers,
     userService.findUserByCredentials,
-    userService.updateUser,
+    userService.updateUsers,
     userService.deleteUsers,
     hashPassword
 );

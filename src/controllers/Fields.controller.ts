@@ -8,24 +8,63 @@ import {
 
 import fieldService from '../services/Field.service.js';
 
-import { FieldCredentialsType, IFieldModel } from '../types/fields.type.js';
+import collectionService from '../services/Collection.service.js';
 
-import { HttpMessages } from '../configs/httpResponse.config.js';
+import {
+    DeleteField,
+    FieldCredentialsType,
+    FindCollectionFields,
+    FindFieldById,
+    IFieldModel,
+    UpdateField,
+} from '../types/fields.types.js';
+
+import {
+    FindCollectionById,
+    ICollectionModel,
+} from '../types/collections.types.js';
+
+import {
+    HttpMessages,
+    HttpStatusCodes,
+} from '../configs/httpResponse.config.js';
 
 import { checkEditRights } from '../utils/helpers.util.js';
 
 class FieldsController {
     constructor(
-        private updateField: (
-            payload: Partial<IFieldModel>,
-            id: number
-        ) => Promise<void>,
-        private deleteField: (id: number) => Promise<void>,
-        private findFieldById: (id: number) => Promise<IFieldModel>,
-        private findCollectionFields: (
-            collectionId: number
-        ) => Promise<IFieldModel[]>
+        private updateField: UpdateField,
+        private deleteField: DeleteField,
+        private findFieldById: FindFieldById,
+        private findCollectionFields: FindCollectionFields,
+        private findCollectionById: FindCollectionById
     ) {}
+
+    private createCollectionFields = (
+        { fields }: { fields: FieldCredentialsType[] },
+        collection: ICollectionModel
+    ): Promise<IFieldModel[]> =>
+        Promise.all(fields.map((field) => collection.createField(field)));
+
+    public handleNewCollectionFields = async (
+        req: TypedRequest<{ fields: FieldCredentialsType[] }>,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const collection = await this.findCollectionById(
+                Number(req.params.collectionId)
+            );
+            checkEditRights(req, Number(collection.userId));
+            const fields = await this.createCollectionFields(
+                req.body,
+                collection
+            );
+            res.status(HttpStatusCodes.dataCreated).send(fields);
+        } catch (err) {
+            next(err);
+        }
+    };
 
     private checkFieldEditRights = async (
         req: TypedRequest<FieldCredentialsType> | UserRequest
@@ -90,5 +129,6 @@ export default new FieldsController(
     fieldService.updateField,
     fieldService.deleteField,
     fieldService.findFieldById,
-    fieldService.findCollectionFields
+    fieldService.findCollectionFields,
+    collectionService.findCollectionById
 );

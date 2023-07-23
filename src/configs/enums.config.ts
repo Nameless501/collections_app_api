@@ -50,6 +50,8 @@ export enum ItemScopes {
     withCollection = 'withCollection',
     withLikes = 'withLikes',
     withTags = 'withTags',
+    withComments = 'withComments',
+    withFieldValues = 'withFieldValues',
 }
 
 export enum FieldValueScopes {
@@ -62,4 +64,12 @@ export enum TagsScopes {
 
 export enum CommentScopes {
     withUser = 'withUser',
+}
+
+export enum SearchIndexes {
+    collections = 'collections',
+    items = 'items',
+    fieldValues = 'fields',
+    tags = 'tags',
+    comments = 'comments',
 }

@@ -9,11 +9,11 @@ const { MYSQLHOST, MYSQLUSER, MYSQLDATABASE, MYSQLPASSWORD, MYSQLPORT } =
 
 const dbConfig: Options = {
     dialect: 'mysql',
-    username: MYSQLUSER,
-    password: MYSQLPASSWORD,
-    database: MYSQLDATABASE,
-    host: MYSQLHOST,
-    port: Number(MYSQLPORT),
+    username: MYSQLUSER ?? '',
+    password: MYSQLPASSWORD ?? '',
+    database: MYSQLDATABASE ?? '',
+    host: MYSQLHOST ?? '',
+    port: Number(MYSQLPORT) ?? '',
     timezone: '+00:00',
     logging: (msg: string) => databaseLogger.info(msg),
     define: {

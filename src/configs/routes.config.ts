@@ -11,6 +11,7 @@ const routesConfig: RoutesConfigType = {
         tags: '/tags',
         likes: '/likes',
         comments: '/comments',
+        search: '/search',
     },
     authentication: {
         signIn: '/sign-in',
@@ -25,13 +26,12 @@ const routesConfig: RoutesConfigType = {
         deleteCollection: '/:collectionId',
         allCollections: '/',
         topCollections: '/top',
-        newCollectionFields: '/:collectionId/fields',
-        updateCollectionFields: '/:collectionId/fields',
     },
     fields: {
         updateField: '/:fieldId',
         deleteField: '/:fieldId',
         collectionFields: '/collection/:collectionId',
+        newCollectionFields: '/collection/:collectionId',
     },
     items: {
         newItem: '/collection/:collectionId',
@@ -60,6 +60,9 @@ const routesConfig: RoutesConfigType = {
         itemComments: '/item/:itemId',
         leaveComment: '/item/:itemId',
         deleteComment: '/:commentId',
+    },
+    search: {
+        search: '/',
     },
 } as const;
 

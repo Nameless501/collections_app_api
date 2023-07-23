@@ -5,7 +5,9 @@ import {
     Model,
 } from 'sequelize';
 
-import { IFieldModel } from './fields.type.js';
+import { IFieldModel } from './fields.types.js';
+import { ScopeType } from './common.types.js';
+import { FieldValueScopes } from '../configs/enums.config.js';
 
 export interface IFieldValueModel
     extends Model<
@@ -30,3 +32,16 @@ export type FieldValueResultType = {
     field: IFieldModel;
     value: IFieldValueModel;
 };
+
+export type SetFieldValue = (
+    payload: FieldValueCredentialsType
+) => Promise<IFieldValueModel>;
+
+export type FindFieldValues = (
+    payload: Partial<IFieldValueModel>,
+    scopes?: ScopeType<FieldValueScopes>
+) => Promise<IFieldValueModel[]>;
+
+export type FindItemFieldsValues = (
+    itemId: number
+) => Promise<IFieldValueModel[]>;

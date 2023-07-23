@@ -14,3 +14,10 @@ export interface ILikeModel
     itemId: number;
     userId: number;
 }
+
+export type FindOrSetLike = (
+    itemId: number,
+    userId: number
+) => Promise<ILikeModel>;
+
+export type DeleteLike = (itemId: number, userId: number) => Promise<void>;

@@ -2,34 +2,42 @@ import { Request, Response, NextFunction } from 'express';
 
 import commentService from '../services/Comment.service.js';
 
+import searchService from '../services/Search.service.js';
+
 import {
     ResponseWithMessage,
-    ScopeType,
     TypedRequest,
     UserRequest,
 } from '../types/common.types.js';
 
 import { CommentScopes } from '../configs/enums.config.js';
 
-import { ICommentModel, CommentRequestType } from '../types/comments.type.js';
+import {
+    ICommentModel,
+    CommentRequestType,
+    CreateComment,
+    FindItemComments,
+    DeleteItemComments,
+    FindCommentById,
+} from '../types/comments.types.js';
 
 import {
     HttpMessages,
     HttpStatusCodes,
 } from '../configs/httpResponse.config.js';
+
 import { checkEditRights } from '../utils/helpers.util.js';
+
+import { DeleteCommentIndex, IndexNewComment } from '../types/search.types.js';
 
 class CommentsController {
     constructor(
-        private createComment: (
-            payload: CommentRequestType
-        ) => Promise<ICommentModel>,
-        private findItemComments: (
-            itemId: number,
-            scopes?: ScopeType<CommentScopes>
-        ) => Promise<ICommentModel[]>,
-        private deleteItemComments: (commentId: number) => Promise<void>,
-        private findCommentById: (commentId: number) => Promise<ICommentModel>
+        private createComment: CreateComment,
+        private findItemComments: FindItemComments,
+        private deleteItemComments: DeleteItemComments,
+        private findCommentById: FindCommentById,
+        private indexNewComment: IndexNewComment,
+        private deleteCommentIndex: DeleteCommentIndex
     ) {}
 
     private handleCreateComment = (req: TypedRequest<CommentRequestType>) =>
@@ -52,6 +60,7 @@ class CommentsController {
         try {
             const comment = await this.handleCreateComment(req);
             await this.getCommentUser(comment);
+            await this.indexNewComment(comment);
             res.status(HttpStatusCodes.dataCreated).send(comment);
         } catch (err) {
             next(err);
@@ -74,13 +83,11 @@ class CommentsController {
         }
     };
 
-    private checkCommentEditRights = async (
-        req: UserRequest
+    private deleteCommentData = async (
+        comment: ICommentModel
     ): Promise<void> => {
-        const { userId } = await this.findCommentById(
-            Number(req.params.commentId)
-        );
-        checkEditRights(req, userId);
+        await this.deleteCommentIndex(comment);
+        await this.deleteItemComments(comment.id);
     };
 
     public handleDeleteComment = async (
@@ -89,8 +96,11 @@ class CommentsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            await this.checkCommentEditRights(req);
-            await this.deleteItemComments(Number(req.params.commentId));
+            const comment = await this.findCommentById(
+                Number(req.params.commentId)
+            );
+            checkEditRights(req, comment.userId);
+            await this.deleteCommentData(comment);
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
@@ -102,5 +112,7 @@ export default new CommentsController(
     commentService.createComment,
     commentService.findItemComments,
     commentService.deleteItemComments,
-    commentService.findCommentById
+    commentService.findCommentById,
+    searchService.indexNewComment,
+    searchService.deleteCommentIndex
 );

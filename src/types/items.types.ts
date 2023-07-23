@@ -8,13 +8,17 @@ import {
 import {
     IFieldValueModel,
     FieldValueCredentialsType,
-} from './fieldValues.type.js';
+} from './fieldValues.types.js';
 
 import { ITagModel } from './tags.types.js';
 
-import { IItemTagModel } from './itemTags.type.js';
+import { IItemTagModel } from './itemTags.types.js';
 
-import { ICollectionModel } from './collections.type.js';
+import { ICollectionModel } from './collections.types.js';
+
+import { ScopeType } from './common.types.js';
+
+import { ItemScopes } from '../configs/enums.config.js';
 
 export interface IItemModel
     extends Model<
@@ -26,10 +30,9 @@ export interface IItemModel
     createdAt: CreationOptional<Date>;
     collectionId: CreationOptional<number>;
     collection?: ICollectionModel;
-    createItemField: (
-        payload: FieldValueCredentialsType
-    ) => Promise<IFieldValueModel>;
-    getItemFields: () => Promise<IFieldValueModel[]>;
+    fields?: Array<IFieldValueModel>;
+    tags?: Array<ITagModel>;
+    getFieldValues: () => Promise<IFieldValueModel[]>;
     addTag: (tag: ITagModel) => Promise<IItemTagModel>;
     getCollection: () => Promise<ICollectionModel>;
 }
@@ -37,8 +40,8 @@ export interface IItemModel
 export type ItemRequestType = {
     collectionId: number;
     title: string;
-    fields: Array<FieldValueCredentialsType>;
-    tags: string[];
+    fields?: FieldValueCredentialsType[];
+    tags?: string[];
 };
 
 export type ItemCredentialsType = {
@@ -46,8 +49,30 @@ export type ItemCredentialsType = {
     title: string;
 };
 
-export type ItemResponseType = {
-    item: IItemModel;
-    fields: Array<IFieldValueModel>;
-    tags?: Array<ITagModel>;
-};
+export type CreateItem = (payload: ItemCredentialsType) => Promise<IItemModel>;
+
+export type FindItems = (
+    param?: Partial<IItemModel>,
+    scopes?: ScopeType<ItemScopes>
+) => Promise<IItemModel[]>;
+
+export type FindCollectionItems = (
+    collectionId: number,
+    scopes?: ScopeType<ItemScopes>
+) => Promise<IItemModel[]>;
+
+export type FindAllItems = (
+    scopes?: ScopeType<ItemScopes>
+) => Promise<IItemModel[]>;
+
+export type FindItemById = (
+    id: number,
+    scopes?: ScopeType<ItemScopes>
+) => Promise<IItemModel>;
+
+export type DeleteItem = (id: number) => Promise<void>;
+
+export type BulkFindItemById = (
+    id: number[],
+    scopes?: ScopeType<ItemScopes>
+) => Promise<IItemModel[]>;

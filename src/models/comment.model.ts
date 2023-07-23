@@ -2,7 +2,7 @@ import sequelize from '../configs/db.config.js';
 
 import { commentTableConfig } from '../configs/tables.config.js';
 
-import { ICommentModel } from '../types/comments.type.js';
+import { ICommentModel } from '../types/comments.types.js';
 
 import UserModel from './user.model.js';
 
