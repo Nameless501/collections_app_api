@@ -2,24 +2,20 @@ import { Client } from '@elastic/elasticsearch';
 
 import { elasticConfig } from '../configs/elasticsearch.config.js';
 
-import { SearchIndexes } from '../configs/enums.config.js';
+import { DeleteIndex, Index, Search } from '../types/search.types.js';
 
 class SearchService {
     constructor(private client: Client) {}
 
-    public index = async (
-        index: SearchIndexes,
-        id: number,
-        document: { [key: string]: string | number }
-    ) => {
+    public index: Index = async (index, id, document) => {
         this.client.index({ index, id: `${id}`, document });
     };
 
-    public deleteIndex = async (index: SearchIndexes, id: number) => {
+    public deleteIndex: DeleteIndex = async (index, id) => {
         this.client.delete({ index, id: `${id}` });
     };
 
-    public search = (query: string, index?: SearchIndexes) =>
+    public search: Search = (query, index?) =>
         this.client.search({
             index,
             body: {

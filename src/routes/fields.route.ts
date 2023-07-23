@@ -6,17 +6,27 @@ import authorization from '../middlewares/Authorization.middleware.js';
 
 import createRequestValidator from '../utils/validation.util.js';
 
-import { updateFieldValidationConfig } from '../configs/validation.config.js';
+import {
+    newFieldsValidationConfig,
+    updateFieldValidationConfig,
+} from '../configs/validation.config.js';
 
 import routesConfig from '../configs/routes.config.js';
 
-const { updateField, deleteField, collectionFields } = routesConfig.fields;
+const { updateField, deleteField, collectionFields, newCollectionFields } =
+    routesConfig.fields;
 
 const router: Router = Router();
 
 router.use(authorization.authorize);
 
 router.get(collectionFields, fieldsController.handleGetCollectionFields);
+
+router.post(
+    newCollectionFields,
+    createRequestValidator(newFieldsValidationConfig),
+    fieldsController.handleNewCollectionFields
+);
 
 router.patch(
     updateField,

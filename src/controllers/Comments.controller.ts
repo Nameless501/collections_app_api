@@ -6,37 +6,35 @@ import searchService from '../services/Search.service.js';
 
 import {
     ResponseWithMessage,
-    ScopeType,
     TypedRequest,
     UserRequest,
 } from '../types/common.types.js';
 
 import { CommentScopes, SearchIndexes } from '../configs/enums.config.js';
 
-import { ICommentModel, CommentRequestType } from '../types/comments.type.js';
+import {
+    ICommentModel,
+    CommentRequestType,
+    CreateComment,
+    FindItemComments,
+    DeleteItemComments,
+    FindCommentById,
+} from '../types/comments.types.js';
 
 import {
     HttpMessages,
     HttpStatusCodes,
 } from '../configs/httpResponse.config.js';
 import { checkEditRights } from '../utils/helpers.util.js';
+import { Index } from '../types/search.types.js';
 
 class CommentsController {
     constructor(
-        private createComment: (
-            payload: CommentRequestType
-        ) => Promise<ICommentModel>,
-        private findItemComments: (
-            itemId: number,
-            scopes?: ScopeType<CommentScopes>
-        ) => Promise<ICommentModel[]>,
-        private deleteItemComments: (commentId: number) => Promise<void>,
-        private findCommentById: (commentId: number) => Promise<ICommentModel>,
-        private index: (
-            index: SearchIndexes,
-            id: number,
-            document: { [key: string]: string | number }
-        ) => Promise<void>
+        private createComment: CreateComment,
+        private findItemComments: FindItemComments,
+        private deleteItemComments: DeleteItemComments,
+        private findCommentById: FindCommentById,
+        private index: Index
     ) {}
 
     private handleCreateComment = (req: TypedRequest<CommentRequestType>) =>

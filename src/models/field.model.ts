@@ -2,7 +2,7 @@ import sequelize from '../configs/db.config.js';
 
 import FieldValueModel from './fieldValue.model.js';
 
-import { IFieldModel } from '../types/fields.type.js';
+import { IFieldModel } from '../types/fields.types.js';
 
 import { fieldTableConfig } from '../configs/tables.config.js';
 

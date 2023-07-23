@@ -91,9 +91,9 @@ export const newItemValidationConfig: ValidationConfigTypes = {
             })
         )
         .required(),
-    tags: validationOptions
-        .getOptionsArray(validationOptions.getStringValidation())
-        .required(),
+    tags: validationOptions.getOptionsArray(
+        validationOptions.getStringValidation()
+    ),
 };
 
 export const uploadImageValidation = validationOptions.getFileValidation();

@@ -8,7 +8,6 @@ import createRequestValidator from '../utils/validation.util.js';
 
 import {
     newCollectionValidationConfig,
-    newFieldsValidationConfig,
     updateCollectionValidationConfig,
 } from '../configs/validation.config.js';
 
@@ -22,20 +21,19 @@ const {
     userCollections,
     collectionData,
     newCollection,
-    newCollectionFields,
     updateCollection,
     deleteCollection,
 } = routesConfig.collections;
 
 const router: Router = Router();
 
-router.get(allCollections, collectionsController.handleAllCollections);
+router.get(allCollections, collectionsController.handleGetAllCollections);
 
-router.get(topCollections, collectionsController.handleCollectionsTop);
+router.get(topCollections, collectionsController.handleGetBiggestCollections);
 
-router.get(collectionData, collectionsController.handleCollectionData);
+router.get(collectionData, collectionsController.handleGetCollectionData);
 
-router.get(userCollections, collectionsController.handleUserCollections);
+router.get(userCollections, collectionsController.handleGetUserCollections);
 
 router.use(authorization.authorize);
 
@@ -44,12 +42,6 @@ router.post(
     fileParser,
     createRequestValidator(newCollectionValidationConfig),
     collectionsController.handleNewCollection
-);
-
-router.post(
-    newCollectionFields,
-    createRequestValidator(newFieldsValidationConfig),
-    collectionsController.handleNewCollectionFields
 );
 
 router.patch(

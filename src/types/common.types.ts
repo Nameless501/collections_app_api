@@ -74,9 +74,6 @@ export type ResponseWithMessage<T = string> = Response<{
 
 export interface TypedRequest<T> extends UserRequest {
     body: T;
-    user?: {
-        id: number;
-    };
 }
 
 export type TableConfigType<M extends Model = Model> = {
@@ -98,3 +95,10 @@ export type SeedsConfigType = {
 export type Migration = typeof migrator._types.migration;
 
 export type ScopeType<T> = Array<T> | ScopeOptions;
+
+export type HashPassword = (password: string) => Promise<string>;
+
+export type ComparePasswords = (
+    password: string,
+    passwordHash: string
+) => Promise<void> | never;

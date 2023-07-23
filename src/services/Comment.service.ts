@@ -1,36 +1,33 @@
 import { ModelCtor } from 'sequelize';
 
-import { ScopeType } from '../types/common.types.js';
-
-import { CommentScopes } from '../configs/enums.config.js';
-
-import { ICommentModel, CommentRequestType } from '../types/comments.type.js';
+import {
+    ICommentModel,
+    CreateComment,
+    FindAllComments,
+    FindItemComments,
+    DeleteItemComments,
+    FindCommentById,
+} from '../types/comments.types.js';
 
 import CommentModel from '../models/comment.model.js';
 
 class CommentService {
     constructor(private commentModel: ModelCtor<ICommentModel>) {}
 
-    public createComment = (
-        payload: CommentRequestType
-    ): Promise<ICommentModel> => this.commentModel.create(payload);
+    public createComment: CreateComment = (payload) =>
+        this.commentModel.create(payload);
 
-    private findAllComments = (
-        param?: Partial<ICommentModel>,
-        scopes?: ScopeType<CommentScopes>
-    ): Promise<ICommentModel[]> =>
+    private findAllComments: FindAllComments = (param, scopes) =>
         this.commentModel.scope(scopes).findAll({ where: param });
 
-    public findItemComments = (
-        itemId: number,
-        scopes?: ScopeType<CommentScopes>
-    ): Promise<ICommentModel[]> => this.findAllComments({ itemId }, scopes);
+    public findItemComments: FindItemComments = (itemId, scopes) =>
+        this.findAllComments({ itemId }, scopes);
 
-    public deleteItemComments = async (id: number): Promise<void> => {
+    public deleteItemComments: DeleteItemComments = async (id) => {
         await this.commentModel.destroy({ where: { id } });
     };
 
-    public findCommentById = async (id: number): Promise<ICommentModel> => {
+    public findCommentById: FindCommentById = async (id) => {
         const [comment] = await this.commentModel.findAll({ where: { id } });
         return comment;
     };

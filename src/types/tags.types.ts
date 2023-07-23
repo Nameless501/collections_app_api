@@ -5,7 +5,11 @@ import {
     Model,
 } from 'sequelize';
 
-import { IItemTagModel } from './itemTags.type.js';
+import { IItemTagModel } from './itemTags.types.js';
+
+import { ScopeType } from './common.types.js';
+
+import { TagsScopes } from '../configs/enums.config.js';
 
 export interface ITagModel
     extends Model<
@@ -17,3 +21,9 @@ export interface ITagModel
     itemTagId: CreationOptional<number>;
     itemTags?: IItemTagModel | IItemTagModel[];
 }
+
+export type FindOrCreateTag = (value: string) => Promise<ITagModel>;
+
+export type FindAllTags = (
+    scopes?: ScopeType<TagsScopes>
+) => Promise<ITagModel[]>;

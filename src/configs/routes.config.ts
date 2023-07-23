@@ -26,13 +26,12 @@ const routesConfig: RoutesConfigType = {
         deleteCollection: '/:collectionId',
         allCollections: '/',
         topCollections: '/top',
-        newCollectionFields: '/:collectionId/fields',
-        updateCollectionFields: '/:collectionId/fields',
     },
     fields: {
         updateField: '/:fieldId',
         deleteField: '/:fieldId',
         collectionFields: '/collection/:collectionId',
+        newCollectionFields: '/collection/:collectionId',
     },
     items: {
         newItem: '/collection/:collectionId',

@@ -1,6 +1,6 @@
 import sequelize from '../configs/db.config.js';
 
-import { IItemTagModel } from '../types/itemTags.type.js';
+import { IItemTagModel } from '../types/itemTags.types.js';
 
 import { itemTagTableConfig } from '../configs/tables.config.js';
 

@@ -19,7 +19,7 @@ router.get(collectionItems, itemsController.handleGetCollectionItems);
 
 router.get(topNewest, itemsController.handleRecentItems);
 
-router.get(itemData, itemsController.handleItemData);
+router.get(itemData, itemsController.handleGetItemData);
 
 router.use(authorization.authorize);
 

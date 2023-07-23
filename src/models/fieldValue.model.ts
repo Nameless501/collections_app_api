@@ -1,6 +1,6 @@
 import sequelize from '../configs/db.config.js';
 
-import { IFieldValueModel } from '../types/fieldValues.type.js';
+import { IFieldValueModel } from '../types/fieldValues.types.js';
 
 import { fieldValueTableConfig } from '../configs/tables.config.js';
 

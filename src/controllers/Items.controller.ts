@@ -2,16 +2,13 @@ import { Response, NextFunction } from 'express';
 
 import {
     ResponseWithMessage,
-    ScopeType,
     TypedRequest,
     UserRequest,
 } from '../types/common.types.js';
 
 import itemService from '../services/Item.service.js';
 
-import itemFieldService from '../services/ItemField.service.js';
-
-import fieldService from '../services/Field.service.js';
+import fieldValueService from '../services/FieldValue.service.js';
 
 import tagService from '../services/Tag.service.js';
 
@@ -19,16 +16,25 @@ import searchService from '../services/Search.service.js';
 
 import {
     IItemModel,
-    ItemCredentialsType,
-    ItemResponseType,
     ItemRequestType,
+    FindAllItems,
+    FindItemById,
+    CreateItem,
+    FindCollectionItems,
+    DeleteItem,
 } from '../types/items.types.js';
 
-import { FieldValueCredentialsType } from '../types/fieldValues.type.js';
+import {
+    FieldValueCredentialsType,
+    FindItemFieldsValues,
+    SetFieldValue,
+} from '../types/fieldValues.types.js';
 
-import { ITagModel } from '../types/tags.types.js';
+import { FindOrCreateTag, ITagModel } from '../types/tags.types.js';
 
-import { IFieldValueModel } from '../types/fieldValues.type.js';
+import { IFieldValueModel } from '../types/fieldValues.types.js';
+
+import { Index } from '../types/search.types.js';
 
 import {
     HttpMessages,
@@ -41,44 +47,30 @@ import { checkEditRights } from '../utils/helpers.util.js';
 
 class ItemsController {
     constructor(
-        private findAllItems: (
-            scopes?: ScopeType<ItemScopes>
-        ) => Promise<IItemModel[]>,
-        private findItemById: (
-            id: number,
-            scopes?: ScopeType<ItemScopes>
-        ) => Promise<IItemModel>,
-        private createItem: (
-            payload: ItemCredentialsType
-        ) => Promise<IItemModel>,
-        private findCollectionItems: (
-            collectionId: number,
-            scopes?: ScopeType<ItemScopes>
-        ) => Promise<IItemModel[]>,
-        private findItemFieldsValues: (
-            itemId: number
-        ) => Promise<IFieldValueModel[]>,
-        private deleteItems: (id: number) => Promise<void>,
-        private setFieldValue: (
-            payload: FieldValueCredentialsType
-        ) => Promise<IFieldValueModel>,
-        private findOrCreateTag: (value: string) => Promise<ITagModel>,
-        private index: (
-            index: SearchIndexes,
-            id: number,
-            document: { [key: string]: string | number }
-        ) => Promise<void>
+        private findAllItems: FindAllItems,
+        private findItemById: FindItemById,
+        private createItem: CreateItem,
+        private findCollectionItems: FindCollectionItems,
+        private findItemFieldsValues: FindItemFieldsValues,
+        private deleteItems: DeleteItem,
+        private setFieldValue: SetFieldValue,
+        private findOrCreateTag: FindOrCreateTag,
+        private index: Index
     ) {}
 
-    private handleNewItemFields = (
+    private createNewItemFields = async (
         fieldsList: Array<FieldValueCredentialsType>,
-        itemId: number
-    ): Promise<IFieldValueModel[]> =>
-        Promise.all(
-            fieldsList.map((field) => this.setFieldValue({ ...field, itemId }))
+        item: IItemModel
+    ): Promise<void> => {
+        const fields = await Promise.all(
+            fieldsList.map((field) =>
+                this.setFieldValue({ ...field, itemId: item.id })
+            )
         );
+        item.setDataValue('fields', fields);
+    };
 
-    private handleNewItemTags = async (
+    private createNewItemTags = (
         tagsList: string[],
         item: IItemModel
     ): Promise<ITagModel[]> =>
@@ -91,26 +83,47 @@ class ItemsController {
             })
         );
 
-    private handleItemCreate = async ({
-        title,
-        collectionId,
-    }: ItemRequestType): Promise<IItemModel> => {
-        const item = await this.createItem({ title, collectionId });
-        const collection = await item.getCollection();
-        item.setDataValue('collection', collection);
-        return item;
+    private getItemTags = async (
+        tagsList: string[],
+        item: IItemModel
+    ): Promise<void> => {
+        const tags = await this.createNewItemTags(tagsList, item);
+        item.setDataValue('tags', tags);
     };
 
-    private createItemWithFields = async (
+    private getItemCollection = async (item: IItemModel): Promise<void> => {
+        const collection = await item.getCollection();
+        item.setDataValue('collection', collection);
+    };
+
+    private handleItemCreate = ({
+        title,
+        collectionId,
+    }: ItemRequestType): Promise<IItemModel> =>
+        this.createItem({ title, collectionId });
+
+    private getNewItemData = async (
+        item: IItemModel,
         req: TypedRequest<ItemRequestType>
-    ): Promise<ItemResponseType> => {
+    ) => {
+        await this.getItemCollection(item);
+        if (req.body.fields) {
+            await this.createNewItemFields(req.body.fields, item);
+        }
+        if (req.body.tags) {
+            await this.getItemTags(req.body.tags, item);
+        }
+    };
+
+    private handleItemDataCreate = async (
+        req: TypedRequest<ItemRequestType>
+    ): Promise<IItemModel> => {
         const item = await this.handleItemCreate({
             ...req.body,
             collectionId: Number(req.params.collectionId),
         });
-        const fields = await this.handleNewItemFields(req.body.fields, item.id);
-        const tags = await this.handleNewItemTags(req.body.tags, item);
-        return { item, fields, tags };
+        await this.getNewItemData(item, req);
+        return item;
     };
 
     private indexItem = ({ id, title }: IItemModel): Promise<void> =>
@@ -136,21 +149,23 @@ class ItemsController {
             })
         );
 
-    private indexNewItem = async ({ item, fields, tags }: ItemResponseType) => {
+    private indexNewItem = async (item: IItemModel) => {
         await this.indexItem(item);
-        await this.indexFields(fields);
-        if (tags) {
-            await this.indexTags(tags);
+        if (item.fields) {
+            await this.indexFields(item.fields);
+        }
+        if (item.tags) {
+            await this.indexTags(item.tags);
         }
     };
 
     public handleNewItem = async (
         req: TypedRequest<ItemRequestType>,
-        res: Response<ItemResponseType>,
+        res: Response<IItemModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
-            const item = await this.createItemWithFields(req);
+            const item = await this.handleItemDataCreate(req);
             await this.indexNewItem(item);
             res.status(HttpStatusCodes.dataCreated).send(item);
         } catch (err) {
@@ -158,21 +173,18 @@ class ItemsController {
         }
     };
 
-    private getItemFields = async (
-        item: IItemModel
-    ): Promise<ItemResponseType> => {
+    private getItemFields = async (item: IItemModel): Promise<void> => {
         const fields = await this.findItemFieldsValues(item.id);
-        return { item, fields };
+        item.setDataValue('fields', fields);
     };
 
-    private getItemsFields = async (
-        items: IItemModel[]
-    ): Promise<ItemResponseType[]> =>
-        Promise.all(items.map((item) => this.getItemFields(item)));
+    private getItemsFields = async (items: IItemModel[]): Promise<void> => {
+        await Promise.all(items.map((item) => this.getItemFields(item)));
+    };
 
     public handleGetCollectionItems = async (
         req: UserRequest,
-        res: Response<ItemResponseType[]>,
+        res: Response<IItemModel[]>,
         next: NextFunction
     ): Promise<void> => {
         try {
@@ -180,8 +192,8 @@ class ItemsController {
                 Number(req.params.collectionId),
                 [ItemScopes.withCollection, ItemScopes.withLikes]
             );
-            const itemWithFields = await this.getItemsFields(items);
-            res.send(itemWithFields);
+            await this.getItemsFields(items);
+            res.send(items);
         } catch (err) {
             next(err);
         }
@@ -198,13 +210,13 @@ class ItemsController {
 
     public handleRecentItems = async (
         req: UserRequest,
-        res: Response<ItemResponseType[]>,
+        res: Response<IItemModel[]>,
         next: NextFunction
     ): Promise<void> => {
         try {
             const items = await this.findMostRecentItems();
-            const itemWithFields = await this.getItemsFields(items);
-            res.send(itemWithFields);
+            await this.getItemsFields(items);
+            res.send(items);
         } catch (err) {
             next(err);
         }
@@ -230,9 +242,9 @@ class ItemsController {
         }
     };
 
-    public handleItemData = async (
+    public handleGetItemData = async (
         req: UserRequest,
-        res: Response<ItemResponseType>,
+        res: Response<IItemModel>,
         next: NextFunction
     ): Promise<void> => {
         try {
@@ -241,8 +253,8 @@ class ItemsController {
                 ItemScopes.withTags,
                 ItemScopes.withLikes,
             ]);
-            const itemWithFields = await this.getItemFields(item);
-            res.send(itemWithFields);
+            await this.getItemFields(item);
+            res.send(item);
         } catch (err) {
             next(err);
         }
@@ -254,9 +266,9 @@ export default new ItemsController(
     itemService.findItemById,
     itemService.createItem,
     itemService.findCollectionItems,
-    fieldService.findItemFieldsValues,
-    itemService.deleteItems,
-    itemFieldService.setFieldValue,
+    fieldValueService.findItemFieldsValues,
+    itemService.deleteItem,
+    fieldValueService.setFieldValue,
     tagService.findOrCreateTag,
     searchService.index
 );

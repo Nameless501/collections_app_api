@@ -2,7 +2,7 @@ import { NextFunction } from 'express';
 
 import likeService from '../services/Like.service.js';
 
-import { ILikeModel } from '../types/likes.type.js';
+import { DeleteLike, FindOrSetLike } from '../types/likes.types.js';
 
 import { ResponseWithMessage, UserRequest } from '../types/common.types.js';
 
@@ -10,11 +10,8 @@ import { HttpMessages } from '../configs/httpResponse.config.js';
 
 class LikesController {
     constructor(
-        private findOrSetLike: (
-            itemId: number,
-            userId: number
-        ) => Promise<ILikeModel>,
-        private deleteLike: (itemId: number, userId: number) => Promise<void>
+        private findOrSetLike: FindOrSetLike,
+        private deleteLike: DeleteLike
     ) {}
 
     public handleLikeSet = async (

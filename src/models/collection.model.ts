@@ -1,6 +1,6 @@
 import sequelize from '../configs/db.config.js';
 
-import { ICollectionModel } from '../types/collections.type.js';
+import { ICollectionModel } from '../types/collections.types.js';
 
 import { collectionsTableConfig } from '../configs/tables.config.js';
 

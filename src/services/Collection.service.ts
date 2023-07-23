@@ -4,52 +4,41 @@ import CollectionModel from '../models/collection.model.js';
 
 import {
     ICollectionModel,
-    CollectionCredentialsType,
-} from '../types/collections.type.js';
-
-import { ScopeType } from '../types/common.types.js';
-
-import { CollectionScopes } from '../configs/enums.config.js';
+    CreateCollection,
+    FindCollections,
+    FindUserCollections,
+    UpdateCollection,
+    FindCollectionById,
+    FindAllCollections,
+    DeleteCollection,
+} from '../types/collections.types.js';
 
 class CollectionService {
     constructor(private collectionModel: ModelCtor<ICollectionModel>) {}
 
-    public createCollection = (
-        payload: CollectionCredentialsType
-    ): Promise<ICollectionModel> => this.collectionModel.create(payload);
+    public createCollection: CreateCollection = (payload) =>
+        this.collectionModel.create(payload);
 
-    private findCollections = (
-        param?: Partial<CollectionCredentialsType>,
-        scopes?: ScopeType<CollectionScopes>
-    ): Promise<ICollectionModel[]> =>
+    private findCollections: FindCollections = (param, scopes) =>
         this.collectionModel.scope(scopes).findAll({ where: param });
 
-    public findUserCollections = (
-        userId: number,
-        scopes?: ScopeType<CollectionScopes>
-    ): Promise<ICollectionModel[]> => this.findCollections({ userId }, scopes);
+    public findUserCollections: FindUserCollections = (userId, scopes?) =>
+        this.findCollections({ userId }, scopes);
 
-    public updateCollection = async (
-        payload: Partial<CollectionCredentialsType>,
-        id: number
-    ): Promise<void> => {
+    public findCollectionById: FindCollectionById = async (id, scopes) => {
+        const [collection] = await this.findCollections({ id }, scopes);
+        return collection;
+    };
+
+    public findAllCollections: FindAllCollections = (scopes) =>
+        this.findCollections(undefined, scopes);
+
+    public updateCollection: UpdateCollection = async (payload, id) => {
         await this.collectionModel.update(payload, { where: { id } });
     };
 
-    public findAllCollections = (
-        scopes?: ScopeType<CollectionScopes>
-    ): Promise<ICollectionModel[]> => this.findCollections(undefined, scopes);
-
-    public deleteCollection = async (id: number): Promise<void> => {
+    public deleteCollection: DeleteCollection = async (id) => {
         await this.collectionModel.destroy({ where: { id } });
-    };
-
-    public findCollectionById = async (
-        id: number,
-        scopes?: ScopeType<CollectionScopes>
-    ): Promise<ICollectionModel> => {
-        const collections = await this.findCollections({ id }, scopes);
-        return collections[0];
     };
 }
 

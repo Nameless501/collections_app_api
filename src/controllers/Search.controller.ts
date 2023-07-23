@@ -1,18 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { SearchResponse } from '@elastic/elasticsearch/lib/api/types.js';
-
 import searchService from '../services/Search.service.js';
 
 import { SearchIndexes } from '../configs/enums.config.js';
 
+import { Search } from '../types/search.types.js';
+
 class SearchController {
-    constructor(
-        private search: (
-            query: string,
-            index?: SearchIndexes
-        ) => Promise<SearchResponse>
-    ) {}
+    constructor(private search: Search) {}
 
     public handleSearch = async (
         req: Request,

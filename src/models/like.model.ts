@@ -1,6 +1,6 @@
 import sequelize from '../configs/db.config.js';
 
-import { ILikeModel } from '../types/likes.type.js';
+import { ILikeModel } from '../types/likes.types.js';
 
 import { likesTableConfig } from '../configs/tables.config.js';
 
