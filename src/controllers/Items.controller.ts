@@ -32,18 +32,16 @@ import {
 
 import { FindOrCreateTag, ITagModel } from '../types/tags.types.js';
 
-import { IFieldValueModel } from '../types/fieldValues.types.js';
-
-import { Index } from '../types/search.types.js';
-
 import {
     HttpMessages,
     HttpStatusCodes,
 } from '../configs/httpResponse.config.js';
 
-import { ItemScopes, SearchIndexes } from '../configs/enums.config.js';
+import { ItemScopes } from '../configs/enums.config.js';
 
 import { checkEditRights } from '../utils/helpers.util.js';
+
+import { IndexNewItem } from '../types/search.types.js';
 
 class ItemsController {
     constructor(
@@ -55,8 +53,8 @@ class ItemsController {
         private deleteItems: DeleteItem,
         private setFieldValue: SetFieldValue,
         private findOrCreateTag: FindOrCreateTag,
-        private index: Index
-    ) { }
+        private indexNewItem: IndexNewItem
+    ) {}
 
     private createNewItemFields = async (
         fieldsList: Array<FieldValueCredentialsType>,
@@ -77,8 +75,7 @@ class ItemsController {
         Promise.all(
             tagsList.map(async (tag) => {
                 const newTag = await this.findOrCreateTag(tag);
-                const itemTag = await item.addTag(newTag);
-                newTag.setDataValue('itemTags', itemTag);
+                await item.addTag(newTag);
                 return newTag;
             })
         );
@@ -126,42 +123,6 @@ class ItemsController {
         return item;
     };
 
-    private indexItem = ({ id, title }: IItemModel): Promise<void> =>
-        this.index(SearchIndexes.items, id, { itemId: id, title });
-
-    private indexFields = async (fields?: IFieldValueModel[]): Promise<void> => {
-        if (fields) {
-            await Promise.all(
-                fields.map(({ id, value, itemId }) =>
-                    this.index(SearchIndexes.fieldValues, id, { itemId, value })
-                )
-            );
-        }
-    }
-
-    private indexTags = async (tags?: ITagModel[]): Promise<void> => {
-        if (tags) {
-            await Promise.all(
-                tags.map((tag) => {
-                    const itemTag = tag.getDataValue('itemTags');
-                    if (typeof itemTag === 'object' && !Array.isArray(itemTag)) {
-                        this.index(SearchIndexes.tags, itemTag.id, {
-                            itemId: itemTag.itemId,
-                            value: tag.value,
-                        });
-                    }
-                })
-            );
-        }
-    }
-
-    private indexNewItem = async (item: IItemModel) => {
-        await this.indexItem(item);
-        await this.indexFields(item.getDataValue('fields'));
-        await this.indexTags(item.getDataValue('tags'));
-    };
-
-
     public handleNewItem = async (
         req: TypedRequest<ItemRequestType>,
         res: Response<IItemModel>,
@@ -169,7 +130,7 @@ class ItemsController {
     ): Promise<void> => {
         try {
             const item = await this.handleItemDataCreate(req);
-            await this.indexNewItem(item);
+            this.indexNewItem(item);
             res.status(HttpStatusCodes.dataCreated).send(item);
         } catch (err) {
             next(err);
@@ -273,5 +234,5 @@ export default new ItemsController(
     itemService.deleteItem,
     fieldValueService.setFieldValue,
     tagService.findOrCreateTag,
-    searchService.index
+    searchService.indexNewItem
 );

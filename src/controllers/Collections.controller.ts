@@ -10,8 +10,6 @@ import collectionService from '../services/Collection.service.js';
 
 import cloudStorageService from '../services/CloudStorage.service.js';
 
-import searchService from '../services/Search.service.js';
-
 import {
     ICollectionModel,
     CollectionCredentialsType,
@@ -25,18 +23,14 @@ import {
 
 import { UploadCollectionImage } from '../types/cloudStorage.types.js';
 
-import { DeleteIndex, Index } from '../types/search.types.js';
-
 import {
     HttpStatusCodes,
     HttpMessages,
 } from '../configs/httpResponse.config.js';
 
-import { CollectionScopes, SearchIndexes } from '../configs/enums.config.js';
+import { CollectionScopes } from '../configs/enums.config.js';
 
 import { checkEditRights } from '../utils/helpers.util.js';
-
-import { IItemModel } from '../types/items.types.js';
 
 class CollectionsController {
     constructor(
@@ -46,10 +40,8 @@ class CollectionsController {
         private findUserCollections: FindUserCollections,
         private findCollectionById: FindCollectionById,
         private findAllCollections: FindAllCollections,
-        private uploadImage: UploadCollectionImage,
-        private index: Index,
-        private deleteIndex: DeleteIndex,
-    ) { }
+        private uploadImage: UploadCollectionImage
+    ) {}
 
     private getReqIdParam = (req: Request): number =>
         Number(req.params.collectionId);
@@ -89,13 +81,6 @@ class CollectionsController {
         return collection;
     };
 
-    private indexCollection = (collection: ICollectionModel) =>
-        this.index(SearchIndexes.collections, collection.id, {
-            title: collection.title,
-            subject: collection.subject,
-            description: collection.description,
-        });
-
     public handleNewCollection = async (
         req: TypedRequest<CollectionCredentialsType>,
         res: Response<ICollectionModel>,
@@ -104,7 +89,6 @@ class CollectionsController {
         try {
             checkEditRights(req, Number(req.params.userId));
             const collection = await this.handleCollectionCreate(req);
-            await this.indexCollection(collection);
             res.status(HttpStatusCodes.dataCreated).send(collection);
         } catch (err) {
             next(err);
@@ -139,7 +123,9 @@ class CollectionsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collection = await this.findCollectionById(this.getReqIdParam(req));
+            const collection = await this.findCollectionById(
+                this.getReqIdParam(req)
+            );
             checkEditRights(req, collection.userId);
             const updatedCollection = await this.updateCollectionData(req);
             res.send(updatedCollection);
@@ -221,27 +207,11 @@ class CollectionsController {
         }
     };
 
-    public deleteCollectionItemIndex = async (item: IItemModel): Promise<void> => {
-        const fieldsValues = await item.getFieldValues();
-        await Promise.all(fieldsValues.map(({ id }): Promise<void> => this.deleteIndex(SearchIndexes.fieldValues, id)));
-        await this.deleteIndex(SearchIndexes.items, item.id);
-    }
-
-    public deleteCollectionItemsIndexes = async (items: IItemModel[]): Promise<void> => {
-        await Promise.all(items.map(this.deleteCollectionItemIndex));
-    }
-
-    private deleteCollectionIndex = async (collection: ICollectionModel): Promise<void> => {
-        await this.deleteIndex(SearchIndexes.collections, collection.id);
-        if (collection.items) {
-            await this.deleteCollectionItemsIndexes(collection.items);
-        }
-    }
-
-    private deleteCollectionData = async (collection: ICollectionModel): Promise<void> => {
-        await this.deleteCollectionIndex(collection);
+    private deleteCollectionData = async (
+        collection: ICollectionModel
+    ): Promise<void> => {
         await this.deleteCollection(collection.id);
-    }
+    };
 
     public handleDeleteCollection = async (
         req: UserRequest,
@@ -249,9 +219,12 @@ class CollectionsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const collection = await this.findCollectionById(Number(this.getReqIdParam(req)), [CollectionScopes.withItems]);
+            const collection = await this.findCollectionById(
+                Number(this.getReqIdParam(req)),
+                [CollectionScopes.withItems]
+            );
             checkEditRights(req, collection.userId);
-            await this.deleteCollectionData(collection)
+            await this.deleteCollectionData(collection);
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
@@ -266,7 +239,5 @@ export default new CollectionsController(
     collectionService.findUserCollections,
     collectionService.findCollectionById,
     collectionService.findAllCollections,
-    cloudStorageService.uploadCollectionImage,
-    searchService.index,
-    searchService.deleteIndex,
+    cloudStorageService.uploadCollectionImage
 );

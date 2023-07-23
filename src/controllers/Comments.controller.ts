@@ -10,7 +10,7 @@ import {
     UserRequest,
 } from '../types/common.types.js';
 
-import { CommentScopes, SearchIndexes } from '../configs/enums.config.js';
+import { CommentScopes } from '../configs/enums.config.js';
 
 import {
     ICommentModel,
@@ -28,7 +28,7 @@ import {
 
 import { checkEditRights } from '../utils/helpers.util.js';
 
-import { DeleteIndex, Index } from '../types/search.types.js';
+import { IndexNewComment } from '../types/search.types.js';
 
 class CommentsController {
     constructor(
@@ -36,11 +36,10 @@ class CommentsController {
         private findItemComments: FindItemComments,
         private deleteItemComments: DeleteItemComments,
         private findCommentById: FindCommentById,
-        private index: Index,
-        private deleteIndex: DeleteIndex,
+        private indexNewComment: IndexNewComment
     ) {}
 
-    private getParamsId = (req: Request) => Number(req.params.itemId)
+    private getParamsId = (req: Request) => Number(req.params.itemId);
 
     private handleCreateComment = (req: TypedRequest<CommentRequestType>) =>
         this.createComment({
@@ -54,9 +53,6 @@ class CommentsController {
         comment.setDataValue('user', user);
     };
 
-    private indexComment = ({ id, itemId, value }: ICommentModel) =>
-        this.index(SearchIndexes.comments, id, { itemId, value });
-
     public handleLeaveComment = async (
         req: TypedRequest<CommentRequestType>,
         res: Response<ICommentModel>,
@@ -65,7 +61,7 @@ class CommentsController {
         try {
             const comment = await this.handleCreateComment(req);
             await this.getCommentUser(comment);
-            await this.indexComment(comment);
+            await this.indexNewComment(comment);
             res.status(HttpStatusCodes.dataCreated).send(comment);
         } catch (err) {
             next(err);
@@ -95,8 +91,6 @@ class CommentsController {
         checkEditRights(req, userId);
     };
 
-    private deleteCommentIndex = (commentId: number): Promise<void> => this.deleteIndex(SearchIndexes.comments, commentId);
-
     public handleDeleteComment = async (
         req: UserRequest,
         res: ResponseWithMessage,
@@ -105,7 +99,6 @@ class CommentsController {
         try {
             await this.checkCommentEditRights(req);
             await this.deleteItemComments(this.getParamsId(req));
-            await this.deleteCommentIndex(this.getParamsId(req));
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
@@ -118,6 +111,5 @@ export default new CommentsController(
     commentService.findItemComments,
     commentService.deleteItemComments,
     commentService.findCommentById,
-    searchService.index,
-    searchService.deleteIndex,
+    searchService.indexNewComment
 );

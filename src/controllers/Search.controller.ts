@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 
 import searchService from '../services/Search.service.js';
 
-import { SearchIndexes } from '../configs/enums.config.js';
-
 import { Search } from '../types/search.types.js';
 
 class SearchController {
@@ -15,12 +13,9 @@ class SearchController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const { query, tags } = req.query;
+            const { query } = req.query;
             if (typeof query === 'string') {
-                const result = await this.search(
-                    query,
-                    tags ? SearchIndexes.tags : undefined
-                );
+                const result = await this.search(query);
                 res.send(result.hits.hits);
             }
         } catch (err) {
