@@ -3,6 +3,7 @@ import { Client } from '@elastic/elasticsearch';
 import { elasticConfig } from '../configs/elasticsearch.config.js';
 
 import {
+    DeleteCommentIndex,
     DeleteIndex,
     FormatCollectionData,
     FormatFieldsData,
@@ -13,6 +14,7 @@ import {
     IndexNewComment,
     IndexNewItem,
     Search,
+    UpdateCollectionIndex,
 } from '../types/search.types.js';
 
 import DefaultError from '../errors/Default.error.js';
@@ -26,22 +28,6 @@ import { SearchIndexes } from '../configs/enums.config.js';
 class SearchService {
     constructor(private client: Client) {}
 
-    private index: Index = async (index, id, document) => {
-        try {
-            await this.client.index({ index, id: `${id}`, document });
-        } catch (err) {
-            throw new DefaultError();
-        }
-    };
-
-    private update: Index = async (index, id, body) => {
-        try {
-            await this.client.update({ index, id: `${id}`, body });
-        } catch (err) {
-            throw new DefaultError();
-        }
-    };
-
     private handleError: HandleError = (err) => {
         if (typeof err === 'object' && err != null && 'statusCode' in err) {
             if (err.statusCode === HttpStatusCodes.notFound) {
@@ -51,22 +37,54 @@ class SearchService {
         throw new DefaultError();
     };
 
-    public deleteIndex: DeleteIndex = async (index, id) => {
+    private index: Index = async (id, document) => {
         try {
-            await this.client.delete({ index, id: `${id}` });
+            await this.client.index({
+                index: SearchIndexes.items,
+                id: `${id}`,
+                document,
+            });
+        } catch (err) {
+            throw new DefaultError();
+        }
+    };
+
+    private checkItem = async (id: number) =>
+        this.client.get({ id: `${id}`, index: SearchIndexes.items });
+
+    private update: Index = async (id, body) => {
+        try {
+            await this.checkItem(id);
+            await this.client.update({
+                index: SearchIndexes.items,
+                id: `${id}`,
+                body,
+            });
         } catch (err) {
             this.handleError(err);
         }
     };
 
-    public search: Search = (query, index?) =>
+    public deleteIndex: DeleteIndex = async (id) => {
+        try {
+            await this.checkItem(id);
+            await this.client.delete({
+                index: SearchIndexes.items,
+                id: `${id}`,
+            });
+        } catch (err) {
+            this.handleError(err);
+        }
+    };
+
+    public search: Search = (query) =>
         this.client.search({
-            index,
+            index: SearchIndexes.items,
             body: {
                 query: {
                     multi_match: {
                         query,
-                        fields: ['title', 'subject', 'description', 'value'],
+                        fields: ['*'],
                         fuzziness: 'AUTO',
                     },
                 },
@@ -102,16 +120,42 @@ class SearchService {
 
     public indexNewItem: IndexNewItem = (item: IItemModel) => {
         const itemData = this.formatNewItemData(item);
-        this.index(SearchIndexes.items, item.id, itemData);
+        this.index(item.id, itemData);
     };
 
     public indexNewComment: IndexNewComment = async ({ id, itemId, value }) => {
-        await this.update(SearchIndexes.items, itemId, {
+        await this.update(itemId, {
             script: {
                 source: 'ctx._source.comments.add(params.comment)',
                 lang: 'painless',
                 params: {
                     comment: { id, value },
+                },
+            },
+        });
+    };
+
+    public updateCollectionIndex: UpdateCollectionIndex = async (
+        { title, subject, description },
+        itemId
+    ) => {
+        await this.update(itemId, {
+            doc: {
+                collection: { title, subject, description },
+            },
+        });
+    };
+
+    public deleteCommentIndex: DeleteCommentIndex = async ({ id, itemId }) => {
+        await this.update(itemId, {
+            script: {
+                source: `for (int i=ctx._source.comments.length-1; i>=0; i--) {
+                    if (ctx._source.comments[i].id == params.id) {
+                        ctx._source.comments.remove(i);
+                    }}`,
+                lang: 'painless',
+                params: {
+                    id: id,
                 },
             },
         });

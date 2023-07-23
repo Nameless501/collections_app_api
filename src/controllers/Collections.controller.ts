@@ -10,6 +10,10 @@ import collectionService from '../services/Collection.service.js';
 
 import cloudStorageService from '../services/CloudStorage.service.js';
 
+import searchService from '../services/Search.service.js';
+
+import itemService from '../services/Item.service.js';
+
 import {
     ICollectionModel,
     CollectionCredentialsType,
@@ -32,6 +36,10 @@ import { CollectionScopes } from '../configs/enums.config.js';
 
 import { checkEditRights } from '../utils/helpers.util.js';
 
+import { DeleteIndex, UpdateCollectionIndex } from '../types/search.types.js';
+
+import { FindCollectionItems, IItemModel } from '../types/items.types.js';
+
 class CollectionsController {
     constructor(
         private create: CreateCollection,
@@ -40,7 +48,10 @@ class CollectionsController {
         private findUserCollections: FindUserCollections,
         private findCollectionById: FindCollectionById,
         private findAllCollections: FindAllCollections,
-        private uploadImage: UploadCollectionImage
+        private uploadImage: UploadCollectionImage,
+        private deleteItemIndex: DeleteIndex,
+        private findCollectionItems: FindCollectionItems,
+        private updateCollectionIndex: UpdateCollectionIndex
     ) {}
 
     private getReqIdParam = (req: Request): number =>
@@ -114,7 +125,20 @@ class CollectionsController {
         return await this.findCollectionById(this.getReqIdParam(req), [
             CollectionScopes.withFields,
             CollectionScopes.withUser,
+            CollectionScopes.withItems,
         ]);
+    };
+
+    private updateCollectionItemsIndex = async (
+        collection: ICollectionModel
+    ): Promise<void> => {
+        if (collection.items) {
+            await Promise.all(
+                collection.items.map(({ id }) =>
+                    this.updateCollectionIndex(collection, id)
+                )
+            );
+        }
     };
 
     public handleUpdateCollection = async (
@@ -128,6 +152,7 @@ class CollectionsController {
             );
             checkEditRights(req, collection.userId);
             const updatedCollection = await this.updateCollectionData(req);
+            await this.updateCollectionItemsIndex(updatedCollection);
             res.send(updatedCollection);
         } catch (err) {
             next(err);
@@ -207,9 +232,15 @@ class CollectionsController {
         }
     };
 
+    private deleteItemsIndexes = async (items: IItemModel[]): Promise<void> => {
+        await Promise.all(items.map(({ id }) => this.deleteItemIndex(id)));
+    };
+
     private deleteCollectionData = async (
         collection: ICollectionModel
     ): Promise<void> => {
+        const items = await this.findCollectionItems(collection.id);
+        await this.deleteItemsIndexes(items);
         await this.deleteCollection(collection.id);
     };
 
@@ -239,5 +270,8 @@ export default new CollectionsController(
     collectionService.findUserCollections,
     collectionService.findCollectionById,
     collectionService.findAllCollections,
-    cloudStorageService.uploadCollectionImage
+    cloudStorageService.uploadCollectionImage,
+    searchService.deleteIndex,
+    itemService.findCollectionItems,
+    searchService.updateCollectionIndex
 );

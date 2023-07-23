@@ -71,3 +71,8 @@ export type FindItemById = (
 ) => Promise<IItemModel>;
 
 export type DeleteItem = (id: number) => Promise<void>;
+
+export type BulkFindItemById = (
+    id: number[],
+    scopes?: ScopeType<ItemScopes>
+) => Promise<IItemModel[]>;

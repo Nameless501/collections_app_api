@@ -1,23 +1,18 @@
 import { SearchResponse } from '@elastic/elasticsearch/lib/api/types.js';
 
-import { SearchIndexes } from '../configs/enums.config.js';
 import { IItemModel } from './items.types.js';
+
 import { IFieldValueModel } from './fieldValues.types.js';
+
 import { ICollectionModel } from './collections.types.js';
+
 import { ICommentModel } from './comments.types.js';
 
-export type Index = (
-    index: SearchIndexes,
-    id: number,
-    document: object
-) => Promise<void>;
+export type Index = (id: number, document: object) => Promise<void>;
 
-export type DeleteIndex = (index: SearchIndexes, id: number) => Promise<void>;
+export type DeleteIndex = (id: number) => Promise<void>;
 
-export type Search = (
-    query: string,
-    index?: SearchIndexes
-) => Promise<SearchResponse>;
+export type Search = (query: string) => Promise<SearchResponse>;
 
 export type HandleError = (err: unknown) => void | never;
 
@@ -41,3 +36,10 @@ export type FormatNewItemData = (item: IItemModel) => {
 export type IndexNewItem = (item: IItemModel) => void;
 
 export type IndexNewComment = (comment: ICommentModel) => Promise<void>;
+
+export type UpdateCollectionIndex = (
+    comment: Partial<ICollectionModel>,
+    itemId: number
+) => Promise<void>;
+
+export type DeleteCommentIndex = (comment: ICommentModel) => Promise<void>;

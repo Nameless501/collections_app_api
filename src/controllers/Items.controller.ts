@@ -41,7 +41,7 @@ import { ItemScopes } from '../configs/enums.config.js';
 
 import { checkEditRights } from '../utils/helpers.util.js';
 
-import { IndexNewItem } from '../types/search.types.js';
+import { DeleteIndex, IndexNewItem } from '../types/search.types.js';
 
 class ItemsController {
     constructor(
@@ -53,7 +53,8 @@ class ItemsController {
         private deleteItems: DeleteItem,
         private setFieldValue: SetFieldValue,
         private findOrCreateTag: FindOrCreateTag,
-        private indexNewItem: IndexNewItem
+        private indexNewItem: IndexNewItem,
+        private deleteItemIndex: DeleteIndex
     ) {}
 
     private createNewItemFields = async (
@@ -199,6 +200,7 @@ class ItemsController {
     ): Promise<void> => {
         try {
             await this.checkItemEditRights(req);
+            await this.deleteItemIndex(Number(req.params.itemId));
             await this.deleteItems(Number(req.params.itemId));
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
@@ -234,5 +236,6 @@ export default new ItemsController(
     itemService.deleteItem,
     fieldValueService.setFieldValue,
     tagService.findOrCreateTag,
-    searchService.indexNewItem
+    searchService.indexNewItem,
+    searchService.deleteIndex
 );

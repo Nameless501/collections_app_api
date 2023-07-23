@@ -1,8 +1,9 @@
-import { ModelCtor } from 'sequelize';
+import { ModelCtor, Op } from 'sequelize';
 
 import ItemModel from '../models/item.model.js';
 
 import {
+    BulkFindItemById,
     CreateItem,
     DeleteItem,
     FindAllItems,
@@ -34,6 +35,11 @@ class CollectionService {
     public deleteItem: DeleteItem = async (id) => {
         await this.itemModel.destroy({ where: { id } });
     };
+
+    public bulkFindItemsById: BulkFindItemById = async (id, scopes) =>
+        await this.itemModel
+            .scope(scopes)
+            .findAll({ where: { id: { [Op.in]: id } } });
 }
 
 export default new CollectionService(ItemModel);

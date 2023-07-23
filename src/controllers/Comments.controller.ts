@@ -28,7 +28,7 @@ import {
 
 import { checkEditRights } from '../utils/helpers.util.js';
 
-import { IndexNewComment } from '../types/search.types.js';
+import { DeleteCommentIndex, IndexNewComment } from '../types/search.types.js';
 
 class CommentsController {
     constructor(
@@ -36,10 +36,9 @@ class CommentsController {
         private findItemComments: FindItemComments,
         private deleteItemComments: DeleteItemComments,
         private findCommentById: FindCommentById,
-        private indexNewComment: IndexNewComment
+        private indexNewComment: IndexNewComment,
+        private deleteCommentIndex: DeleteCommentIndex
     ) {}
-
-    private getParamsId = (req: Request) => Number(req.params.itemId);
 
     private handleCreateComment = (req: TypedRequest<CommentRequestType>) =>
         this.createComment({
@@ -84,11 +83,11 @@ class CommentsController {
         }
     };
 
-    private checkCommentEditRights = async (
-        req: UserRequest
+    private deleteCommentData = async (
+        comment: ICommentModel
     ): Promise<void> => {
-        const { userId } = await this.findCommentById(this.getParamsId(req));
-        checkEditRights(req, userId);
+        await this.deleteCommentIndex(comment);
+        await this.deleteItemComments(comment.id);
     };
 
     public handleDeleteComment = async (
@@ -97,8 +96,11 @@ class CommentsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            await this.checkCommentEditRights(req);
-            await this.deleteItemComments(this.getParamsId(req));
+            const comment = await this.findCommentById(
+                Number(req.params.commentId)
+            );
+            checkEditRights(req, comment.userId);
+            await this.deleteCommentData(comment);
             res.send({ message: HttpMessages.deleteSuccess });
         } catch (err) {
             next(err);
@@ -111,5 +113,6 @@ export default new CommentsController(
     commentService.findItemComments,
     commentService.deleteItemComments,
     commentService.findCommentById,
-    searchService.indexNewComment
+    searchService.indexNewComment,
+    searchService.deleteCommentIndex
 );
