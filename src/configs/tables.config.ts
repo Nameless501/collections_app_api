@@ -194,7 +194,7 @@ export const fieldValueTableConfig: TableConfigType<IFieldValueModel> = {
             unique: true,
         },
         value: {
-            type: DataTypes.JSON,
+            type: DataTypes.TEXT,
             allowNull: false,
         },
         fieldId: {
