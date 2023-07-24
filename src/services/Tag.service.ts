@@ -5,6 +5,7 @@ import TagModel from '../models/tag.model.js';
 import {
     FindAllTags,
     FindOrCreateTag,
+    FindTagById,
     ITagModel,
 } from '../types/tags.types.js';
 
@@ -18,6 +19,9 @@ class TagService {
 
     public findAllTags: FindAllTags = (scopes) =>
         this.tagModel.scope(scopes).findAll();
+
+    public findTagById: FindTagById = (id, scopes) =>
+        this.tagModel.scope(scopes).findOne({ where: { id } });
 }
 
 export default new TagService(TagModel);
