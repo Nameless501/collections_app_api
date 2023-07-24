@@ -63,6 +63,7 @@ const routesConfig: RoutesConfigType = {
     },
     search: {
         search: '/',
+        searchTag: '/tag/:tagId',
     },
 } as const;
 

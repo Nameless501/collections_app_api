@@ -27,3 +27,8 @@ export type FindOrCreateTag = (value: string) => Promise<ITagModel>;
 export type FindAllTags = (
     scopes?: ScopeType<TagsScopes>
 ) => Promise<ITagModel[]>;
+
+export type FindTagById = (
+    id: number,
+    scopes?: ScopeType<TagsScopes>
+) => Promise<ITagModel | null>;
