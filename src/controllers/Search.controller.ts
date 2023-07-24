@@ -37,6 +37,7 @@ class SearchController {
             ItemScopes.withCollection,
             ItemScopes.withFieldValues,
             ItemScopes.withFieldValues,
+            ItemScopes.withLikes,
         ]);
 
     public handleSearch = async (
