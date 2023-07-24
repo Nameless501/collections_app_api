@@ -26,12 +26,15 @@ export type FormatCollectionData = (
     item: IItemModel
 ) => Partial<ICollectionModel>;
 
-export type FormatNewItemData = (item: IItemModel) => {
+export type ItemFormattedDataType = {
     title: string;
     fields: Partial<IFieldValueModel>[];
     tags: string[];
     collection: Partial<ICollectionModel>;
+    comments: Partial<ICommentModel>[];
 };
+
+export type FormatNewItemData = (item: IItemModel) => ItemFormattedDataType;
 
 export type IndexNewItem = (item: IItemModel) => void;
 
@@ -43,3 +46,10 @@ export type UpdateCollectionIndex = (
 ) => Promise<void>;
 
 export type DeleteCommentIndex = (comment: ICommentModel) => Promise<void>;
+
+export type SeedFormattedDataType = {
+    id: number;
+    data: ItemFormattedDataType;
+};
+
+export type IndexSeedsData = (data: SeedFormattedDataType[]) => Promise<void>;

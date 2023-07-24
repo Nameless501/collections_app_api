@@ -13,6 +13,7 @@ import {
     Index,
     IndexNewComment,
     IndexNewItem,
+    IndexSeedsData,
     Search,
     UpdateCollectionIndex,
 } from '../types/search.types.js';
@@ -20,8 +21,6 @@ import {
 import DefaultError from '../errors/Default.error.js';
 
 import { HttpStatusCodes } from '../configs/httpResponse.config.js';
-
-import { IItemModel } from '../types/items.types.js';
 
 import { SearchIndexes } from '../configs/enums.config.js';
 
@@ -118,9 +117,13 @@ class SearchService {
         comments: [],
     });
 
-    public indexNewItem: IndexNewItem = (item: IItemModel) => {
+    public indexNewItem: IndexNewItem = (item) => {
         const itemData = this.formatNewItemData(item);
         this.index(item.id, itemData);
+    };
+
+    public indexSeedsItems: IndexSeedsData = async (data) => {
+        await Promise.all(data.map(({ id, data }) => this.index(id, data)));
     };
 
     public indexNewComment: IndexNewComment = async ({ id, itemId, value }) => {

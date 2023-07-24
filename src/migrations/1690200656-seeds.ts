@@ -4,6 +4,8 @@ import { MigrationParams } from 'umzug';
 
 import { Migration } from '../types/common.types.js';
 
+import searchService from '../services/Search.service.js';
+
 import {
     handleMigrationsDeleteSeeds,
     handleMigrationsInsertSeeds,
@@ -17,6 +19,7 @@ import {
     itemTagsSeedsConfig,
     fieldsSeedsConfig,
     itemsSeedsConfig,
+    seedsSearchIndexes,
 } from '../configs/seeds.config.js';
 
 export const up: Migration = async ({
@@ -32,6 +35,7 @@ export const up: Migration = async ({
         tagsSeedsConfig,
         itemTagsSeedsConfig
     );
+    await searchService.indexSeedsItems(seedsSearchIndexes);
 };
 
 export const down: Migration = async ({

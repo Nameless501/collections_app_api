@@ -129,7 +129,7 @@ export const itemsSeedsConfig: SeedsConfigType = {
         },
         {
             id: 4,
-            title: 'Sentimental Journey ',
+            title: 'Sentimental Journey',
             collectionId: 4,
             createdAt: new Date(),
         },
@@ -201,3 +201,62 @@ export const itemTagsSeedsConfig: SeedsConfigType = {
         },
     ],
 };
+
+export const seedsSearchIndexes = [
+    {
+        id: 1,
+        data: {
+            title: 'McCartney',
+            tags: ['music'],
+            collection: {
+                title: 'Albums',
+                subject: CollectionSubjects.musicalRecords,
+                description: 'Paul albums',
+            },
+            fields: [{ id: 1, value: '1970' }],
+            comments: [],
+        },
+    },
+    {
+        id: 2,
+        data: {
+            title: 'Imagine',
+            tags: ['music'],
+            collection: {
+                title: 'Albums',
+                subject: CollectionSubjects.musicalRecords,
+                description: 'John albums',
+            },
+            fields: [{ id: 2, value: '1971' }],
+            comments: [],
+        },
+    },
+    {
+        id: 3,
+        data: {
+            title: 'Wonderwall Music',
+            tags: ['music'],
+            collection: {
+                title: 'Albums',
+                subject: CollectionSubjects.musicalRecords,
+                description: 'Ringo albums',
+            },
+            fields: [{ id: 3, value: '1968' }],
+            comments: [],
+        },
+    },
+    {
+        id: 4,
+        data: {
+            title: 'Sentimental Journey',
+            tags: ['music'],
+            collection: {
+                title: 'Albums',
+                subject: CollectionSubjects.musicalRecords,
+                description: 'Ringo albums',
+            },
+            fields: [{ id: 4, value: '1970' }],
+            comments: [],
+        },
+    },
+];
