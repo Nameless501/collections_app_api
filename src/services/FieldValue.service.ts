@@ -7,6 +7,8 @@ import {
     FindFieldValues,
     FindItemFieldsValues,
     SetFieldValue,
+    UpdateFieldsValue,
+    FindFieldValueById,
 } from '../types/fieldValues.types.js';
 
 import { FieldValueScopes } from '../configs/enums.config.js';
@@ -26,6 +28,13 @@ class FieldValueService {
 
     public findItemFieldsValues: FindItemFieldsValues = (itemId) =>
         this.findFieldValues({ itemId }, [FieldValueScopes.withField]);
+
+    public updateFieldValue: UpdateFieldsValue = async (id, value) => {
+        await this.fieldValueModel.update({ value }, { where: { id } });
+    };
+
+    public findFieldValueById: FindFieldValueById = (id, scopes) =>
+        this.fieldValueModel.scope(scopes).findOne({ where: { id } });
 }
 
 export default new FieldValueService(FieldValueModel);

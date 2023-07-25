@@ -10,6 +10,10 @@ import fieldService from '../services/Field.service.js';
 
 import collectionService from '../services/Collection.service.js';
 
+import fieldValueService from '../services/FieldValue.service.js';
+
+import searchService from '../services/Search.service.js';
+
 import {
     DeleteField,
     FieldCredentialsType,
@@ -31,13 +35,27 @@ import {
 
 import { checkEditRights } from '../utils/helpers.util.js';
 
+import {
+    FindFieldValueById,
+    IFieldValueModel,
+    UpdateFieldValueRequestType,
+    UpdateFieldsValue,
+} from '../types/fieldValues.types.js';
+
+import { UpdateFieldValueIndex } from '../types/search.types.js';
+import { FieldValueScopes } from '../configs/enums.config.js';
+
 class FieldsController {
     constructor(
         private updateField: UpdateField,
         private deleteField: DeleteField,
+        private updateFieldValue: UpdateFieldsValue,
         private findFieldById: FindFieldById,
         private findCollectionFields: FindCollectionFields,
-        private findCollectionById: FindCollectionById
+        private findCollectionById: FindCollectionById,
+        private updateFieldValueIndex: UpdateFieldValueIndex,
+
+        private findFieldValueById: FindFieldValueById
     ) {}
 
     private createCollectionFields = (
@@ -67,10 +85,14 @@ class FieldsController {
     };
 
     private checkFieldEditRights = async (
-        req: TypedRequest<FieldCredentialsType> | UserRequest
+        req: UserRequest,
+        field?: IFieldModel
     ): Promise<void> => {
-        const field = await this.findFieldById(Number(req.params.fieldId));
-        const { userId } = await field.getCollection();
+        let searchField = field;
+        if (!searchField) {
+            searchField = await this.findFieldById(Number(req.params.fieldId));
+        }
+        const { userId } = await searchField.getCollection();
         checkEditRights(req, userId);
     };
 
@@ -123,12 +145,43 @@ class FieldsController {
             next(err);
         }
     };
+
+    private updateFieldValueData = async (
+        fieldValue: IFieldValueModel,
+        value: string
+    ) => {
+        await this.updateFieldValue(fieldValue.id, value);
+        await this.updateFieldValueIndex(fieldValue, value);
+    };
+
+    public handleUpdateFieldValue = async (
+        req: TypedRequest<UpdateFieldValueRequestType>,
+        res: ResponseWithMessage,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const fieldValue = await this.findFieldValueById(
+                Number(req.params.fieldId),
+                [FieldValueScopes.withField]
+            );
+            if (fieldValue) {
+                await this.checkFieldEditRights(req, fieldValue.field);
+                await this.updateFieldValueData(fieldValue, req.body.value);
+                res.send({ message: HttpMessages.updateSuccess });
+            }
+        } catch (err) {
+            next(err);
+        }
+    };
 }
 
 export default new FieldsController(
     fieldService.updateField,
     fieldService.deleteField,
+    fieldValueService.updateFieldValue,
     fieldService.findFieldById,
     fieldService.findCollectionFields,
-    collectionService.findCollectionById
+    collectionService.findCollectionById,
+    searchService.updateFieldValueIndex,
+    fieldValueService.findFieldValueById
 );

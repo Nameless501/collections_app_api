@@ -81,6 +81,10 @@ export const updateFieldValidationConfig: ValidationConfigTypes = {
     type: validationOptions.getStringValidation(),
 };
 
+export const updateFieldValueValidationConfig: ValidationConfigTypes = {
+    value: validationOptions.getStringValidation(),
+};
+
 export const newItemValidationConfig: ValidationConfigTypes = {
     title: validationOptions.getStringValidation().required(),
     fields: validationOptions

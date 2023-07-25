@@ -16,6 +16,7 @@ import {
     IndexSeedsData,
     Search,
     UpdateCollectionIndex,
+    UpdateFieldValueIndex,
 } from '../types/search.types.js';
 
 import DefaultError from '../errors/Default.error.js';
@@ -158,7 +159,26 @@ class SearchService {
                     }}`,
                 lang: 'painless',
                 params: {
-                    id: id,
+                    id,
+                },
+            },
+        });
+    };
+
+    public updateFieldValueIndex: UpdateFieldValueIndex = async (
+        { id, itemId },
+        value
+    ) => {
+        await this.update(itemId, {
+            script: {
+                source: `for (int i=ctx._source.comments.length-1; i>=0; i--) {
+                    if (ctx._source.fields[i].id == params.id) {
+                        ctx._source.fields[i] = params.newValue;
+                    }}`,
+                lang: 'painless',
+                params: {
+                    id,
+                    newValue: { id, value },
                 },
             },
         });

@@ -9,12 +9,18 @@ import createRequestValidator from '../utils/validation.util.js';
 import {
     newFieldsValidationConfig,
     updateFieldValidationConfig,
+    updateFieldValueValidationConfig,
 } from '../configs/validation.config.js';
 
 import routesConfig from '../configs/routes.config.js';
 
-const { updateField, deleteField, collectionFields, newCollectionFields } =
-    routesConfig.fields;
+const {
+    updateField,
+    updateFieldValue,
+    deleteField,
+    collectionFields,
+    newCollectionFields,
+} = routesConfig.fields;
 
 const router: Router = Router();
 
@@ -32,6 +38,12 @@ router.patch(
     updateField,
     createRequestValidator(updateFieldValidationConfig),
     fieldsController.handleUpdateField
+);
+
+router.patch(
+    updateFieldValue,
+    createRequestValidator(updateFieldValueValidationConfig),
+    fieldsController.handleUpdateFieldValue
 );
 
 router.delete(deleteField, fieldsController.handleDeleteField);

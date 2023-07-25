@@ -47,6 +47,11 @@ export type UpdateCollectionIndex = (
 
 export type DeleteCommentIndex = (comment: ICommentModel) => Promise<void>;
 
+export type UpdateFieldValueIndex = (
+    field: IFieldValueModel,
+    value: string
+) => Promise<void>;
+
 export type SeedFormattedDataType = {
     id: number;
     data: ItemFormattedDataType;

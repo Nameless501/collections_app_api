@@ -22,6 +22,10 @@ export interface IFieldValueModel
     getField: () => Promise<IFieldModel>;
 }
 
+export type UpdateFieldValueRequestType = {
+    value: string;
+};
+
 export type FieldValueCredentialsType = {
     itemId: number;
     fieldId: number;
@@ -42,6 +46,13 @@ export type FindFieldValues = (
     scopes?: ScopeType<FieldValueScopes>
 ) => Promise<IFieldValueModel[]>;
 
+export type FindFieldValueById = (
+    id: number,
+    scopes?: ScopeType<FieldValueScopes>
+) => Promise<IFieldValueModel | null>;
+
 export type FindItemFieldsValues = (
     itemId: number
 ) => Promise<IFieldValueModel[]>;
+
+export type UpdateFieldsValue = (id: number, value: string) => Promise<void>;

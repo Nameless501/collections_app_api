@@ -29,6 +29,7 @@ const routesConfig: RoutesConfigType = {
     },
     fields: {
         updateField: '/:fieldId',
+        updateFieldValue: '/value/:fieldId',
         deleteField: '/:fieldId',
         collectionFields: '/collection/:collectionId',
         newCollectionFields: '/collection/:collectionId',
