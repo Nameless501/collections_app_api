@@ -2,6 +2,8 @@
 
 <div align="center"><a href="https://github.com/Nameless501/collections_app_frontend">Репозиторий front-end</a></div>
 
+---
+
 Деплой отклюен - истекли триалы для используемых API
 
 ---
