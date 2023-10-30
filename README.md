@@ -1,8 +1,8 @@
 # <p align="center">Collections app (back-end)</p>
 
-<div align="center"><a href="https://projectfrontend-production.up.railway.app">Ссылка на сайт</a></div>
-
 <div align="center"><a href="https://github.com/Nameless501/collections_app_frontend">Репозиторий front-end</a></div>
+
+Деплой отклюен - истекли триалы для используемых API
 
 ---
 
